@@ -1,0 +1,114 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-01-25 17:19+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: quizdrill.glade.h:1
+msgid "<b>Solution: </b>"
+msgstr ""
+
+#: quizdrill.glade.h:2
+msgid "<b>Subquiz: </b>"
+msgstr ""
+
+#: quizdrill.glade.h:3
+msgid "<b>Timer: </b>"
+msgstr ""
+
+#: quizdrill.glade.h:4
+msgid "<b>What is this? </b>"
+msgstr ""
+
+#: quizdrill.glade.h:5
+msgid "Aktivate timer"
+msgstr ""
+
+#: quizdrill.glade.h:6
+msgid "Break length in min: "
+msgstr ""
+
+#: quizdrill.glade.h:7
+msgid "Did you remember it correct?"
+msgstr ""
+
+#: quizdrill.glade.h:8
+msgid "Evaluate"
+msgstr ""
+
+#: quizdrill.glade.h:9
+msgid "Multiple Choice"
+msgstr ""
+
+#: quizdrill.glade.h:10
+msgid "Quiz"
+msgstr ""
+
+#: quizdrill.glade.h:11
+msgid "Quiz length: "
+msgstr ""
+
+#: quizdrill.glade.h:12
+msgid "Quizdrill"
+msgstr ""
+
+#: quizdrill.glade.h:13
+msgid "Quizdrill Preferences"
+msgstr ""
+
+#: quizdrill.glade.h:14
+msgid "Show solution"
+msgstr ""
+
+#: quizdrill.glade.h:15
+msgid "Simple Quiz"
+msgstr ""
+
+#: quizdrill.glade.h:16
+msgid "Statistics"
+msgstr ""
+
+#: quizdrill.glade.h:17
+msgid ""
+"This program is free software; you can redistribute it and/or modify\n"
+"it under the terms of the GNU General Public License as published by\n"
+"the Free Software Foundation; either version 2 of the License, or\n"
+"(at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n"
+"GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
+msgstr ""
+
+#: quizdrill.glade.h:31
+msgid "Words"
+msgstr ""
+
+#: quizdrill.glade.h:32
+msgid "_Edit"
+msgstr ""
+
+#: quizdrill.glade.h:33
+msgid "_File"
+msgstr ""
+
+#: quizdrill.glade.h:34
+msgid "_Help"
+msgstr ""

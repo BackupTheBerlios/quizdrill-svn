@@ -1,0 +1,42 @@
+Future Plans
+============
+
+Program
+-------
+* Testing
+    * support for 1-directional-tests
+        * math, geography, ...
+        * image-tests
+            * geography
+        * sound-tests
+            * dictating (spelling)
+    * additional learning support
+        * (better) selection of next quiz for the learning strategy
+            * save/reload this state
+        * support learning strategies: e.g. Mnemonic[1] 
+        * word said after correct answer on vocabulary tests
+    * testing only a given category of a test
+* improve UI
+    * give feedback on Simple Quiz 
+    * support system-tray (notify when breaks over)
+    * only test from selected categories
+    * accessibility support
+* gconf-support
+    * last/recent quiz
+    * config-options
+        * which ones ? => design Preferences-window
+* fix Bugs ;-)
+    * Timer
+
+Documentation
+-------------
+* needed ...
+
+Quiz
+-----
+* more, more, more, ... ;-)
+
+
+Notes
+=====
+[1] Wikipedia Mnemonic: http://en.wikipedia.org/wiki/Mnemonic

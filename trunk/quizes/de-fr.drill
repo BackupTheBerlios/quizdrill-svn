@@ -1,0 +1,248 @@
+!type: vocabulary
+!language: Deutsch = Français
+!quizquestion: Bitte übersetzen Sie:=Tradez-vous:
+
+
+[Zahlen=nombres]
+
+die Zahl=le nombre
+
+null=zéro
+eins=un
+zwei=deux
+drei=trois
+vier=quatre
+fünf=cinq
+sechs=six
+sieben=sept
+acht=huit
+neun=neuf
+zehn=dix
+elf=onze
+zwölf=douze
+dreizehn=treize
+vierzehn=quatorze
+fünfzehn=quinze
+sechszehn=seize
+siebzehn=dix-sept
+achzehn=dix-huit
+neunzehn=dix-neuf
+zwanzig=vingt
+einundzwanzig=vingt-et-un
+zweiundzwanzig=vingt-deux
+dreiundzwanzig=vingt-trois
+siebenundzwanzig=vingt-sept
+dreißig=trente
+vierzig=quarante
+fünfzig=cinquante
+sechszig=soixante
+siebzig=soixante-dix
+achzig=quatre-vingt
+neunzig=quatre-vingt-dix
+einhundert=cent
+zweihundert=deux cents
+dreihundert=trois cents
+vierhundert=quatre cents
+fünfhundert=cinq cents
+sechshundert=six cents
+siebenhundert=sept cents
+tausend=mille
+zweitausend=deux mille
+zehntausend=dix mille
+ungefähr dreißig=trentaine
+
+
+[Zeit=temps]
+
+Januar=janvier
+Februar=février
+Merz=mars
+April=avril
+Mai=mai
+Juni=juin
+July=juillet
+August=août
+September=septembre
+October=octobre
+November=novembre
+Dezember=décembre
+
+der Tag (Zeitspanne)=la journée
+das Jahr (Zeitspanne)=l'année (f)
+der Morgen (Zeitspanne)=la matinée
+der Abend (Zeitspanne)=la soirée
+der Morgen=le matin
+am Mitttag=à midi
+der Nachmitttag=l'après-midi
+der Abend=le soir
+die Uhr=l'heure (f)
+
+Montag=lundi
+Dienstag=mardi
+Mittwoch=mercredi
+Donnerstag=jeudi
+Freitag=vendredi
+Samstag=samedi
+Sonntag=dimanche
+
+
+[Restaurant=restaurant]
+
+der Eiskaffee=le café glacé
+der koffeinfreier Kaffe=le café décaféiné
+der Alkohol=l'alcool (m)
+das warme Getränk=la boisson chaude
+das Getränk mit Alkohol=la boisson alcoolisée
+das Bier=la bière
+das Mineralwasser=l'eau minérale (f)
+der Wein=le vin
+der Orangensaft=le jus d'orange
+die Milch=le lait
+der Tee=le thé
+das Glas=la verre
+die Flasche=la bouteille
+der Radler=le panaché
+das stille Wasser=l'eau plate (f)
+
+das Wechselgeld=la monnaie
+die Karte=la carte
+das Trinkgeld=le pourboir
+die Münzen (f)=les pièces (f)
+die Mahlzeit=le repas
+die Ente=le canard
+das Mittagessen=le déjeuner
+der Frühstück=le petit-déjeuner
+
+
+[Frage=question]
+
+wie=comment
+warum=pourquoi
+wo / wohin=où
+woher=d'où
+wann=quand
+wie viel(e)=combien
+zu welcher Zeit=à quel heure
+was=qu'est-ce que
+
+
+[Richtung=direction]
+
+der Norden=le nord
+der Osten=l'est (m)
+der Süden=le sud
+der Westen=l'ouest (m)
+
+[Farben=couleur]
+
+rot=rouge
+blau=bleu(e)
+gelb=jaune
+grün=vert(e)
+grau=gris(e)
+rosa=rose
+schwarz=noir(e)
+weiß=blanc(he)
+
+[Weitere=autre]
+
+die Dose=la boîte
+die Wanderung=la promenade
+am Strand=au bard de la mer
+der Strand=le plage
+das Lagerfeuer=le feu de comp
+der Wunsch=le souhait
+der Wolf=le loup
+der Regenschirm=la parapluie
+der Inhalt=le contenu
+der Stift=le stylo
+die Flasche=la bouteille
+das Blatt=la feuille
+das Buch=le livre
+das Mäppchen=la trousse
+das Radiergummie=la gomme
+das Taschentuch=la mouchoir
+die Brille=les lunettes (f)
+der Ring=l'anneau (m)
+das Kleidungsstück=le vêtement
+der Lärm=le bruit
+die Schäune=la grange
+das Werkzeug=l'outil (m)
+die Woche=la semaine
+das Geschenk=le cadeau
+das Schiff=le bateau
+der Hut=le chapeau
+
+
+genug=assez
+zwischen=entre
+zusammen=ensemble
+allgemein=généraux
+regelmäßig=régulièrement
+jede=chaque
+besonders=tellement
+nächste=prochaine
+letzte=dernière
+letzter=dernier
+
+[Verben=verbe]
+glauben=croire
+aufstehen=se lever
+verbrauchen=consommer
+sich hinsetzen=s'asseoir
+es tut mir leid=je suis désolé(e)
+finden=trouver
+leben=vivre
+sterben=motir
+lesen=lire
+kaufen=acheter
+rufen=appeler
+bezahlen=payer
+anbeiten / schenken=offrir
+verlassen=quitter
+essen=manger
+haben=avoir
+gehen=aller
+antworten=répondre
+reisen=voyager
+machen=faire
+geben=donner
+sein=être
+beginnen=commencer
+denken=penser
+öffnen=ouvrir
+verstehen=comprendre
+fragen=demander
+sagen=dire
+nehmen=prendre
+weggehen=partir
+kommen=venir
+setzen / stellen / legen=mettre
+schicken=envoyer
+eintreten=entrer
+wollen=vouloir
+wissen=savoir
+können=pouvoir
+schreiben=écrire
+müssen / sollen=devoir
+fallen=tomber
+erzählen=raconter
+glauben=croire
+befürchten=craindre
+fahren=condure
+folgen=suivre
+abtrennen=séparer
+benutzen / verwenden=utiliser
+reden=parler
+küssen=embraisser
+probieren=goûter
+spucken=cracher
+übergeben=vomir
+
+[Körper=corps]
+die Augen (n)=les yeux (m)
+das Auge=l'oeil (m)
+die Nase=le nez
+der Mund=la bouche
+die Haare=les chereux
+die Haut=la peau
