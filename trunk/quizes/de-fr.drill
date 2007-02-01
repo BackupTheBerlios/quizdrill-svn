@@ -107,7 +107,7 @@ das stille Wasser=l'eau plate (f)
 das Wechselgeld=la monnaie
 die Karte=la carte
 das Trinkgeld=le pourboir
-die Münzen (f)=les pièces (f)
+die Münzen (w)=les pièces (f)
 die Mahlzeit=le repas
 die Ente=le canard
 das Mittagessen=le déjeuner
@@ -173,11 +173,10 @@ das Geschenk=le cadeau
 das Schiff=le bateau
 der Hut=le chapeau
 
-
 genug=assez
 zwischen=entre
 zusammen=ensemble
-allgemein=généraux
+allgemein=général
 regelmäßig=régulièrement
 jede=chaque
 besonders=tellement
@@ -186,6 +185,7 @@ letzte=dernière
 letzter=dernier
 
 [Verben=verbe]
+
 glauben=croire
 aufstehen=se lever
 verbrauchen=consommer
@@ -240,6 +240,7 @@ spucken=cracher
 übergeben=vomir
 
 [Körper=corps]
+
 die Augen (n)=les yeux (m)
 das Auge=l'oeil (m)
 die Nase=le nez
