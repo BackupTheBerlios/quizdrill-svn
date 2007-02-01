@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2007, Adam Schmalhofer
-# Developed by Addam Schmalhofer <Adam.Schmalhofer@gmx.de>
+# Developed by Addam Schmalhofer <schmalhof@users.berlios.de>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@
 
 import pygtk
 pygtk.require('2.0')
-import gtk, gtk.glade
+import gobject, gtk, gtk.glade
 import random
-from threading import Timer
-
-import locale
+import os, os.path
+import cPickle as pickle
 # i18n for glade
+import locale
 APP = "quizdrill"
 DIR = "locale"
 locale.bindtextdomain(APP, DIR)
@@ -33,8 +33,9 @@ locale.textdomain(APP)
 
 class Gui:
     GLADE_FILE = "quizdrill.glade"
-    QUIZDIR_PATH = "quizes/"
-    quiz_file_path = QUIZDIR_PATH + "de-fr.drill"
+    SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
+    quiz_file_path = "quizes/de-fr.drill"
+    break_length = 900000   # in ms: 15min
 
     def __init__(self):
         xml = gtk.glade.XML(self.GLADE_FILE, "main_window", APP)
@@ -53,15 +54,16 @@ class Gui:
         self.progressbar1 = gw("progressbar1")
         self.subquiz_combobox = gw("subquiz_combobox")
         ### start quiz
+        score = self.read_score_file()
         self.read_quiz_list(self.quiz_file_path)
-        self.quiz = Weighted_Quiz(self.quizlist)
+        self.quiz = Weighted_Quiz(self.quizlist, score)
         self.next_question()
         ## signals
         xml.signal_autoconnect(self)
 
     def next_question(self):
         if not self.quiz.next():
-            self.take_relax_time()
+            self.start_relax_time()
         self.simple_question_label.set_text(
                 self.quiz.question[self.quiz.ask_from])
         self.multi_question_label.set_text(
@@ -75,15 +77,39 @@ class Gui:
             button.set_label(text)
             button.set_sensitive(True)
 
-    def take_relax_time(self):
+    def start_relax_time(self):
         self.main_window.iconify()
         print "relaxing time..."
-        self.relax_timer = Timer(3.0, self.end_relax_time)
-        self.relax_timer.start()
+        gobject.timeout_add(self.break_length, self.on_end_relax_time)
 
-    def end_relax_time(self):
+    def on_end_relax_time(self):
         self.main_window.deiconify()
         print "stop relaxing..."
+
+    # read/write files
+
+    def read_score_file(self, type="", score_file=None):
+        " Reads a score-file for a given quiz_file "
+        if score_file == None:
+            score_file = self._get_score_file(self.quiz_file_path, type)
+        try:
+            f = open(score_file)
+        except IOError:
+            return {}
+        return pickle.load(f)
+
+    def write_score_file(self, score, type=""):
+        " Reads a score-file for a given quiz_file "
+        score_file = self._get_score_file(self.quiz_file_path, type)
+        if not os.path.exists(os.path.dirname(score_file)):
+            os.makedirs(os.path.dirname(score_file))
+        f = open(score_file, "w")
+        pickle.dump(score, f)
+        f.close()
+
+    def _get_score_file(self, quiz_file, type):
+        return self.SCORE_PATH + os.path.dirname(quiz_file) + \
+                '_' + type + ".score"
 
     def read_quiz_list(self, file):
         """
@@ -105,7 +131,6 @@ class Gui:
                 if line[0] == '#':
                     continue
                 elif line[0] == '!':
-                    # TODO
                     colon = line.index(":")
                     tag = line[1:colon]
                     word_pair = [ w.strip() for w in line[colon+1:].split("=")]
@@ -121,7 +146,8 @@ class Gui:
                     section = self.treestore.append(None, word_pair)
                 else:
                     word_pair = [ w.strip() for w in line.split("=") ]
-                    assert len(word_pair) == 2, 'Fileformaterror in "%s": Not exactly one "=" in line %s' % ( file, i+1 )
+                    assert len(word_pair) == 2, 'Fileformaterror in "%s": \
+                            Not exactly one "=" in line %s' % ( file, i+1 )
                     self.quizlist.append(word_pair)
                     self.treestore.append(section, word_pair)
         f.close()
@@ -141,18 +167,21 @@ class Gui:
         self.subquiz_combobox.set_active(0)
 
     def on_tag_quizquestion(self, word_paar):
-        # TODO (Only needed once we have non-vokabulary tests)
+        # TODO (Only needed once we have non-vocabulary tests)
         pass
 
     def on_tag_type(self, word_paar):
-        # TODO (Only needed once we have non-vokabulary tests)
+        # TODO (Only needed once we have non-vocabulary tests)
         pass
 
     # main_window handlers #
 
     def on_quit(self, widget):
-        # TODO Save state
-        gtk.main_quit()
+        try:
+            if isinstance(self.quiz, Weighted_Quiz):
+                self.write_score_file(self.quiz.question_score)
+        finally:
+            gtk.main_quit()
 
     def on_about_activate(self, widget):
         gtk.glade.XML(self.GLADE_FILE, "aboutdialog1", APP)
@@ -165,7 +194,7 @@ class Gui:
         chooser = gtk.FileChooserDialog("Open Quiz", None, 
                 gtk.FILE_CHOOSER_ACTION_OPEN, (gtk.STOCK_CANCEL, 
                 gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
-        chooser.set_current_folder(self.QUIZDIR_PATH)
+        chooser.set_current_folder(os.path.dirname(self.quiz_file_path))
         response = chooser.run()
         if response == gtk.RESPONSE_OK:
             self.quiz_file_path = chooser.get_filename()
@@ -196,8 +225,8 @@ class Gui:
 
 class Quiz:
     """
-    A simple randomselecting vocabulary test , with simple quiz and 
-    multible quiz
+    A simple random-selecting vocabulary test , with simple quiz and 
+    multiple quiz
     """
 
     def __init__(self, quiz_pool, ask_from=0, exam_length=15):
@@ -225,7 +254,7 @@ class Quiz:
             return True
 
     def _select_question(self):
-        "selcet next question"
+        "select next question"
         self.question = random.choice(self.quiz_pool)
 
     def _gen_multi_choices(self):
@@ -241,7 +270,7 @@ class Quiz:
     def check(self, solution):
         """
         Checks if the given solution is correct
-        and returns the coresponding boolean
+        and returns the corresponding boolean
         """
         if solution == self.question[self.answer_to]:
             if self.tries == 0:
@@ -260,7 +289,7 @@ class Quiz:
 class Weighted_Quiz(Quiz):
     """
     A quiz with weighted question selection of a vocabulary test. The more 
-    questions are answered wrong (in comparacen to the other questions the 
+    questions are answered wrong (in comparison to the other questions the 
     more often they are asked. More recent answers are weighted stronger.
 
     score is form 0 (worst) to 1 (best).
@@ -297,8 +326,8 @@ class Weighted_Quiz(Quiz):
         it was answered correctly
         """
         self.score_sum -= self.question_score[word]
-        self.question_score[word] = (self.question_score[word] * 7 
-                + correct_answered) / 8
+        self.question_score[word] = (self.question_score[word] 
+                + correct_answered) / 2
         self.score_sum += self.question_score[word]
 
     def _gen_score_sum(self):
@@ -318,6 +347,62 @@ class Weighted_Quiz(Quiz):
     def set_question_direction(self, direction):
         Quiz.set_question_direction(self, direction)
         self._gen_score_sum()
+
+class Queued_Quiz(Weighted_Quiz):
+    """ 
+    Previously not asked questions are added one-after-each-other once only a 
+    few questions still are below a certain score.
+
+    WARNING: not functionall yet
+    """
+    def __init__(self, question_pool, question_score={}, ask_from=0, 
+            exam_length=15, bad_score=.875, min_num_bad_scores=3, 
+            batch_length=5):
+        Weighted_Quiz.__init__(self, [], question_score, ask_from, exam_length)
+        self.num_bad_scores = 0
+        self.new_quiz_pool = question_pool
+        self.bad_score = bad_score
+        self.min_num_bad_scores = min_num_bad_scores
+        self.batch_length = batch_length
+
+        self._separate_scored_questions()
+
+    def _separate_scored_questions(self):
+        """
+        Move questions with a score from new_quiz_pool to quiz_pool.
+        """
+        for quiz in self.new_quiz_pool:
+            question = quiz[self.ask_from]
+            if question in self.question_score:
+                self.quiz_pool.append(question)
+                if self.question_score[question] < self.bad_score:
+                    self.num_bad_scores += 1
+            else:
+                self.new_quiz_pool.append(question)
+
+    def _update_score(self, question, correct_answered):
+        """
+        updates the score (and score_sum) of question, depending on whether
+        it was answered correctly.
+        """
+        if self.question_score[question] < self.bad_score:
+            self.num_bad_scores -= 1
+        Weighted_Quiz._update_score(self, question, correct_answered)
+        if self.question_score[question] < self.bad_scores:
+            self.num_bad_scores += 1
+
+    def _select_question(self):
+        "select next question"
+        if self.num_bad_scores < self.min_num_bad_scores:
+            _increase_quiz_pool()
+        Weighted_Quiz._select_question(self)
+
+    def _increase_quiz_pool(self, num=None):
+        "Add quizes from the new_quiz_pool to the quiz_pool"
+        if num == None:
+            num = self.batch_length
+        for i in range(num):
+            self.quiz_pool.append(self.new_quiz_pool.pop())
 
 if __name__ == "__main__":
     gui = Gui()
