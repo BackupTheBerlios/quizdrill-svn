@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2007, Adam Schmalhofer
-# Developed by Addam Schmalhofer <schmalhof@users.berlios.de>
+# Developed by Adam Schmalhofer <schmalhof@users.berlios.de>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
