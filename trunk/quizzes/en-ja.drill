@@ -2,6 +2,7 @@
 !language: 日本語=English
 
 [Hiragana]
+
 あ=a
 い=i
 う=u
@@ -60,6 +61,7 @@
 ん=n
 
 [Katakana]
+
 ア=A
 イ=I
 ウ=U
@@ -118,6 +120,7 @@
 ン=N
 
 [Numbers]
+
 ぜろ=0
 いち=1
 に=2
@@ -547,6 +550,7 @@
 
 
 [Words: Lesson 6]
+
 たべます=eat
 のみます=drink
 すいます［たばこを〜］=smoke [a cigarette]
