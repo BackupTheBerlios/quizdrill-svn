@@ -35,7 +35,7 @@ class Gui:
     GLADE_FILE = "quizdrill.glade"
     SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
     quiz_file_path = "quizes/de-fr.drill"
-    break_length = 900000   # in ms: 15min
+    break_length = 900000   # 900,000 ms: 15min
 
     def __init__(self):
         xml = gtk.glade.XML(self.GLADE_FILE, "main_window", APP)
