@@ -326,8 +326,8 @@ class Weighted_Quiz(Quiz):
         it was answered correctly
         """
         self.score_sum -= self.question_score[word]
-        self.question_score[word] = (self.question_score[word] 
-                + correct_answered) / 2
+        self.question_score[word] = self.question_score[word] * .75
+                + correct_answered * .25
         self.score_sum += self.question_score[word]
 
     def _gen_score_sum(self):
