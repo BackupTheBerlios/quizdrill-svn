@@ -2,6 +2,10 @@ About
 =====
 Quizdrill is a program to test mostly memorizing tasks to excess. It was inspired by langdrill[1], a language drill program, which itself was inspired by JavaDrill[2]. No code came from either, however the quizzes en-fr.drill, en-ja.drill, en-ja_romaji.drill and en-sv.drill are taken directly from langdrill (french.drill, japanese.drill, romaji.drill and swedish.drill).
 
+Licence
+-------
+All files (exepet the licence file GPL-2 itself) are released under the GPL: You can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. See GPL-2 for the details.
+
 Usage
 =====
 Start the program quizdrill.py. The different quizzes can be found in the quizzes folder. There is no need to install (e.g. make install etc.) and currently it is not supported either.
