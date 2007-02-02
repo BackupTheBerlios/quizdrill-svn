@@ -34,7 +34,7 @@ locale.textdomain(APP)
 class Gui:
     GLADE_FILE = "quizdrill.glade"
     SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
-    quiz_file_path = "quizes/de-fr.drill"
+    quiz_file_path = "quizzes/de-fr.drill"
     break_length = 900000   # 900,000 ms: 15min
 
     def __init__(self):
@@ -326,8 +326,8 @@ class Weighted_Quiz(Quiz):
         it was answered correctly
         """
         self.score_sum -= self.question_score[word]
-        self.question_score[word] = self.question_score[word] * .75
-                + correct_answered * .25
+        self.question_score[word] = (self.question_score[word] * 7
+                + correct_answered ) / 8
         self.score_sum += self.question_score[word]
 
     def _gen_score_sum(self):
