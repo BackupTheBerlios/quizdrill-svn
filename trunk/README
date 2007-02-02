@@ -1,6 +1,8 @@
 About
 =====
-Quizdrill is a program to test mostly memorizing tasks to excess. It was inspired by langdrill[1], a language drill program, which itself was inspired by JavaDrill[2]. No code came from either, however the quizzes en-fr.drill, en-ja.drill, en-ja_romaji.drill and en-sv.drill are taken directly from langdrill (french.drill, japanese.drill, romaji.drill and swedish.drill).
+Quizdrill is a program to test mostly memorizing tasks to excess. It was inspired by langdrill[1], a language drill program, which itself was inspired by JavaDrill[2]. No code came from either, however the quizzes en-fr.drill, en-ja.drill, en-ja_romaji.drill and en-sv.drill are taken directly from langdrill (french.drill, japanese.drill, romaji.drill and swedish.drill). Quizdrill offers multiple choice test as well as simple test (where you type the answer). As opposed to langdrill quizdrill should ask the questions depending on previous answers to make learning as efficient as possible. Note however, that a lot of work still needs to be done.
+
+Other testing programs that might be of interest to you include granule[3] AKFQuiz[4] or Pauker[5].
 
 Licence
 -------
@@ -14,7 +16,7 @@ Help needed
 ===========
 Quizdrill is a new Project and could use a lot of help. The easiest way and very appreciated is to send in your quizzes or extend the ones included. feature requests, bug reports and patches are very welcomed at the project page at berlios: http://developer.berlios.de/projects/quizdrill
 
-Questions and feedback can be sent to the mailing list[3].
+Questions and feedback can be sent to the mailing list[6].
 
 Adding new Quizzes
 ==================
@@ -33,11 +35,14 @@ and that is it. Note however, that quizdrill has a style-guideline for the quizf
 
 Project Goal
 ============
-To offer an easy and efficient way for "learning-by-testing", this includes  creating programs to do the testing (tracking the results and selecting the next question), the different tests from many different topics (vocabulary, spelling, geography, math, ...) and documentation.
+To offer an easy and efficient way for "learning-by-testing", this includes  creating programs to do the testing (tracking the results and selecting the next question), the different tests from many different topics (vocabulary, spelling, geography, math, ...) and documentation.
 
 
 Footnotes
 =========
 [1] http://storm.prohosting.com/borco/programming/langdrill.html
 [2] http://www.righto.com/java/fonts/learn.html
-[3] quizdrill-main@lists.berlios.de
+[3] http://granule.sourceforge.net
+[4] http://akfquiz.akfoerster.de/
+[5] http://sourceforge.net/projects/pauker/
+[6] quizdrill-main@lists.berlios.de
