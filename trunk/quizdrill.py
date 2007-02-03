@@ -122,7 +122,8 @@ class Gui:
         self.treestore = gtk.TreeStore(str, str)
         # Read file and add to quizlist and treestore
         f = open(file)
-        self.quizlist=[]
+        current_list = []
+        self.quiztree=[ current_list ]
         section = None
         for i, line in enumerate(f.readlines()):
             line = line.strip()
@@ -143,12 +144,17 @@ class Gui:
                     if len(word_pair) < 2:
                         word_pair.append("")
                     section = self.treestore.append(None, word_pair)
+                    current_list = []
+                    self.quiztree.append( current_list )
                 else:
                     word_pair = [ w.strip() for w in line.split("=") ]
                     assert len(word_pair) == 2, 'Fileformaterror in "%s": \
                             Not exactly one "=" in line %s' % ( file, i+1 )
-                    self.quizlist.append(word_pair)
+                    current_list.append(word_pair)
                     self.treestore.append(section, word_pair)
+        self.quizlist = self.quiztree[0]
+        for wordlist in self.quiztree[1:]:
+            self.quizlist.extend(wordlist)
         f.close()
 
     # Process "heading-tags" on reading quiz-files [see read_quiz_list(file)]
