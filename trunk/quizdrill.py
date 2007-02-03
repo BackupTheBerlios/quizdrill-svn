@@ -35,7 +35,8 @@ class Gui:
     GLADE_FILE = "quizdrill.glade"
     SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
     quiz_file_path = "quizzes/de-fr.drill"
-    break_length = 900000   # 900,000 ms: 15min
+    break_length = 900000    # 900,000 ms: 15min
+    snooze_length = 300000   # 300,000 ms: 5min -- not used yet
 
     def __init__(self):
         xml = gtk.glade.XML(self.GLADE_FILE, "main_window", APP)
@@ -56,7 +57,7 @@ class Gui:
         ### start quiz
         score = self.read_score_file()
         self.read_quiz_list(self.quiz_file_path)
-        self.quiz = Weighted_Quiz(self.quizlist, score)
+        self.quiz = Queued_Quiz(self.quizlist, score)
         self.next_question()
         ## signals
         xml.signal_autoconnect(self)
@@ -79,12 +80,10 @@ class Gui:
 
     def start_relax_time(self):
         self.main_window.iconify()
-        print "relaxing time..."
         gobject.timeout_add(self.break_length, self.on_end_relax_time)
 
     def on_end_relax_time(self):
         self.main_window.deiconify()
-        print "stop relaxing..."
 
     # read/write files
 
@@ -228,18 +227,17 @@ class Quiz:
     A simple random-selecting vocabulary test , with simple quiz and 
     multiple quiz
     """
+    DEFAULT_MULTICHOICE_LEN = 7
+    quiz_pool = []
 
     def __init__(self, quiz_pool, ask_from=0, exam_length=15):
         self.answered = 0
         self.correct_answered = 0
         self.exam_length = exam_length
         self.session_length = exam_length
-        self.multichoice_len = 7
         self.ask_from = ask_from
         self.answer_to = 1 - ask_from
-        self.quiz_pool = quiz_pool
-        if len(self.quiz_pool) < self.multichoice_len:
-            self.multichoice_len = len(self.quiz_pool)
+        self.add_quizzes(quiz_pool)
 
     def next(self):
         # Generate new Test
@@ -286,6 +284,13 @@ class Quiz:
             self.ask_from = direction
             self.answer_to = 1 - direction
 
+    def add_quizzes(self, new_quizzes):
+        self.quiz_pool.extend(new_quizzes)
+        if len(self.quiz_pool) < self.DEFAULT_MULTICHOICE_LEN:
+            self.multichoice_len = len(self.quiz_pool)
+        else:
+            self.multichoice_len = self.DEFAULT_MULTICHOICE_LEN
+
 class Weighted_Quiz(Quiz):
     """
     A quiz with weighted question selection of a vocabulary test. The more 
@@ -294,14 +299,15 @@ class Weighted_Quiz(Quiz):
 
     score is form 0 (worst) to 1 (best).
 
-    The score is recorded by question as non-vocabulary answers may be 
-    identical.
+    The score is recorded by question (as opposed to by answer) as 
+    non-vocabulary answers may be identical.
     """
 
     def __init__(self, quiz_pool, 
             question_score={}, ask_from=0, exam_length=15):
-        Quiz.__init__(self, quiz_pool, ask_from, exam_length)
         self.question_score = question_score
+        self.score_sum = 0.
+        Quiz.__init__(self, quiz_pool, ask_from, exam_length)
         self._gen_score_sum()
 
     def _select_question(self):
@@ -326,59 +332,49 @@ class Weighted_Quiz(Quiz):
         it was answered correctly
         """
         self.score_sum -= self.question_score[word]
-        self.question_score[word] = (self.question_score[word] * 7
-                + correct_answered ) / 8
+        self.question_score[word] = (self.question_score[word] * 3
+                + correct_answered ) / 4
         self.score_sum += self.question_score[word]
 
-    def _gen_score_sum(self):
+    def _gen_score_sum(self, quizzes=None):
         """ 
         Creates the sum of all sores in quiz_pool in the current question 
         direction and fills all unknown scores with 0
         """
-        self.score_sum = 0.
-        for question in self.quiz_pool:
+        if quizzes == None:
+            self.score_sum = 0.
+            quizzes = self.quiz_pool
+        for question in quizzes:
             if question[self.ask_from] in self.question_score:
-                last_score = self.question_score[question[self.ask_from]]
-                self.score_sum += last_score
+                least_score = self.question_score[question[self.ask_from]]
+                self.score_sum += least_score
             else:
-                last_score = 0.
+                least_score = 0.
                 self.question_score[question[self.ask_from]] = 0.
 
     def set_question_direction(self, direction):
         Quiz.set_question_direction(self, direction)
         self._gen_score_sum()
 
+    def add_quizzes(self, new_quizzes):
+        Quiz.add_quizzes(self, new_quizzes)
+        self._gen_score_sum(new_quizzes)
+
 class Queued_Quiz(Weighted_Quiz):
     """ 
     Previously not asked questions are added one-after-each-other once only a 
     few questions still are below a certain score.
-
-    WARNING: not functionall yet
     """
     def __init__(self, question_pool, question_score={}, ask_from=0, 
             exam_length=15, bad_score=.875, min_num_bad_scores=3, 
             batch_length=5):
-        Weighted_Quiz.__init__(self, [], question_score, ask_from, exam_length)
+        self.new_quiz_pool = []
         self.num_bad_scores = 0
-        self.new_quiz_pool = question_pool
         self.bad_score = bad_score
         self.min_num_bad_scores = min_num_bad_scores
         self.batch_length = batch_length
-
-        self._separate_scored_questions()
-
-    def _separate_scored_questions(self):
-        """
-        Move questions with a score from new_quiz_pool to quiz_pool.
-        """
-        for quiz in self.new_quiz_pool:
-            question = quiz[self.ask_from]
-            if question in self.question_score:
-                self.quiz_pool.append(question)
-                if self.question_score[question] < self.bad_score:
-                    self.num_bad_scores += 1
-            else:
-                self.new_quiz_pool.append(question)
+        Weighted_Quiz.__init__(self, [], question_score, ask_from, exam_length)
+        self.add_quizzes(question_pool)
 
     def _update_score(self, question, correct_answered):
         """
@@ -388,21 +384,40 @@ class Queued_Quiz(Weighted_Quiz):
         if self.question_score[question] < self.bad_score:
             self.num_bad_scores -= 1
         Weighted_Quiz._update_score(self, question, correct_answered)
-        if self.question_score[question] < self.bad_scores:
+        if self.question_score[question] < self.bad_score:
             self.num_bad_scores += 1
 
     def _select_question(self):
         "select next question"
         if self.num_bad_scores < self.min_num_bad_scores:
-            _increase_quiz_pool()
+            self._increase_quiz_pool()
         Weighted_Quiz._select_question(self)
 
     def _increase_quiz_pool(self, num=None):
-        "Add quizes from the new_quiz_pool to the quiz_pool"
+        "Add quizzes from the new_quiz_pool to the quiz_pool"
         if num == None:
             num = self.batch_length
+        new_quizzes = []
         for i in range(num):
-            self.quiz_pool.append(self.new_quiz_pool.pop())
+            new_quizzes.append(self.new_quiz_pool.pop())
+        Weighted_Quiz.add_quizzes(self, new_quizzes)
+
+    def add_quizzes(self, new_quizzes):
+        """
+        Add quizzes with score to quiz_pool; without to new_quiz_pool
+        """
+        scored_quizzes = []
+        un_scored_quizzes = []
+        for quiz in new_quizzes:
+            question = quiz[self.ask_from]
+            if question in self.question_score:
+                scored_quizzes.append(quiz)
+                if self.question_score[question] < self.bad_score:
+                    self.num_bad_scores += 1
+            else:
+                un_scored_quizzes.append(quiz)
+        self.new_quiz_pool.extend(un_scored_quizzes)
+        Weighted_Quiz.add_quizzes(self, scored_quizzes)
 
 if __name__ == "__main__":
     gui = Gui()
