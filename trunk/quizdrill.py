@@ -107,7 +107,7 @@ class Gui:
         f.close()
 
     def _get_score_file(self, quiz_file, type):
-        return self.SCORE_PATH + os.path.dirname(quiz_file) + \
+        return self.SCORE_PATH + os.path.basename(quiz_file) + \
                 '_' + type + ".score"
 
     def read_quiz_list(self, file):
