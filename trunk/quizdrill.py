@@ -183,7 +183,8 @@ class Gui:
             gtk.main_quit()
 
     def on_main_window_window_state_event(self, widget, event):
-        print widget.iconify_initially
+        # TODO: support snooze
+        pass
 
     def on_about_activate(self, widget):
         gtk.glade.XML(self.GLADE_FILE, "aboutdialog1", APP)
