@@ -182,6 +182,9 @@ class Gui:
         finally:
             gtk.main_quit()
 
+    def on_main_window_window_state_event(self, widget, event):
+        print widget.iconify_initially
+
     def on_about_activate(self, widget):
         gtk.glade.XML(self.GLADE_FILE, "aboutdialog1", APP)
 
@@ -399,7 +402,7 @@ class Queued_Quiz(Weighted_Quiz):
             num = self.batch_length
         new_quizzes = []
         for i in range(num):
-            new_quizzes.append(self.new_quiz_pool.pop())
+            new_quizzes.append(self.new_quiz_pool.pop(0))
         self.num_bad_scores += num
         Weighted_Quiz.add_quizzes(self, new_quizzes)
 
