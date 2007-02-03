@@ -400,6 +400,7 @@ class Queued_Quiz(Weighted_Quiz):
         new_quizzes = []
         for i in range(num):
             new_quizzes.append(self.new_quiz_pool.pop())
+        self.num_bad_scores += num
         Weighted_Quiz.add_quizzes(self, new_quizzes)
 
     def add_quizzes(self, new_quizzes):
@@ -415,7 +416,6 @@ class Queued_Quiz(Weighted_Quiz):
                 if self.question_score[question] < self.bad_score:
                     self.num_bad_scores += 1
             else:
-                self.num_bad_scores += 1
                 un_scored_quizzes.append(quiz)
         self.new_quiz_pool.extend(un_scored_quizzes)
         Weighted_Quiz.add_quizzes(self, scored_quizzes)
