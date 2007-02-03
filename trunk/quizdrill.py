@@ -366,7 +366,7 @@ class Queued_Quiz(Weighted_Quiz):
     few questions still are below a certain score.
     """
     def __init__(self, question_pool, question_score={}, ask_from=0, 
-            exam_length=15, bad_score=.875, min_num_bad_scores=3, 
+            exam_length=15, bad_score=.6, min_num_bad_scores=3, 
             batch_length=5):
         self.new_quiz_pool = []
         self.num_bad_scores = 0
@@ -415,6 +415,7 @@ class Queued_Quiz(Weighted_Quiz):
                 if self.question_score[question] < self.bad_score:
                     self.num_bad_scores += 1
             else:
+                self.num_bad_scores += 1
                 un_scored_quizzes.append(quiz)
         self.new_quiz_pool.extend(un_scored_quizzes)
         Weighted_Quiz.add_quizzes(self, scored_quizzes)
