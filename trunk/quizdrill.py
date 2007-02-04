@@ -24,12 +24,16 @@ import gobject, gtk, gtk.glade
 import random
 import os, os.path
 import cPickle as pickle
-# i18n for glade
+# i18n
+import gettext
+_ = gettext.gettext
 import locale
 APP = "quizdrill"
 DIR = "locale"
 locale.bindtextdomain(APP, DIR)
 locale.textdomain(APP)
+gettext.bindtextdomain(APP, DIR)
+gettext.textdomain(APP)
 
 class Gui:
     GLADE_FILE = "quizdrill.glade"
@@ -145,7 +149,7 @@ class Gui:
                     if len(word_pair) < 2:
                         word_pair.append("")
                     column = []; column.extend(word_pair)
-                    column.append(None)
+                    column.append(True)
                     section = self.treestore.append(None, column)
                     current_list = []
                     self.quiztree.append( current_list )
@@ -155,7 +159,7 @@ class Gui:
                             Not exactly one "=" in line %s' % ( file, i+1 )
                     current_list.append(word_pair)
                     column = []; column.extend(word_pair)
-                    column.append(None)
+                    column.append(True)
                     self.treestore.append(section, column)
         self.quizlist = self.quiztree[0]
         for wordlist in self.quiztree[1:]:
@@ -172,7 +176,7 @@ class Gui:
         # TODO: toggler
         toggler = gtk.CellRendererToggle()
         toggler.connect( 'toggled', self.on_treeview_toogled )
-        self.tvcolumn = gtk.TreeViewColumn("", toggler)
+        self.tvcolumn = gtk.TreeViewColumn(_("test"), toggler)
         self.tvcolumn.add_attribute(toggler, "active", 2)
         #self.word_treeview.append_column(self.tvcolumn)
         self.word_treeview.set_model(self.treestore)
