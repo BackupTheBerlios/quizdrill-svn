@@ -112,7 +112,6 @@ die Ente=le canard
 das Mittagessen=le déjeuner
 der Frühstück=le petit-déjeuner
 
-
 [Frage=question]
 
 wie=comment
@@ -171,6 +170,10 @@ die Woche=la semaine
 das Geschenk=le cadeau
 das Schiff=le bateau
 der Hut=le chapeau
+die Hörbücher (s)=les pièces radiophoniques (f)
+der Handschuh=le gant
+der Einkaufszentrum=la grande surface
+die Überlandlinie=le cars
 
 genug=assez
 zwischen=entre
@@ -182,6 +185,13 @@ besonders=tellement
 nächste=prochaine
 letzte=dernière
 letzter=dernier
+vor (zeitlich)=avant
+vor (Zeitdauer)=il y a
+vor (ortsbezogen)=devant
+deshalb=c'est pourquoi
+gratis=gratuit(e)
+besser=meilleur(e)
+erholsam=reposant(e)
 
 [Verben=verbe]
 
@@ -237,6 +247,12 @@ küssen=embraisser
 probieren=goûter
 spucken=cracher
 übergeben=vomir
+ausleihen=emprunter
+verleihen=prêter
+sich erholen=se reposer
+warten=attendre
+zeigen=montrer
+
 
 [Körper=corps]
 
