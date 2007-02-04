@@ -119,7 +119,8 @@ class Gui:
                 "quizquestion" : self.on_tag_quizquestion, 
                 "type" : self.on_tag_type }
         # Prepare TreeView
-        self.treestore = gtk.TreeStore(str, str)
+        self.treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING,
+                gobject.TYPE_BOOLEAN )
         # Read file and add to quizlist and treestore
         f = open(file)
         current_list = []
@@ -143,7 +144,9 @@ class Gui:
                     word_pair = [ w.strip() for w in line.split("=", 1) ]
                     if len(word_pair) < 2:
                         word_pair.append("")
-                    section = self.treestore.append(None, word_pair)
+                    column = []; column.extend(word_pair)
+                    column.append(None)
+                    section = self.treestore.append(None, column)
                     current_list = []
                     self.quiztree.append( current_list )
                 else:
@@ -151,7 +154,9 @@ class Gui:
                     assert len(word_pair) == 2, 'Fileformaterror in "%s": \
                             Not exactly one "=" in line %s' % ( file, i+1 )
                     current_list.append(word_pair)
-                    self.treestore.append(section, word_pair)
+                    column = []; column.extend(word_pair)
+                    column.append(None)
+                    self.treestore.append(section, column)
         self.quizlist = self.quiztree[0]
         for wordlist in self.quiztree[1:]:
             self.quizlist.extend(wordlist)
@@ -164,12 +169,22 @@ class Gui:
             self.tvcolumn = gtk.TreeViewColumn(title,
                     gtk.CellRendererText(), text=i)
             self.word_treeview.append_column(self.tvcolumn)
+        # TODO: toggler
+        toggler = gtk.CellRendererToggle()
+        toggler.connect( 'toggled', self.on_treeview_toogled )
+        self.tvcolumn = gtk.TreeViewColumn("", toggler)
+        self.tvcolumn.add_attribute(toggler, "active", 2)
+        #self.word_treeview.append_column(self.tvcolumn)
         self.word_treeview.set_model(self.treestore)
         self.subquiz_combobox.append_text(
                 word_pair[0] + " → " + word_pair[1])
         self.subquiz_combobox.append_text(
                 word_pair[1] + " → " + word_pair[0])
         self.subquiz_combobox.set_active(0)
+
+    def on_treeview_toogled(self, cell, path ):
+        """ toggle selected CellRendererToggle Row """
+        self.treestore[path][2] = not self.treestore[path][2]
 
     def on_tag_quizquestion(self, word_paar):
         # TODO (Only needed once we have non-vocabulary tests)
