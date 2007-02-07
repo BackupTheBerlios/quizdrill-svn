@@ -41,7 +41,6 @@ class Gui:
     quiz_file_path = "quizzes/de-fr.drill"
     break_length = 900000    # 900,000 ms: 15min
     snooze_length = 300000   # 300,000 ms:  5min
-    settings_changed = False
     timer_id = 0
 
     def __init__(self):
@@ -205,13 +204,16 @@ class Gui:
                 word_pair[1] + " → " + word_pair[0])
         self.subquiz_combobox.set_active(0)
 
-    def on_tag_quizquestion(self, word_paar):
+    def on_tag_quizquestion(self, word_pair):
         # TODO (Only needed once we have non-vocabulary tests)
         pass
 
-    def on_tag_type(self, word_paar):
-        # TODO (Only needed once we have non-vocabulary tests)
-        pass
+    def on_tag_type(self, word_pair):
+        if word_pair[0] == "vocabulary":
+            self.subquiz_combobox.show()
+            return
+        self.subquiz_combobox.hide()
+        print "Warning: unknown quiz type '%s'" % word_pair[0]
 
     # main_window handlers #
 
@@ -283,7 +285,7 @@ class Gui:
 
 class Quiz:
     """
-    A simple random-selecting vocabulary test , with simple quiz and 
+    A simple random-selecting vocabulary test, with simple quiz and 
     multiple quiz
     """
     DEFAULT_MULTICHOICE_LEN = 7
