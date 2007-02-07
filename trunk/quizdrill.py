@@ -27,7 +27,7 @@ import cPickle as pickle
 # i18n
 import locale
 import gettext
-from gettext import gettext as _
+_ = gettext.gettext
 APP = "quizdrill"
 DIR = "locale"
 locale.bindtextdomain(APP, DIR)
