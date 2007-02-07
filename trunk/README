@@ -8,6 +8,11 @@ Licence
 -------
 All files (exepet the licence file GPL-2 itself) are released under the GPL: You can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. See GPL-2 for the details.
 
+Dependencies
+------------
+* python (tested with 2.4)
+* pygtk  (tested with 2.8.6)
+
 Usage
 -----
 Start the program quizdrill.py. The different quizzes can be found in the quizzes folder. There is no need to install (e.g. make install etc.) and currently it is not supported either.
