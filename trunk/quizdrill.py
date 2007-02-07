@@ -182,6 +182,9 @@ class Gui:
             self.quizlist.extend(wordlist)
         f.close()
 
+    def get_quiz_from_treeview(self, row):
+        return [ row[0], row[1] ]
+
     # Process "heading-tags" on reading quiz-files [see read_quiz_list(file)]
 
     def on_tag_language(self, word_pair):
@@ -193,7 +196,7 @@ class Gui:
         toggler = gtk.CellRendererToggle()
         toggler.connect( 'toggled', self.on_treeview_toogled )
         self.tvcolumn = gtk.TreeViewColumn(_("test"), toggler)
-        #self.tvcolumn.add_attribute(toggler, "active", 2)
+        self.tvcolumn.add_attribute(toggler, "active", 2)
         self.word_treeview.append_column(self.tvcolumn)
         self.word_treeview.set_model(self.treestore)
         self.subquiz_combobox.append_text(
@@ -201,13 +204,6 @@ class Gui:
         self.subquiz_combobox.append_text(
                 word_pair[1] + " → " + word_pair[0])
         self.subquiz_combobox.set_active(0)
-
-    def on_treeview_toogled(self, cell, path ):
-        """ toggle selected CellRendererToggle Row """
-        self.settings_changed = True
-        self.treestore[path][2] = not self.treestore[path][2]
-        for child in self.treestore[path].iterchildren():
-            child[2] = self.treestore[path][2]
 
     def on_tag_quizquestion(self, word_paar):
         # TODO (Only needed once we have non-vocabulary tests)
@@ -219,6 +215,19 @@ class Gui:
 
     # main_window handlers #
 
+    def on_treeview_toogled(self, cell, path ):
+        """ toggle selected CellRendererToggle Row """
+        toggled_quizzes = []
+        self.treestore[path][2] = not self.treestore[path][2]
+        for child in self.treestore[path].iterchildren():
+            if child[2] != self.treestore[path][2]:
+                child[2] = self.treestore[path][2]
+                toggled_quizzes.append(self.get_quiz_from_treeview(child))
+        if self.treestore[path][2]:
+            self.quiz.add_quizzes(toggled_quizzes)
+        else:
+            self.quiz.remove_quizzes(toggled_quizzes)
+
     def on_quit(self, widget):
         try:
             if isinstance(self.quiz, Weighted_Quiz):
@@ -229,7 +238,7 @@ class Gui:
     def on_main_window_window_state_event(self, widget, event):
         """ Snooze when minimized """
         if event.new_window_state.value_nicks == ['iconified'] and \
-                self.timer_id == 0
+                self.timer_id == 0:
             self.start_relax_time(self.snooze_length)
         elif self.timer_id:
             gobject.source_remove(self.timer_id)
@@ -336,6 +345,14 @@ class Quiz:
 
     def add_quizzes(self, new_quizzes):
         self.quiz_pool.extend(new_quizzes)
+        self._refit_multichoice_len()
+
+    def remove_quizzes(self, rm_quizzes):
+        for quiz in rm_quizzes:
+            self.quiz_pool.remove(quiz)
+        self._refit_multichoice_len()
+
+    def _refit_multichoice_len(self):
         if len(self.quiz_pool) < self.DEFAULT_MULTICHOICE_LEN:
             self.multichoice_len = len(self.quiz_pool)
         else:
@@ -358,7 +375,7 @@ class Weighted_Quiz(Quiz):
         self.question_score = question_score
         self.score_sum = 0.
         Quiz.__init__(self, quiz_pool, ask_from, exam_length)
-        self._gen_score_sum()
+        self.score_sum = self._gen_score_sum()
 
     def _select_question(self):
         "selcet next question"
@@ -391,24 +408,28 @@ class Weighted_Quiz(Quiz):
         Creates the sum of all sores in quiz_pool in the current question 
         direction and fills all unknown scores with 0
         """
+        score_sum = 0.
         if quizzes == None:
-            self.score_sum = 0.
             quizzes = self.quiz_pool
         for question in quizzes:
             if question[self.ask_from] in self.question_score:
-                least_score = self.question_score[question[self.ask_from]]
-                self.score_sum += least_score
+                score_sum += self.question_score[question[self.ask_from]]
             else:
                 least_score = 0.
                 self.question_score[question[self.ask_from]] = 0.
+        return score_sum
 
     def set_question_direction(self, direction):
         Quiz.set_question_direction(self, direction)
-        self._gen_score_sum()
+        self.score_sum = self._gen_score_sum()
 
     def add_quizzes(self, new_quizzes):
         Quiz.add_quizzes(self, new_quizzes)
-        self._gen_score_sum(new_quizzes)
+        self.score_sum += self._gen_score_sum(new_quizzes)
+
+    def remove_quizzes(self, rm_quizzes):
+        Quiz.remove_quizzes(self, rm_quizzes)
+        self.score_sum -= self._gen_score_sum(rm_quizzes)
 
 class Queued_Quiz(Weighted_Quiz):
     """ 
@@ -449,7 +470,7 @@ class Queued_Quiz(Weighted_Quiz):
         if num == None:
             num = self.batch_length
         new_quizzes = []
-        for i in range(num):
+        for i in range(min(num, len(self.new_quiz_pool))):
             new_quizzes.append(self.new_quiz_pool.pop(0))
         self.num_bad_scores += num
         Weighted_Quiz.add_quizzes(self, new_quizzes)
@@ -470,12 +491,25 @@ class Queued_Quiz(Weighted_Quiz):
                 un_scored_quizzes.append(quiz)
         self.new_quiz_pool.extend(un_scored_quizzes)
         Weighted_Quiz.add_quizzes(self, scored_quizzes)
-        # Make sure not too few questions are in the quiz_pool
-        num_missing = min( len(scored_quizzes), 
-                self.min_question_num - len(un_scored_quizzes) )
+        self._insure_min_quiz_num()
+
+    def _insure_min_quiz_num(self):
+        """ Make sure not too few questions are in the quiz_pool """
+        num_missing = min( len(self.new_quiz_pool),
+                self.min_question_num - len(self.quiz_pool) )
         if num_missing > 0:
             self._increase_quiz_pool(num_missing)
 
+    def remove_quizzes(self, rm_quizzes):
+        rm_scored_quizzes = []
+        for quiz in rm_quizzes:
+            try:
+                self.new_quiz_pool.remove(quiz)
+            except:
+                rm_scored_quizzes.append(quiz)
+        Weighted_Quiz.remove_quizzes(self, rm_scored_quizzes)
+        self._insure_min_quiz_num()
+                
 if __name__ == "__main__":
     gui = Gui()
     gtk.main()

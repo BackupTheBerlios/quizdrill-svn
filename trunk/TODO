@@ -19,7 +19,6 @@ Program
 * improve UI
     * give feedback on Simple Quiz (e.g. misspelled words coloured red)
     * support system-tray (notify when breaks over)
-    * only test from selected categories
     * accessibility support
     * switch treeview colons, when test direction changes
     * easy edit of quizfile (open-in-editor or edit directly + save)
