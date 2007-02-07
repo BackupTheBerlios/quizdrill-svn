@@ -142,8 +142,7 @@ class Gui:
                 gobject.TYPE_BOOLEAN )
         # Read file and add to quizlist and treestore
         f = open(file)
-        current_list = []
-        self.quiztree=[ current_list ]
+        self.quizlist = []
         section = None
         for i, line in enumerate(f.readlines()):
             line = line.strip()
@@ -166,19 +165,22 @@ class Gui:
                     column = []; column.extend(word_pair)
                     column.append(True)
                     section = self.treestore.append(None, column)
-                    current_list = []
-                    self.quiztree.append( current_list )
                 else:
                     word_pair = [ w.strip() for w in line.split("=") ]
                     assert len(word_pair) == 2, 'Fileformaterror in "%s": \
                             Not exactly one "=" in line %s' % ( file, i+1 )
-                    current_list.append(word_pair)
+                    self.quizlist.append(word_pair)
                     column = []; column.extend(word_pair)
                     column.append(True)
                     self.treestore.append(section, column)
-        self.quizlist = self.quiztree[0]
-        for wordlist in self.quiztree[1:]:
-            self.quizlist.extend(wordlist)
+        # toggler
+        toggler = gtk.CellRendererToggle()
+        toggler.connect( 'toggled', self.on_treeview_toogled )
+        self.tvcolumn = gtk.TreeViewColumn(_("test"), toggler)
+        self.tvcolumn.add_attribute(toggler, "active", 2)
+        self.word_treeview.append_column(self.tvcolumn)
+        self.word_treeview.set_model(self.treestore)
+        #
         f.close()
 
     def get_quiz_from_treeview(self, row):
@@ -191,13 +193,6 @@ class Gui:
             self.tvcolumn = gtk.TreeViewColumn(title,
                     gtk.CellRendererText(), text=i)
             self.word_treeview.append_column(self.tvcolumn)
-        # TODO: toggler
-        toggler = gtk.CellRendererToggle()
-        toggler.connect( 'toggled', self.on_treeview_toogled )
-        self.tvcolumn = gtk.TreeViewColumn(_("test"), toggler)
-        self.tvcolumn.add_attribute(toggler, "active", 2)
-        self.word_treeview.append_column(self.tvcolumn)
-        self.word_treeview.set_model(self.treestore)
         self.subquiz_combobox.append_text(
                 word_pair[0] + " → " + word_pair[1])
         self.subquiz_combobox.append_text(
