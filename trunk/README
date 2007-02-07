@@ -9,8 +9,10 @@ Licence
 All files (exepet the licence file GPL-2 itself) are released under the GPL: You can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. See GPL-2 for the details.
 
 Usage
-=====
+-----
 Start the program quizdrill.py. The different quizzes can be found in the quizzes folder. There is no need to install (e.g. make install etc.) and currently it is not supported either.
+
+Quizdrill is designed to really drill you while you are working on the computer. After you answered some questions, it will minimize (iconify) and wait until your break is over (15min). You can however minimize it at any time and continue later. It will however unminimize to remind you (after 5min).
 
 Help needed
 ===========
