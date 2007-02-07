@@ -41,6 +41,7 @@ class Gui:
     quiz_file_path = "quizzes/de-fr.drill"
     break_length = 900000    # 900,000 ms: 15min
     snooze_length = 300000   # 300,000 ms: 5min -- not used yet
+    settings_changed = False
 
     def __init__(self):
         xml = gtk.glade.XML(self.GLADE_FILE, "main_window", APP)
@@ -59,12 +60,17 @@ class Gui:
         self.progressbar1 = gw("progressbar1")
         self.subquiz_combobox = gw("subquiz_combobox")
         ### start quiz
+        self.generate_quiz()
+        ## signals
+        xml.signal_autoconnect(self)
+
+    def generate_quiz(self, quiz_file_path=None):
+        if quiz_file_path != None:
+            self.quiz_file_path = quiz_file_path
         score = self.read_score_file()
         self.read_quiz_list(self.quiz_file_path)
         self.quiz = Queued_Quiz(self.quizlist, score)
         self.next_question()
-        ## signals
-        xml.signal_autoconnect(self)
 
     def next_question(self):
         if not self.quiz.next():
@@ -117,7 +123,7 @@ class Gui:
     def read_quiz_list(self, file):
         """
         Reads a .drill-file and builds a quizlist,
-        TODO: a TreeStore and set it in word_treeview
+        TODO: a TreeStore and set it in word_treeview
         """
         tag_dict = { "language" : self.on_tag_language, 
                 "quizquestion" : self.on_tag_quizquestion, 
@@ -177,8 +183,8 @@ class Gui:
         toggler = gtk.CellRendererToggle()
         toggler.connect( 'toggled', self.on_treeview_toogled )
         self.tvcolumn = gtk.TreeViewColumn(_("test"), toggler)
-        self.tvcolumn.add_attribute(toggler, "active", 2)
-        #self.word_treeview.append_column(self.tvcolumn)
+        #self.tvcolumn.add_attribute(toggler, "active", 2)
+        self.word_treeview.append_column(self.tvcolumn)
         self.word_treeview.set_model(self.treestore)
         self.subquiz_combobox.append_text(
                 word_pair[0] + " → " + word_pair[1])
@@ -188,7 +194,10 @@ class Gui:
 
     def on_treeview_toogled(self, cell, path ):
         """ toggle selected CellRendererToggle Row """
+        self.settings_changed = True
         self.treestore[path][2] = not self.treestore[path][2]
+        for child in self.treestore[path].iterchildren():
+            child[2] = self.treestore[path][2]
 
     def on_tag_quizquestion(self, word_paar):
         # TODO (Only needed once we have non-vocabulary tests)
@@ -225,10 +234,7 @@ class Gui:
         chooser.set_current_folder(os.path.dirname(self.quiz_file_path))
         response = chooser.run()
         if response == gtk.RESPONSE_OK:
-            self.quiz_file_path = chooser.get_filename()
-            self.read_quiz_list(self.quiz_file_path())
-            self.quiz = Weighted_Quiz(self.quizlist)
-            self.next_question()
+            self.generate_quiz(chooser.get_filename())
         chooser.destroy()
 
     def on_simple_question_button_clicked(self, widget, data=None):
@@ -273,7 +279,7 @@ class Quiz:
         self.tries = 0
         self._select_question()
         self.multi_choices = self._gen_multi_choices()
-        # Time for relaxing ? 
+        # Time for relaxing ?
         if self.answered == self.session_length:
             self.session_length += self.exam_length
             return False
@@ -357,7 +363,7 @@ class Weighted_Quiz(Quiz):
 
     def _update_score(self, word, correct_answered):
         """
-        updates the score (and score_sum) of word, depending on whether
+        updates the score (and score_sum) of word, depending on whether
         it was answered correctly
         """
         self.score_sum -= self.question_score[word]
@@ -396,18 +402,19 @@ class Queued_Quiz(Weighted_Quiz):
     """
     def __init__(self, question_pool, question_score={}, ask_from=0, 
             exam_length=15, bad_score=.6, min_num_bad_scores=3, 
-            batch_length=5):
+            min_question_num=20, batch_length=5):
         self.new_quiz_pool = []
         self.num_bad_scores = 0
         self.bad_score = bad_score
         self.min_num_bad_scores = min_num_bad_scores
+        self.min_question_num = min_question_num
         self.batch_length = batch_length
         Weighted_Quiz.__init__(self, [], question_score, ask_from, exam_length)
         self.add_quizzes(question_pool)
 
     def _update_score(self, question, correct_answered):
         """
-        updates the score (and score_sum) of question, depending on whether
+        updates the score (and score_sum) of question, depending on whether
         it was answered correctly.
         """
         if self.question_score[question] < self.bad_score:
@@ -448,6 +455,11 @@ class Queued_Quiz(Weighted_Quiz):
                 un_scored_quizzes.append(quiz)
         self.new_quiz_pool.extend(un_scored_quizzes)
         Weighted_Quiz.add_quizzes(self, scored_quizzes)
+        # Make sure not too few questions are in the quiz_pool
+        num_missing = min( len(scored_quizzes), 
+                self.min_question_num - len(un_scored_quizzes) )
+        if num_missing > 0:
+            self._increase_quiz_pool(num_missing)
 
 if __name__ == "__main__":
     gui = Gui()
