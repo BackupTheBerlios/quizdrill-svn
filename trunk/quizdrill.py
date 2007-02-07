@@ -25,8 +25,7 @@ import random
 import os, os.path
 import cPickle as pickle
 # i18n
-import gettext
-_ = gettext.gettext
+from gettext import gettext as _
 import locale
 APP = "quizdrill"
 DIR = "locale"
