@@ -40,8 +40,9 @@ class Gui:
     SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
     quiz_file_path = "quizzes/de-fr.drill"
     break_length = 900000    # 900,000 ms: 15min
-    snooze_length = 300000   # 300,000 ms: 5min -- not used yet
+    snooze_length = 300000   # 300,000 ms:  5min
     settings_changed = False
+    timer_id = 0
 
     def __init__(self):
         xml = gtk.glade.XML(self.GLADE_FILE, "main_window", APP)
@@ -74,7 +75,7 @@ class Gui:
 
     def next_question(self):
         if not self.quiz.next():
-            self.start_relax_time()
+            self.start_relax_time(self.break_length)
         self.simple_question_label.set_text(
                 self.quiz.question[self.quiz.ask_from])
         self.multi_question_label.set_text(
@@ -88,12 +89,21 @@ class Gui:
             button.set_label(text)
             button.set_sensitive(True)
 
-    def start_relax_time(self):
+    def start_relax_time(self, break_length):
+        """
+        Iconify window as a break and deiconify it when it's over
+
+        Note: There is a race condition. However this should be harmless
+        """
+        if self.timer_id:
+            gobject.source_remove(self.timer_id)
         self.main_window.iconify()
-        gobject.timeout_add(self.break_length, self.on_end_relax_time)
+        self.timer_id = gobject.timeout_add(break_length, 
+                self.on_end_relax_time)
 
     def on_end_relax_time(self):
         self.main_window.deiconify()
+        self.timer_id = 0
 
     # read/write files
 
@@ -217,8 +227,9 @@ class Gui:
             gtk.main_quit()
 
     def on_main_window_window_state_event(self, widget, event):
-        # TODO: support snooze
-        pass
+        """ Snooze when minimized """
+        if event.new_window_state.value_nicks == ['iconified']:
+            self.start_relax_time(self.snooze_length)
 
     def on_about_activate(self, widget):
         gtk.glade.XML(self.GLADE_FILE, "aboutdialog1", APP)
