@@ -235,9 +235,10 @@ class Gui:
     def on_main_window_window_state_event(self, widget, event):
         """ Snooze when minimized """
         if event.new_window_state.value_nicks == ['iconified'] and \
-                self.timer_id == 0:
+                not self.timer_id:
             self.start_relax_time(self.snooze_length)
-        elif self.timer_id:
+        elif not event.new_window_state.value_nicks.count(['iconified']) \
+                and self.timer_id:
             gobject.source_remove(self.timer_id)
             self.timer_id = 0
 
