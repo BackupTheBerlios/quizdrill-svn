@@ -88,7 +88,7 @@ class Gui:
             button.set_label(text)
             button.set_sensitive(True)
 
-    def start_relax_time(self, break_length):
+    def start_relax_time(self, break_length, minimize=True):
         """
         Iconify window as a break and deiconify it when it's over
 
@@ -96,7 +96,8 @@ class Gui:
         """
         if self.timer_id:
             gobject.source_remove(self.timer_id)
-        self.main_window.iconify()
+        if minimize:
+            self.main_window.iconify()
         self.timer_id = gobject.timeout_add(break_length, 
                 self.on_end_relax_time)
 
@@ -234,10 +235,10 @@ class Gui:
 
     def on_main_window_window_state_event(self, widget, event):
         """ Snooze when minimized """
-        if event.new_window_state.value_nicks == ['iconified'] and \
+        if 'iconified' in event.new_window_state.value_nicks and \
                 not self.timer_id:
-            self.start_relax_time(self.snooze_length)
-        elif event.new_window_state.value_nicks != ['iconified'] \
+            self.start_relax_time(self.snooze_length, False)
+        elif not 'iconified' in event.new_window_state.value_nicks \
                 and self.timer_id:
             gobject.source_remove(self.timer_id)
             self.timer_id = 0
