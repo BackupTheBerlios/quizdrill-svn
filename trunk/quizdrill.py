@@ -237,7 +237,7 @@ class Gui:
         if event.new_window_state.value_nicks == ['iconified'] and \
                 not self.timer_id:
             self.start_relax_time(self.snooze_length)
-        elif not event.new_window_state.value_nicks.count(['iconified']) \
+        elif event.new_window_state.value_nicks != ['iconified'] \
                 and self.timer_id:
             gobject.source_remove(self.timer_id)
             self.timer_id = 0
