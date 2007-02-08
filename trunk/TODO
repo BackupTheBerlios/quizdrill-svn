@@ -12,10 +12,8 @@ Program
             * dictating (spelling)
     * additional learning support
         * (better) selection of next quiz for the learning strategy
-            * save/reload this state
         * support learning strategies: e.g. Mnemonic[1] 
         * word said after correct answer on vocabulary tests
-    * testing only a given category of a test
 * improve UI
     * give feedback on Simple Quiz (e.g. misspelled words coloured red)
     * support system-tray (notify when breaks over)
