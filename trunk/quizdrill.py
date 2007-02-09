@@ -168,8 +168,8 @@ class Gui:
                     section = self.treestore.append(None, column)
                 else:
                     word_pair = [ w.strip() for w in line.split("=") ]
-                    assert len(word_pair) == 2, _('Fileformaterror in "%s": \
-                            Not exactly one "=" in line %s') % ( file, i+1 )
+                    assert len(word_pair) == 2, 'Fileformaterror in "%s": \
+                            Not exactly one "=" in line %s' % ( file, i+1 )
                     self.quizlist.append(word_pair)
                     column = []; column.extend(word_pair)
                     column.append(True)
