@@ -11,7 +11,7 @@ depending on previous answers to make learning as efficient as possible. Note
 however, that a lot of work still needs to be done.
 
 Other testing programs that might be of interest to you include granule[3] 
-AKFQuiz[4] or Pauker[5].
+AKFQuiz[4], Pauker[5] or mnemosyne[6].
 
 Licence
 -------
@@ -23,8 +23,8 @@ details.
 
 Dependencies
 ------------
-* python[6] (tested with 2.4)
-* pygtk[7]  (tested with 2.8.6)
+* python[7] (tested with 2.4)
+* pygtk[8]  (tested with 2.8.6)
 
 Usage
 -----
@@ -44,7 +44,7 @@ very appreciated is to send in your quizzes or extend the ones included.
 Feature requests, bug reports and patches are very welcomed at the project page 
 at berlios: http://developer.berlios.de/projects/quizdrill
 
-Questions and feedback can be sent to the mailing list[8].
+Questions and feedback can be sent to the mailing list[9].
 
 Adding new Quizzes
 ==================
@@ -87,6 +87,7 @@ Footnotes
 [3] http://granule.sourceforge.net
 [4] http://akfquiz.akfoerster.de/
 [5] http://sourceforge.net/projects/pauker/
-[6] http://www.python.org/
-[7] http://www.pygtk.org/
-[8] quizdrill-main@lists.berlios.de
+[6] http://mnemosyne-proj.sourceforge.net/
+[7] http://www.python.org/
+[8] http://www.pygtk.org/
+[9] quizdrill-main@lists.berlios.de
