@@ -23,14 +23,14 @@ details.
 
 Dependencies
 ------------
-* python (tested with 2.4)
-* pygtk  (tested with 2.8.6)
+* python[6] (tested with 2.4)
+* pygtk[7]  (tested with 2.8.6)
 
 Usage
 -----
-Start the program quizdrill.py. The different quizzes can be found in the 
-quizzes folder. There is no need to install (e.g. make install etc.) and 
-currently it is not supported either.
+Once you have the dependencies installed, start the program quizdrill.py. The 
+different quizzes can be found in the quizzes folder. There is no need to 
+install (e.g. make install etc.) and currently it is not supported either.
 
 Quizdrill is designed to really drill you while you are working on the 
 computer. After you answered some questions, it will minimize (iconify) and 
@@ -44,7 +44,7 @@ very appreciated is to send in your quizzes or extend the ones included.
 Feature requests, bug reports and patches are very welcomed at the project page 
 at berlios: http://developer.berlios.de/projects/quizdrill
 
-Questions and feedback can be sent to the mailing list[6].
+Questions and feedback can be sent to the mailing list[8].
 
 Adding new Quizzes
 ==================
@@ -87,4 +87,6 @@ Footnotes
 [3] http://granule.sourceforge.net
 [4] http://akfquiz.akfoerster.de/
 [5] http://sourceforge.net/projects/pauker/
-[6] quizdrill-main@lists.berlios.de
+[6] http://www.python.org/
+[7] http://www.pygtk.org/
+[8] quizdrill-main@lists.berlios.de
