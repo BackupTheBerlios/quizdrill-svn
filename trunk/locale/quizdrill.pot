@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-05 00:09+0100\n"
+"POT-Creation-Date: 2007-02-09 23:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,75 +16,113 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: quizdrill.py:177
+#: quizdrill.py:160
+#, python-format
+msgid "Warning: unknown tag \"%s\""
+msgstr ""
+
+#: quizdrill.py:180
 msgid "test"
 msgstr ""
 
+#: quizdrill.py:212
+#, python-format
+msgid "Warning: unknown quiz type \"%s\""
+msgstr ""
+
 #: quizdrill.glade.h:1
-msgid "<b>Solution: </b>"
+msgid "0 - not at all"
 msgstr ""
 
 #: quizdrill.glade.h:2
-msgid "<b>Subquiz: </b>"
+msgid "1 - but it seemed familiar"
 msgstr ""
 
 #: quizdrill.glade.h:3
-msgid "<b>Timer: </b>"
+msgid "2 - but it's getting there"
 msgstr ""
 
 #: quizdrill.glade.h:4
-msgid "<b>What is this? </b>"
+msgid "3 - but I needed a bit"
 msgstr ""
 
 #: quizdrill.glade.h:5
-msgid "Aktivate timer"
+msgid "4 - after short hesitation"
 msgstr ""
 
 #: quizdrill.glade.h:6
-msgid "Break length in min: "
+msgid "5 - no problem"
 msgstr ""
 
 #: quizdrill.glade.h:7
-msgid "Did you remember it correct?"
+msgid "<b>Solution:</b>"
 msgstr ""
 
 #: quizdrill.glade.h:8
-msgid "Evaluate"
+msgid "<b>Subquiz:</b>"
 msgstr ""
 
 #: quizdrill.glade.h:9
-msgid "Multiple Choice"
-msgstr ""
-
-#: quizdrill.glade.h:10
-msgid "Quiz"
+msgid "<b>Timer:</b>"
 msgstr ""
 
 #: quizdrill.glade.h:11
-msgid "Quiz length: "
+msgid "<b>What is this?</b>"
 msgstr ""
 
 #: quizdrill.glade.h:12
-msgid "Quizdrill"
+msgid "Aktivate timer"
 msgstr ""
 
 #: quizdrill.glade.h:13
-msgid "Quizdrill Preferences"
+msgid "Break length in min:"
 msgstr ""
 
 #: quizdrill.glade.h:14
-msgid "Show solution"
+msgid "Did you remember it correctly?"
 msgstr ""
 
 #: quizdrill.glade.h:15
-msgid "Simple Quiz"
+msgid "Evaluate"
 msgstr ""
 
 #: quizdrill.glade.h:16
-msgid "Statistics"
+msgid "Flashcard"
 msgstr ""
 
 #: quizdrill.glade.h:17
+msgid "Multiple Choice"
+msgstr ""
+
+#: quizdrill.glade.h:18
+msgid "No, ..."
+msgstr ""
+
+#: quizdrill.glade.h:19
+msgid "Quiz length:"
+msgstr ""
+
+#: quizdrill.glade.h:20
+msgid "Quizdrill"
+msgstr ""
+
+#: quizdrill.glade.h:21
+msgid "Quizdrill Preferences"
+msgstr ""
+
+#: quizdrill.glade.h:22
+msgid "Show solution"
+msgstr ""
+
+#: quizdrill.glade.h:23
+msgid "Simple Quiz"
+msgstr ""
+
+#: quizdrill.glade.h:24
+msgid "Statistics"
+msgstr ""
+
+#: quizdrill.glade.h:25
 msgid ""
 "This program is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -101,18 +139,22 @@ msgid ""
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 msgstr ""
 
-#: quizdrill.glade.h:31
+#: quizdrill.glade.h:39
 msgid "Words"
 msgstr ""
 
-#: quizdrill.glade.h:32
+#: quizdrill.glade.h:40
+msgid "Yes, ..."
+msgstr ""
+
+#: quizdrill.glade.h:41
 msgid "_Edit"
 msgstr ""
 
-#: quizdrill.glade.h:33
+#: quizdrill.glade.h:42
 msgid "_File"
 msgstr ""
 
-#: quizdrill.glade.h:34
+#: quizdrill.glade.h:43
 msgid "_Help"
 msgstr ""
