@@ -118,7 +118,8 @@
                             <child>
                               <widget class="GtkLabel" id="label1">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Subquiz: &lt;/b&gt;</property>
+                                <property name="xpad">4</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Subquiz:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
                               </widget>
                               <packing>
@@ -586,7 +587,7 @@
                             <child>
                               <widget class="GtkLabel" id="label12">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Solution: &lt;/b&gt;</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Solution:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
                               </widget>
                               <packing>
@@ -851,7 +852,8 @@
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="yalign">0</property>
-                            <property name="label" translatable="yes">Quiz length: </property>
+                            <property name="xpad">3</property>
+                            <property name="label" translatable="yes">Quiz length:</property>
                           </widget>
                           <packing>
                             <property name="x_options">GTK_FILL</property>
@@ -863,7 +865,8 @@
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="yalign">0</property>
-                            <property name="label" translatable="yes">Break length in min: </property>
+                            <property name="xpad">3</property>
+                            <property name="label" translatable="yes">Break length in min:</property>
                           </widget>
                           <packing>
                             <property name="top_attach">1</property>
@@ -915,7 +918,8 @@
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;Timer: &lt;/b&gt;</property>
+                <property name="xpad">3</property>
+                <property name="label" translatable="yes">&lt;b&gt;Timer:&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
               </widget>
               <packing>

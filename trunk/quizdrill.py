@@ -157,7 +157,7 @@ class Gui:
                     if tag in tag_dict:
                         tag_dict[tag](word_pair)
                     else:
-                        print 'Warning: unknown tag "%s"' % tag
+                        print _('Warning: unknown tag "%s"') % tag
                 elif line[0] == '[':
                     line = line[1:-1]
                     word_pair = [ w.strip() for w in line.split("=", 1) ]
@@ -168,8 +168,8 @@ class Gui:
                     section = self.treestore.append(None, column)
                 else:
                     word_pair = [ w.strip() for w in line.split("=") ]
-                    assert len(word_pair) == 2, 'Fileformaterror in "%s": \
-                            Not exactly one "=" in line %s' % ( file, i+1 )
+                    assert len(word_pair) == 2, _('Fileformaterror in "%s": \
+                            Not exactly one "=" in line %s') % ( file, i+1 )
                     self.quizlist.append(word_pair)
                     column = []; column.extend(word_pair)
                     column.append(True)
@@ -209,7 +209,7 @@ class Gui:
             self.subquiz_combobox.show()
             return
         self.subquiz_combobox.hide()
-        print "Warning: unknown quiz type '%s'" % word_pair[0]
+        print _('Warning: unknown quiz type "%s"') % word_pair[0]
 
     # main_window handlers #
 
