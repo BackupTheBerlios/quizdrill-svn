@@ -139,7 +139,7 @@ class Gui:
         TODO: a TreeStore and set it in word_treeview
         """
         tag_dict = { "language" : self.on_tag_language, 
-                "quizquestion" : self.on_tag_quizquestion, 
+                "question" : self.on_tag_question, 
                 "type" : self.on_tag_type,
                 "media" : self.on_tag_media,
                 "generator" : self.on_tag_generator }
@@ -197,7 +197,7 @@ class Gui:
     # Process "heading-tags" on reading quiz-files [see read_quiz_list(file)]
 
     def set_default_tags(self):
-        self.on_tag_quizquestion()
+        self.on_tag_question()
         self.on_tag_type()
 
     def on_tag_language(self, word_pair):
@@ -211,10 +211,13 @@ class Gui:
                 word_pair[1] + " → " + word_pair[0])
         self.subquiz_combobox.set_active(0)
 
-    def on_tag_quizquestion(self, word_pair=None):
-        if word_pair == None:
-            word_pair = [ _("What is this?") ]
-        self.question_topic = word_pair
+    def on_tag_question(self, word_pair=["$what"]):
+        common = { "$what" : _("What is this?"), 
+                "$voc_test" : _("Please translate:") }
+        if word_pair[0] in common:
+            word_pair = [ common[word_pair[0]] ]
+        else:
+            self.question_topic = word_pair
         for label in self.question_topic_labels:
             label.set_markup("<b>%s</b>" % word_pair[0])
 
