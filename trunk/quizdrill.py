@@ -48,6 +48,11 @@ class Gui:
         gw = xml.get_widget
         ## widgets
         self.main_window = gw("main_window")
+        self.main_notbook_tabs = {
+                "multi"  : [ gw("multi_tab_label"), gw("multi_tab_vbox") ], 
+                "simple" : [ gw("simple_tab_label"), gw("simple_tab_vbox") ], 
+                "flash"  : [ gw("flash_tab_label"), gw("flash_tab_vbox") ] }
+        self.subquiz_combobox = gw("subquiz_combobox")
         self.word_treeview = gw("word_treeview")
         self.multi_answer_vbuttonbox = gw("multi_answer_vbuttonbox")
         self.simple_answer_entry = gw("simple_answer_entry")
@@ -60,8 +65,13 @@ class Gui:
                 gw("button12"), gw("button13"), gw("button14"), 
                 gw("button15"), gw("button16"), gw("button17") ]
         self.simple_question_button = gw("simple_question_button")
+        self.flash_notebook = gw("flash_notebook")
+        self.flash_answer_buttons = [ gw("flash_answer_button0"), 
+                gw("flash_answer_button1"), gw("flash_answer_button2"), 
+                gw("flash_answer_button3"), gw("flash_answer_button4"), 
+                gw("flash_answer_button5") ]
+        self.flash_answer_label = gw("flash_answer_label")
         self.progressbar1 = gw("progressbar1")
-        self.subquiz_combobox = gw("subquiz_combobox")
         ### start quiz
         self.generate_quiz()
         ## signals
@@ -222,12 +232,26 @@ class Gui:
             label.set_markup("<b>%s</b>" % word_pair[0])
 
     def on_tag_type(self, word_pair=None):
+        # show and hide combobox
         if word_pair == None or word_pair[0] == "vocabulary":
             self.subquiz_combobox.show()
+            visible_tabs = [ True, True, False ]
         elif word_pair[0] == "questionnaire":
             self.subquiz_combobox.hide()
+            visible_tabs = [ True, True, False ]
+        elif word_pair[0] == "flashcard":
+            self.subquiz_combobox.hide()
+            visible_tabs = [ False, False, True ]
         else:
             print _('Warning: unknown quiz type "%s"') % word_pair[0]
+            visible_tabs = [ True, True, True ]
+        # show and hide notebookpanels
+        for tab, visi in zip(self.main_notbook_tabs.itervalues(),visible_tabs):
+            for widget in tab:
+                if visi:
+                    widget.show()
+                else:
+                    widget.hide()
 
     def on_tag_media(self, word_pair):
         # TODO (Only needed with gstreamer support)
@@ -286,15 +310,27 @@ class Gui:
             self.generate_quiz(chooser.get_filename())
         chooser.destroy()
 
-    def on_simple_question_button_clicked(self, widget, data=None):
-        if self.quiz.check(self.simple_answer_entry.get_text().strip()):
-            self.next_question()
-    
     def on_multi_question_answer_button_clicked(self, widget, data=None):
         if self.quiz.check(widget.get_label()):
             self.next_question()
         else:
             widget.set_sensitive(False)
+
+    def on_simple_question_button_clicked(self, widget, data=None):
+        if self.quiz.check(self.simple_answer_entry.get_text().strip()):
+            self.next_question()
+    
+    def on_flash_question_button_clicked(self, widget, date=None):
+        self.flash_answer_label.set_text(
+                self.quiz.question[self.quiz.answer_to])
+        self.flash_notebook.set_current_page(1)
+
+    def on_flash_answer_button_clicked(self, widget, data=None):
+        if isinstance(self.quiz, Weighted_Quiz):
+            self.quiz.set_answer_quality(
+                    self.flash_answer_buttons.index(widget))
+        self.next_question()
+        self.flash_notebook.set_current_page(0)
 
     def on_subquiz_combobox_changed(self, widget):
         new_status = widget.get_active()
@@ -420,6 +456,9 @@ class Weighted_Quiz(Quiz):
             return True
         else:
             return False
+
+    def set_answer_quality(self, quality):
+        self._update_score(self.question[self.ask_from], quality > 3)
 
     def _update_score(self, word, correct_answered):
         """

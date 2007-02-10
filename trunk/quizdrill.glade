@@ -100,7 +100,7 @@
             <property name="homogeneous">True</property>
             <signal name="switch_page" handler="on_main_notebook_switch_page"/>
             <child>
-              <widget class="GtkScrolledWindow" id="scrolledwindow2">
+              <widget class="GtkScrolledWindow" id="words_scrolledwindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
@@ -175,7 +175,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label2">
+              <widget class="GtkLabel" id="words_tab_label">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
@@ -188,7 +188,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkVBox" id="vbox3">
+              <widget class="GtkVBox" id="multi_tab_vbox">
                 <property name="visible">True</property>
                 <child>
                   <widget class="GtkFrame" id="frame2">
@@ -347,7 +347,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label5">
+              <widget class="GtkLabel" id="multi_tab_label">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
@@ -361,7 +361,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkVBox" id="vbox4">
+              <widget class="GtkVBox" id="simple_tab_vbox">
                 <property name="visible">True</property>
                 <child>
                   <widget class="GtkFrame" id="frame3">
@@ -493,7 +493,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label9">
+              <widget class="GtkLabel" id="simple_tab_label">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
@@ -507,7 +507,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkVBox" id="vbox2">
+              <widget class="GtkVBox" id="flash_tab_vbox">
                 <child>
                   <widget class="GtkFrame" id="frame1">
                     <property name="visible">True</property>
@@ -546,22 +546,29 @@
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkNotebook" id="notebook1">
+                  <widget class="GtkNotebook" id="flash_notebook">
                     <property name="visible">True</property>
                     <property name="show_tabs">False</property>
+                    <property name="show_border">False</property>
                     <child>
-                      <widget class="GtkButton" id="button1">
+                      <widget class="GtkButton" id="flash_question_button">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Show solution</property>
+                        <signal name="clicked" handler="on_flash_question_button_clicked"/>
                       </widget>
                       <packing>
                         <property name="tab_expand">False</property>
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
+                      <widget class="GtkLabel" id="label2">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">label</property>
+                      </widget>
                       <packing>
                         <property name="type">tab</property>
+                        <property name="tab_expand">False</property>
+                        <property name="tab_fill">False</property>
                       </packing>
                     </child>
                     <child>
@@ -577,7 +584,7 @@
                                 <property name="visible">True</property>
                                 <property name="left_padding">12</property>
                                 <child>
-                                  <widget class="GtkLabel" id="label13">
+                                  <widget class="GtkLabel" id="flash_answer_label">
                                     <property name="visible">True</property>
                                     <property name="label">&lt;translation of word&gt;</property>
                                   </widget>
@@ -612,6 +619,78 @@
                             <property name="n_rows">4</property>
                             <property name="n_columns">2</property>
                             <child>
+                              <widget class="GtkButton" id="flash_answer_button2">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">2 - but it's getting there</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="flash_answer_button1">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">1 - but it seemed familiar</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="flash_answer_button0">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">0 - not at all</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="flash_answer_button3">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">3 - but I needed a bit</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="flash_answer_button4">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">4 - after short hesitation</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="flash_answer_button5">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">5 - no problem</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
                               <widget class="GtkLabel" id="label6">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
@@ -629,83 +708,6 @@
                                 <property name="label" translatable="yes">No, ...</property>
                               </widget>
                             </child>
-                            <child>
-                              <widget class="GtkRadioButton" id="radiobutton5">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">3 - but I needed a bit</property>
-                                <property name="draw_indicator">True</property>
-                                <property name="group">radiobutton1</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkRadioButton" id="radiobutton3">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">4 - after short hesitation</property>
-                                <property name="draw_indicator">True</property>
-                                <property name="group">radiobutton1</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkRadioButton" id="radiobutton6">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">5 - no problem</property>
-                                <property name="draw_indicator">True</property>
-                                <property name="group">radiobutton1</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkRadioButton" id="radiobutton1">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">0 - not at all</property>
-                                <property name="draw_indicator">True</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkRadioButton" id="radiobutton4">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">1 - but it seemed familiar</property>
-                                <property name="draw_indicator">True</property>
-                                <property name="group">radiobutton1</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkRadioButton" id="radiobutton2">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">2 - but it's getting there</property>
-                                <property name="draw_indicator">True</property>
-                                <property name="group">radiobutton1</property>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
-                              </packing>
-                            </child>
                           </widget>
                           <packing>
                             <property name="position">2</property>
@@ -718,9 +720,15 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
+                      <widget class="GtkLabel" id="label3">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">label</property>
+                      </widget>
                       <packing>
                         <property name="type">tab</property>
+                        <property name="position">1</property>
+                        <property name="tab_expand">False</property>
+                        <property name="tab_fill">False</property>
                       </packing>
                     </child>
                   </widget>
@@ -735,7 +743,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label3">
+              <widget class="GtkLabel" id="flash_tab_label">
                 <property name="label" translatable="yes">Flashcard</property>
               </widget>
               <packing>
@@ -757,7 +765,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label11">
+              <widget class="GtkLabel" id="statistic_label">
                 <property name="sensitive">False</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
