@@ -51,8 +51,11 @@ class Gui:
         self.word_treeview = gw("word_treeview")
         self.multi_answer_vbuttonbox = gw("multi_answer_vbuttonbox")
         self.simple_answer_entry = gw("simple_answer_entry")
-        self.multi_question_label = gw("multi_question_label")
-        self.simple_question_label = gw("simple_question_label")
+        self.question_topic_labels = [ gw("multi_question_topic_label"),
+                gw("simple_question_topic_label"),
+                gw("flash_question_topic_label") ]
+        self.question_labels = [ gw("multi_question_label"), 
+                gw("simple_question_label"), gw("flash_question_label") ]
         self.multi_question_buttons = [ gw("button11"), 
                 gw("button12"), gw("button13"), gw("button14"), 
                 gw("button15"), gw("button16"), gw("button17") ]
@@ -75,10 +78,8 @@ class Gui:
     def next_question(self):
         if not self.quiz.next():
             self.start_relax_time(self.break_length)
-        self.simple_question_label.set_text(
-                self.quiz.question[self.quiz.ask_from])
-        self.multi_question_label.set_text(
-                self.quiz.question[self.quiz.ask_from])
+        for label in self.question_labels:
+            label.set_text(self.quiz.question[self.quiz.ask_from])
         self.simple_answer_entry.set_text("")
         self.progressbar1.set_fraction(
                 float(self.quiz.answered) / self.quiz.session_length)
@@ -87,6 +88,8 @@ class Gui:
                 self.multi_question_buttons,self.quiz.multi_choices):
             button.set_label(text)
             button.set_sensitive(True)
+
+    # Timer
 
     def start_relax_time(self, break_length, minimize=True):
         """
@@ -137,7 +140,9 @@ class Gui:
         """
         tag_dict = { "language" : self.on_tag_language, 
                 "quizquestion" : self.on_tag_quizquestion, 
-                "type" : self.on_tag_type }
+                "type" : self.on_tag_type,
+                "media" : self.on_tag_media,
+                "generator" : self.on_tag_generator }
         # Prepare TreeView
         self.treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING,
                 gobject.TYPE_BOOLEAN )
@@ -145,6 +150,8 @@ class Gui:
         f = open(file)
         self.quizlist = []
         section = None
+
+        self.set_default_tags()
         for i, line in enumerate(f.readlines()):
             line = line.strip()
             if len(line) > 0:
@@ -189,6 +196,10 @@ class Gui:
 
     # Process "heading-tags" on reading quiz-files [see read_quiz_list(file)]
 
+    def set_default_tags(self):
+        self.on_tag_quizquestion()
+        self.on_tag_type()
+
     def on_tag_language(self, word_pair):
         for i, title in enumerate(word_pair):
             self.tvcolumn = gtk.TreeViewColumn(title,
@@ -200,16 +211,28 @@ class Gui:
                 word_pair[1] + " → " + word_pair[0])
         self.subquiz_combobox.set_active(0)
 
-    def on_tag_quizquestion(self, word_pair):
-        # TODO (Only needed once we have non-vocabulary tests)
+    def on_tag_quizquestion(self, word_pair=None):
+        if word_pair == None:
+            word_pair = [ _("What is this?") ]
+        self.question_topic = word_pair
+        for label in self.question_topic_labels:
+            label.set_markup("<b>%s</b>" % word_pair[0])
+
+    def on_tag_type(self, word_pair=None):
+        if word_pair == None or word_pair[0] == "vocabulary":
+            self.subquiz_combobox.show()
+        elif word_pair[0] == "questionnaire":
+            self.subquiz_combobox.hide()
+        else:
+            print _('Warning: unknown quiz type "%s"') % word_pair[0]
+
+    def on_tag_media(self, word_pair):
+        # TODO (Only needed with gstreamer support)
         pass
 
-    def on_tag_type(self, word_pair):
-        if word_pair[0] == "vocabulary":
-            self.subquiz_combobox.show()
-            return
-        self.subquiz_combobox.hide()
-        print _('Warning: unknown quiz type "%s"') % word_pair[0]
+    def on_tag_generator(self, word_pair):
+        # TODO
+        pass
 
     # main_window handlers #
 
@@ -273,6 +296,9 @@ class Gui:
     def on_subquiz_combobox_changed(self, widget):
         new_status = widget.get_active()
         self.quiz.set_question_direction(new_status)
+        if len(self.question_topic) > 1:
+            for label in self.question_topic_labels:
+                label.set_text(self.question_topic[new_status])
         self.next_question()
 
     def on_main_notebook_switch_page(self, widget, gpointer, new_tab):

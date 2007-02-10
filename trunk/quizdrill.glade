@@ -214,11 +214,11 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="multi_question_constant_label">
+                      <widget class="GtkLabel" id="multi_question_topic_label">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="yalign">0</property>
-                        <property name="label" translatable="yes" comments="will get overwritten">&lt;b&gt;What is this?&lt;/b&gt;</property>
+                        <property name="label" comments="get's overwritten">&lt;b&gt;What is this?&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
                       <packing>
@@ -387,11 +387,11 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="simple_question_constant_label">
+                      <widget class="GtkLabel" id="simple_question_topic_label">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="yalign">0</property>
-                        <property name="label" translatable="yes" comments="will get overwritten">&lt;b&gt;What is this?&lt;/b&gt;</property>
+                        <property name="label" comments="get's overwritten">&lt;b&gt;What is this?&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
                       <packing>
@@ -532,11 +532,11 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="flash_question_constant_label">
+                      <widget class="GtkLabel" id="flash_question_topic_label">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="yalign">0</property>
-                        <property name="label" translatable="yes">&lt;b&gt;What is this?&lt;/b&gt;</property>
+                        <property name="label" comments="get's overwritten">&lt;b&gt;What is this?&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
                       <packing>

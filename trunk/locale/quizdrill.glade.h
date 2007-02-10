@@ -7,8 +7,6 @@ char *s = N_("5 - no problem");
 char *s = N_("<b>Solution:</b>");
 char *s = N_("<b>Subquiz:</b>");
 char *s = N_("<b>Timer:</b>");
-/* will get overwritten */
-char *s = N_("<b>What is this?</b>");
 char *s = N_("Aktivate timer");
 char *s = N_("Break length in min:");
 char *s = N_("Did you remember it correctly?");
