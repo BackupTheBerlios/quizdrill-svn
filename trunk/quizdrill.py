@@ -35,6 +35,47 @@ locale.textdomain(APP)
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 
+class Quiz_Info:
+    """
+    TODO: move quiz settings from class Gui here, so quizzes can be switched
+    nicely.
+
+    Contains the parts of a quiz, that are not tested. A kind of "meta-data".
+    """
+    quiz_file_path = "quizzes/de-fr.drill"
+    type = "vocabulary"
+    subquiz = None
+    treestore = None
+    quiz = None
+
+    def __init__(self, quiz_file_path=None):
+        self.generate_quiz(quiz_file_path)
+
+    def read_score_file(self, type="", score_file=None):
+        # TODO: move here from Gui
+        pass
+
+    def write_score_file(self, score, type=""):
+        # TODO: move here from Gui
+        pass
+
+    def _get_score_file(self, quiz_file, type):
+        # TODO: move here from Gui
+        pass
+
+    def read_quiz_list(self, file):
+        # TODO: move here from Gui
+        pass
+
+    def generate_quiz(self, quiz_file_path=None):
+        # TODO: move here from Gui
+        pass
+
+    def next_question(self):
+        # TODO: move part of Gui's here
+        pass
+
+
 class Gui:
     GLADE_FILE = "quizdrill.glade"
     SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
@@ -98,6 +139,13 @@ class Gui:
                 self.multi_question_buttons,self.quiz.multi_choices):
             button.set_label(text)
             button.set_sensitive(True)
+
+    def switch_Quiz(self, quiz_info=None):
+        """
+        Set the Userinterface to test a different Quiz (represented by a 
+        Info_Quiz object or randomly selected).
+        """
+        pass
 
     # Timer
 
@@ -504,7 +552,7 @@ class Queued_Quiz(Weighted_Quiz):
     few questions still are below a certain score.
     """
     def __init__(self, question_pool, question_score={}, ask_from=0, 
-            exam_length=15, bad_score=.6, min_num_bad_scores=3, 
+            exam_length=15, bad_score=.4, min_num_bad_scores=3, 
             min_question_num=20, batch_length=5):
         self.new_quiz_pool = []
         self.num_bad_scores = 0
