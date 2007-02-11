@@ -411,6 +411,7 @@ class Quiz:
         self.add_quizzes(quiz_pool)
 
     def next(self):
+        """ ask next question """
         # Generate new Test
         self.tries = 0
         self._select_question()
@@ -423,10 +424,11 @@ class Quiz:
             return True
 
     def _select_question(self):
-        "select next question"
+        """ select next question """
         self.question = random.choice(self.quiz_pool)
 
     def _gen_multi_choices(self):
+        """ Returns a list of multichoice options """
         list = [ self.question[self.answer_to] ]
         while len(list) < self.multichoice_len:
             r = random.randrange(len(self.quiz_pool))
@@ -451,6 +453,10 @@ class Quiz:
             return False
 
     def set_question_direction(self, direction):
+        """
+        Set which part is the question and which the answer.
+        Only makes with vocabulary-like quizzes
+        """
         if direction in [0, 1]:
             self.ask_from = direction
             self.answer_to = 1 - direction
