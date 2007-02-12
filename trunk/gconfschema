@@ -1,0 +1,55 @@
+<confschemafile>
+    <schemalist>
+        <schema>
+            <key>/schemas/apps/quizdrill/timer/use_timer</key>
+            <applyto>/apps/quizdrill/timer/use_timer</applyto>
+            <type>bool</type>
+            <default>1</default>
+            <locale name="C">
+                <short>use timer</short>
+                <long>
+                    Whether or not the timer should be used. If it is used
+                    quizdrill will take a break after $exam_length questions.
+                </long>
+            </locale>
+        </schema>
+        <schema>
+            <key>/schemas/apps/quizdrill/timer/exam_length</key>
+            <applyto>/apps/quizdrill/timer/exam_length</applyto>
+            <type>int</type>
+            <default>15</default>
+            <locale name="C">
+                <short>exam length</short>
+                <long>
+                    How many questions are asked into there is a break.
+                </long>
+            </locale>
+        </schema>
+        <schema>
+            <key>/schemas/apps/quizdrill/timer/break_length</key>
+            <applyto>/apps/quizdrill/timer/break_length</applyto>
+            <type>int</type>
+            <default>10</default>
+            <locale name="C">
+                <short>break length</short>
+                <long>
+                    How long quizdrill waits after the exam is finished into
+                    quizdrill starts asking the questions again.
+                </long>
+            </locale>
+        </schema>
+        <schema>
+            <key>/schemas/apps/quizdrill/timer/snooze_length</key>
+            <applyto>/apps/quizdrill/timer/snooze_length</applyto>
+            <type>int</type>
+            <default>5</default>
+            <locale name="C">
+                <short>snooze length</short>
+                <long>
+                    How long quizdrill waits after the exam is interrupted into
+                    quizdrill starts asking the questions again.
+                </long>
+            </locale>
+        </schema>
+    <confschemafile>
+<schemalist>

@@ -549,7 +549,7 @@
                     <child>
                       <widget class="GtkLabel" id="label2">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">label</property>
+                        <property name="label">tab1</property>
                       </widget>
                       <packing>
                         <property name="type">tab</property>
@@ -605,62 +605,21 @@
                             <property name="n_rows">4</property>
                             <property name="n_columns">2</property>
                             <child>
-                              <widget class="GtkButton" id="flash_answer_button2">
+                              <widget class="GtkLabel" id="label4">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">2 - but it's getting there</property>
-                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">No, ...</property>
                               </widget>
-                              <packing>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
-                              </packing>
                             </child>
                             <child>
-                              <widget class="GtkButton" id="flash_answer_button1">
+                              <widget class="GtkLabel" id="label6">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">1 - but it seemed familiar</property>
-                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkButton" id="flash_answer_button0">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">0 - not at all</property>
-                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
-                              </widget>
-                              <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkButton" id="flash_answer_button3">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">3 - but I needed a bit</property>
-                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Yes, ...</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkButton" id="flash_answer_button4">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">4 - after short hesitation</property>
-                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
                               </packing>
                             </child>
                             <child>
@@ -677,22 +636,63 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label6">
+                              <widget class="GtkButton" id="flash_answer_button4">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Yes, ...</property>
+                                <property name="label" translatable="yes">4 - after short hesitation</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label4">
+                              <widget class="GtkButton" id="flash_answer_button3">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">No, ...</property>
+                                <property name="label" translatable="yes">3 - but I needed a bit</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
                               </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="flash_answer_button0">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">0 - not at all</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="flash_answer_button1">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">1 - but it seemed familiar</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="flash_answer_button2">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">2 - but it's getting there</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                              </packing>
                             </child>
                           </widget>
                           <packing>
@@ -708,7 +708,7 @@
                     <child>
                       <widget class="GtkLabel" id="label3">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">label</property>
+                        <property name="label">tab2</property>
                       </widget>
                       <packing>
                         <property name="type">tab</property>
@@ -827,7 +827,7 @@
                       <widget class="GtkCheckButton" id="checkbutton1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">Aktivate timer</property>
+                        <property name="label" translatable="yes">Use _timer</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
                       </widget>
@@ -839,33 +839,18 @@
                     <child>
                       <widget class="GtkTable" id="table2">
                         <property name="visible">True</property>
-                        <property name="n_rows">2</property>
+                        <property name="n_rows">3</property>
                         <property name="n_columns">2</property>
                         <child>
-                          <widget class="GtkLabel" id="label14">
+                          <widget class="GtkSpinButton" id="spinbutton3">
                             <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="yalign">0</property>
-                            <property name="xpad">3</property>
-                            <property name="label" translatable="yes">Quiz length:</property>
+                            <property name="can_focus">True</property>
+                            <property name="adjustment">15 1 100 5 10 10</property>
+                            <property name="climb_rate">1</property>
                           </widget>
                           <packing>
-                            <property name="x_options">GTK_FILL</property>
-                            <property name="y_options"></property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label15">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="yalign">0</property>
-                            <property name="xpad">3</property>
-                            <property name="label" translatable="yes">Break length in min:</property>
-                          </widget>
-                          <packing>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                            <property name="x_options">GTK_FILL</property>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="y_options"></property>
                           </packing>
                         </child>
@@ -886,15 +871,59 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkSpinButton" id="spinbutton3">
+                          <widget class="GtkLabel" id="label15">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="yalign">0</property>
+                            <property name="xpad">3</property>
+                            <property name="label" translatable="yes">Break length in min:</property>
+                            <property name="tooltip" translatable="yes">How long to wait after the exam is finished before continueing the testing.</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options">GTK_FILL</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label14">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="yalign">0</property>
+                            <property name="xpad">3</property>
+                            <property name="label" translatable="yes">Exam length:</property>
+                            <property name="tooltip" translatable="yes">How many questions are asked into there is a break.</property>
+                          </widget>
+                          <packing>
+                            <property name="x_options">GTK_FILL</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label5">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Snooze length in min:</property>
+                            <property name="tooltip" translatable="yes">How long to wait after the exam is interrupted before continueing the testing.</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                            <property name="x_options">GTK_FILL</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkSpinButton" id="spinbutton1">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="adjustment">15 1 100 5 10 10</property>
-                            <property name="climb_rate">1</property>
+                            <property name="adjustment">5 0 100 1 10 10</property>
                           </widget>
                           <packing>
                             <property name="left_attach">1</property>
                             <property name="right_attach">2</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
                             <property name="y_options"></property>
                           </packing>
                         </child>
@@ -951,20 +980,11 @@
     <property name="visible">True</property>
     <property name="version">0.1.0</property>
     <property name="copyright">Adam Schmalhofer</property>
-    <property name="license" translatable="yes">This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+    <property name="license" translatable="yes">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-</property>
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</property>
     <property name="translator_credits" comments="TRANSLATORS: Replace this string with your names, one name per line.">Deutsch: Adam Schmalhofer</property>
     <property name="wrap_license">True</property>
     <child internal-child="vbox">

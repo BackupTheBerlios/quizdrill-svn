@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-10 03:04+0100\n"
+"POT-Creation-Date: 2007-02-12 04:03+0100\n"
 "PO-Revision-Date: 2007-01-24 21:17+0100\n"
 "Last-Translator: Adam Schmalhofer <Adam.Schmalhofer@web.de>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
@@ -17,24 +17,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: quizdrill.py:167
+#: quizdrill.py:225
 #, python-format
 msgid "Warning: unknown tag \"%s\""
 msgstr "Warnung: unbekannter Tag \"%s\""
 
-#: quizdrill.py:187
+#: quizdrill.py:245
 msgid "test"
 msgstr "testen"
 
-#: quizdrill.py:215
+#: quizdrill.py:273
 msgid "What is this?"
 msgstr "Was ist das?"
 
-#: quizdrill.py:216
+#: quizdrill.py:274
 msgid "Please translate:"
 msgstr "Übersetze:"
 
-#: quizdrill.py:230
+#: quizdrill.py:294
 #, python-format
 msgid "Warning: unknown quiz type \"%s\""
 msgstr "Warnung: unbekannter Quiztyp \"%s\""
@@ -76,104 +76,126 @@ msgid "<b>Timer:</b>"
 msgstr "<b>Stoppuhr:</b>"
 
 #: quizdrill.glade.h:10
-msgid "Aktivate timer"
-msgstr "Stoppuhr aktivieren"
-
-#: quizdrill.glade.h:11
 msgid "Break length in min:"
 msgstr "Pausenlänge in min:"
 
-#: quizdrill.glade.h:12
+#: quizdrill.glade.h:11
 msgid "Did you remember it correctly?"
 msgstr "Haben Sie dies richtig beantwortet?"
 
-#: quizdrill.glade.h:13
+#: quizdrill.glade.h:12
 msgid "Evaluate"
 msgstr "Bewerten"
+
+#: quizdrill.glade.h:13
+msgid "Exam length:"
+msgstr "Prüfungslänge:"
 
 #: quizdrill.glade.h:14
 msgid "Flashcard"
 msgstr "Karteikarten"
 
 #: quizdrill.glade.h:15
+msgid ""
+"How long to wait after the exam is finished before continueing the testing."
+msgstr ""
+"Wielange nach Prüfungsende wartet wird, "
+"bis das Testen fortgesetzt wird."
+
+#: quizdrill.glade.h:16
+msgid ""
+"How long to wait after the exam is interrupted before continueing the "
+"testing."
+msgstr ""
+"Wielange nach einer Unterbrechung der Prüfung gewartet wird, "
+"bis das Testen fortgesetzt wird."
+
+#: quizdrill.glade.h:17
+msgid "How many questions are asked into there is a break."
+msgstr "Anzahl der gestellten Fragen bis eine Pause genommen wird."
+
+#: quizdrill.glade.h:18
 msgid "Multiple Choice"
 msgstr "Mehrfachauswahl"
 
-#: quizdrill.glade.h:16
+#: quizdrill.glade.h:19
 msgid "No, ..."
 msgstr "Nein, ..."
 
-#: quizdrill.glade.h:17
-msgid "Quiz length:"
-msgstr "Quizlänge:"
-
-#: quizdrill.glade.h:18
+#: quizdrill.glade.h:20
 msgid "Quizdrill"
 msgstr "Quizdrill"
 
-#: quizdrill.glade.h:19
+#: quizdrill.glade.h:21
 msgid "Quizdrill Preferences"
 msgstr "Quizdill Einstellungen"
 
-#: quizdrill.glade.h:20
+#: quizdrill.glade.h:22
 msgid "Show solution"
 msgstr "Lösung zeigen"
 
-#: quizdrill.glade.h:21
+#: quizdrill.glade.h:23
 msgid "Simple Quiz"
 msgstr "Einfacher Quiz"
 
-#: quizdrill.glade.h:22
+#: quizdrill.glade.h:24
+msgid "Snooze length in min:"
+msgstr "Schlummerzeit in min:"
+
+#: quizdrill.glade.h:25
 msgid "Statistics"
 msgstr "Statistiken"
 
-#: quizdrill.glade.h:23
+#: quizdrill.glade.h:26
 msgid ""
-"This program is free software; you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
-"(at your option) any later version.\n"
+"This program is free software; you can redistribute it and/or modify it "
+"under the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version.\n"
 "\n"
-"This program is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n"
-"GNU General Public License for more details.\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for "
+"more details.\n"
 "\n"
-"You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
+"You should have received a copy of the GNU General Public License along with "
+"this program; if not, write to the Free Software Foundation, Inc., 59 Temple "
+"Place - Suite 330, Boston, MA 02111-1307, USA."
 msgstr ""
-"Dieses Programm ist freie Software; Sie können es weitergeben und/oder \n"
-"modifizieren im Sinne der GNU General Public License wie sie von der \n"
-"Free Software Foundation veröffentlicht wird; entweder Version 2, oder \n"
+"Dieses Programm ist freie Software; Sie können es weitergeben und/oder "
+"modifizieren im Sinne der GNU General Public License wie sie von der Free "
+"Software Foundation veröffentlicht wird; entweder Version 2, oder "
 "(wahlweise) jede neuere Version.\n"
 "\n"
-"Dieses Programm wird in der Hoffnung vertrieben, dass es nützlich ist, \n"
-"jedoch OHNE JEDE GARANTIE; selbst ohne die implizite Garantie der \n"
-"TAUGLICHKEIT oder der EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie die \n"
-"GNU General Public License für weitere Details.\n"
+"Dieses Programm wird in der Hoffnung vertrieben, dass es nützlich ist, "
+"jedoch OHNE JEDE GARANTIE; selbst ohne die implizite Garantie der "
+"TAUGLICHKEIT oder der EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie die GNU "
+"General Public License für weitere Details.\n"
 "\n"
-"Sie sollten eine Kopie der GNU General Public License mit diesem Programm \n"
-"erhalten haben; wenn nicht, dann schreiben Sie an Free Software "
-"Foundation, \n"
-"Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"
+"Sie sollten eine Kopie der GNU General Public License mit diesem Programm "
+"erhalten haben; wenn nicht, dann schreiben Sie an Free Software Foundation, "
+"Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
-#: quizdrill.glade.h:37
+#: quizdrill.glade.h:31
+msgid "Use _timer"
+msgstr "Stopp_uhr benutzen"
+
+#: quizdrill.glade.h:32
 msgid "Words"
 msgstr "Wörter"
 
-#: quizdrill.glade.h:38
+#: quizdrill.glade.h:33
 msgid "Yes, ..."
 msgstr "Ja, ..."
 
-#: quizdrill.glade.h:39
+#: quizdrill.glade.h:34
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: quizdrill.glade.h:40
+#: quizdrill.glade.h:35
 msgid "_File"
 msgstr "_Datei"
 
-#: quizdrill.glade.h:41
+#: quizdrill.glade.h:36
 msgid "_Help"
 msgstr "_Hilfe"
