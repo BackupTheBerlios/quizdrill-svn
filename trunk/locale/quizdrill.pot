@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-12 04:03+0100\n"
+"POT-Creation-Date: 2007-02-13 10:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,26 +16,34 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: quizdrill.py:225
+#: quizdrill.py:109
+#, python-format
+msgid "Warning: unknown quiz type \"%s\""
+msgstr ""
+
+#: quizdrill.py:142
+msgid "test"
+msgstr ""
+
+#: quizdrill.py:266 quizdrill.py:357
+msgid "What is this?"
+msgstr ""
+
+#: quizdrill.py:267
+msgid "Question"
+msgstr ""
+
+#: quizdrill.py:267
+msgid "Answer"
+msgstr ""
+
+#: quizdrill.py:330
 #, python-format
 msgid "Warning: unknown tag \"%s\""
 msgstr ""
 
-#: quizdrill.py:245
-msgid "test"
-msgstr ""
-
-#: quizdrill.py:273
-msgid "What is this?"
-msgstr ""
-
-#: quizdrill.py:274
+#: quizdrill.py:358
 msgid "Please translate:"
-msgstr ""
-
-#: quizdrill.py:294
-#, python-format
-msgid "Warning: unknown quiz type \"%s\""
 msgstr ""
 
 #: quizdrill.glade.h:1

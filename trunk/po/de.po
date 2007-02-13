@@ -8,36 +8,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-12 04:03+0100\n"
+"POT-Creation-Date: 2007-02-13 10:54+0100\n"
 "PO-Revision-Date: 2007-01-24 21:17+0100\n"
-"Last-Translator: Adam Schmalhofer <Adam.Schmalhofer@web.de>\n"
-"Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
+"Last-Translator: Adam Schmalhofer <schmalhof@users.berlios.de>\n"
+"Language-Team: German <quizdrill-main@lists.berlios.de>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: quizdrill.py:225
+#: quizdrill.py:109
+#, python-format
+msgid "Warning: unknown quiz type \"%s\""
+msgstr "Warnung: unbekannter Quiztyp \"%s\""
+
+#: quizdrill.py:142
+msgid "test"
+msgstr "testen"
+
+#: quizdrill.py:266 quizdrill.py:357
+msgid "What is this?"
+msgstr "Was ist das?"
+
+#: quizdrill.py:267
+msgid "Question"
+msgstr "Frage"
+
+#: quizdrill.py:267
+msgid "Answer"
+msgstr "Antwort"
+
+#: quizdrill.py:330
 #, python-format
 msgid "Warning: unknown tag \"%s\""
 msgstr "Warnung: unbekannter Tag \"%s\""
 
-#: quizdrill.py:245
-msgid "test"
-msgstr "testen"
-
-#: quizdrill.py:273
-msgid "What is this?"
-msgstr "Was ist das?"
-
-#: quizdrill.py:274
+#: quizdrill.py:358
 msgid "Please translate:"
 msgstr "Übersetze:"
-
-#: quizdrill.py:294
-#, python-format
-msgid "Warning: unknown quiz type \"%s\""
-msgstr "Warnung: unbekannter Quiztyp \"%s\""
 
 #: quizdrill.glade.h:1
 msgid "0 - not at all"
@@ -99,16 +107,15 @@ msgstr "Karteikarten"
 msgid ""
 "How long to wait after the exam is finished before continueing the testing."
 msgstr ""
-"Wielange nach Prüfungsende wartet wird, "
-"bis das Testen fortgesetzt wird."
+"Wielange nach Prüfungsende wartet wird, bis das Testen fortgesetzt wird."
 
 #: quizdrill.glade.h:16
 msgid ""
 "How long to wait after the exam is interrupted before continueing the "
 "testing."
 msgstr ""
-"Wielange nach einer Unterbrechung der Prüfung gewartet wird, "
-"bis das Testen fortgesetzt wird."
+"Wielange nach einer Unterbrechung der Prüfung gewartet wird, bis das Testen "
+"fortgesetzt wird."
 
 #: quizdrill.glade.h:17
 msgid "How many questions are asked into there is a break."
