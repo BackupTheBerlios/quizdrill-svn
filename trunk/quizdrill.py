@@ -35,59 +35,22 @@ locale.textdomain(APP)
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 
-class Quiz_Info:
-    """
-    TODO: move quiz settings from class Gui here, so quizzes can be switched
-    nicely.
-
-    Contains the parts of a quiz, that are not tested. A kind of "meta-data".
-    """
-    quiz_file_path = "quizzes/de-fr.drill"
-    type = "vocabulary"
-    subquiz = None
-    treestore = None
-    quiz = None
-
-    def __init__(self, quiz_file_path=None):
-        self.generate_quiz(quiz_file_path)
-
-    def read_score_file(self, type="", score_file=None):
-        # TODO: move here from Gui
-        pass
-
-    def write_score_file(self, score, type=""):
-        # TODO: move here from Gui
-        pass
-
-    def _get_score_file(self, quiz_file, type):
-        # TODO: move here from Gui
-        pass
-
-    def read_quiz_list(self, file):
-        # TODO: move here from Gui
-        pass
-
-    def generate_quiz(self, quiz_file_path=None):
-        # TODO: move here from Gui
-        pass
-
-    def next_question(self):
-        # TODO: move part of Gui's here
-        pass
-
-
 class Gui:
     GLADE_FILE = "quizdrill.glade"
-    SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
+    SHOW_TABS = { "vocabulary" : [ True, True, False], 
+            "questionnaire" : [ True, True, False ],
+            "flashcard" : [ False, False, True ],
+            "all" : [ True, True, True ] }
     quiz_file_path = "quizzes/de-fr.drill"
     break_length = 900000    # 900,000 ms: 15min
     snooze_length = 300000   # 300,000 ms:  5min
     timer_id = 0
+    quiz_filer_list = []
 
     def __init__(self):
         xml = gtk.glade.XML(self.GLADE_FILE, "main_window", APP)
         gw = xml.get_widget
-        ## widgets
+        # widgets
         self.main_window = gw("main_window")
         self.main_notbook_tabs = {
                 "multi"  : [ gw("multi_tab_label"), gw("multi_tab_vbox") ], 
@@ -113,18 +76,11 @@ class Gui:
                 gw("flash_answer_button5") ]
         self.flash_answer_label = gw("flash_answer_label")
         self.progressbar1 = gw("progressbar1")
-        ### start quiz
-        self.generate_quiz()
-        ## signals
+        # start quiz
+        self.quiz_filer_list.append(Quiz_Filer())
+        self.switch_quiz(self.quiz_filer_list[0])
+        # signals
         xml.signal_autoconnect(self)
-
-    def generate_quiz(self, quiz_file_path=None):
-        if quiz_file_path != None:
-            self.quiz_file_path = quiz_file_path
-        score = self.read_score_file()
-        self.read_quiz_list(self.quiz_file_path)
-        self.quiz = Queued_Quiz(self.quizlist, score)
-        self.next_question()
 
     def next_question(self):
         if not self.quiz.next():
@@ -140,12 +96,56 @@ class Gui:
             button.set_label(text)
             button.set_sensitive(True)
 
-    def switch_Quiz(self, quiz_info=None):
+    def switch_quiz(self, quiz_filer=None):
         """
         Set the Userinterface to test a different Quiz (represented by a 
-        Info_Quiz object or randomly selected).
+        Quiz_Filer object or randomly selected).
         """
-        pass
+        self.quiz_filer = quiz_filer
+        self.quiz = quiz_filer.quiz
+        self.next_question()
+        # show and hide notebookpanels
+        if not quiz_filer.type in self.SHOW_TABS:
+            print _('Warning: unknown quiz type "%s"') % quiz_filer.type
+            type = "all"
+        else:
+            type = self.quiz_filer.type
+        for tab, visi in zip(self.main_notbook_tabs.itervalues(),
+                self.SHOW_TABS[type]):
+            for widget in tab:   # tab is tab-label + tab-content
+                if visi:
+                    widget.show()
+                else:
+                    widget.hide()
+        # show, hide and settext of combobox
+        if quiz_filer.all_subquizzes == []:
+            self.subquiz_combobox.hide()
+        else:
+            #self.subquiz_combobox.clear()
+            for subquiz in quiz_filer.all_subquizzes:
+                self.subquiz_combobox.append_text(subquiz)
+            self.subquiz_combobox.set_active(self.quiz.ask_from)
+            self.subquiz_combobox.show()
+        #
+        for label in self.question_topic_labels:
+            label.set_markup("<b>%s</b>" % 
+                    quiz_filer.question_topic[self.quiz.ask_from])
+        # treeview
+        ## Question/Answer-Columns
+        for i, title in enumerate(quiz_filer.data_name):
+            tvcolumn = gtk.TreeViewColumn(title,
+                    gtk.CellRendererText(), text=i)
+            self.word_treeview.append_column(tvcolumn)
+        ## toggler
+        toggler = gtk.CellRendererToggle()
+        toggler.connect( 'toggled', self.on_treeview_toogled )
+        tvcolumn = gtk.TreeViewColumn(_("test"), toggler)
+        tvcolumn.add_attribute(toggler, "active", 2)
+        self.word_treeview.append_column(tvcolumn)
+        self.word_treeview.set_model(quiz_filer.treestore)
+
+    def get_quiz_from_treeview(self, row):
+        return [ row[0], row[1] ]
 
     # Timer
 
@@ -166,170 +166,26 @@ class Gui:
         self.main_window.deiconify()
         self.timer_id = 0
 
-    # read/write files
-
-    def read_score_file(self, type="", score_file=None):
-        " Reads a score-file for a given quiz_file "
-        if score_file == None:
-            score_file = self._get_score_file(self.quiz_file_path, type)
-        try:
-            f = open(score_file)
-        except IOError:
-            return {}
-        return pickle.load(f)
-
-    def write_score_file(self, score, type=""):
-        " Reads a score-file for a given quiz_file "
-        score_file = self._get_score_file(self.quiz_file_path, type)
-        if not os.path.exists(os.path.dirname(score_file)):
-            os.makedirs(os.path.dirname(score_file))
-        f = open(score_file, "w")
-        pickle.dump(score, f)
-        f.close()
-
-    def _get_score_file(self, quiz_file, type):
-        return self.SCORE_PATH + os.path.basename(quiz_file) + \
-                '_' + type + ".score"
-
-    def read_quiz_list(self, file):
-        """
-        Reads a .drill-file and builds a quizlist,
-        TODO: a TreeStore and set it in word_treeview
-        """
-        tag_dict = { "language" : self.on_tag_language, 
-                "question" : self.on_tag_question, 
-                "type" : self.on_tag_type,
-                "media" : self.on_tag_media,
-                "generator" : self.on_tag_generator }
-        # Prepare TreeView
-        self.treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING,
-                gobject.TYPE_BOOLEAN )
-        # Read file and add to quizlist and treestore
-        f = open(file)
-        self.quizlist = []
-        section = None
-
-        self.set_default_tags()
-        for i, line in enumerate(f.readlines()):
-            line = line.strip()
-            if len(line) > 0:
-                if line[0] == '#':
-                    continue
-                elif line[0] == '!':
-                    colon = line.index(":")
-                    tag = line[1:colon]
-                    word_pair = [ w.strip() for w in line[colon+1:].split("=")]
-                    if tag in tag_dict:
-                        tag_dict[tag](word_pair)
-                    else:
-                        print _('Warning: unknown tag "%s"') % tag
-                elif line[0] == '[':
-                    line = line[1:-1]
-                    word_pair = [ w.strip() for w in line.split("=", 1) ]
-                    if len(word_pair) < 2:
-                        word_pair.append("")
-                    column = []; column.extend(word_pair)
-                    column.append(True)
-                    section = self.treestore.append(None, column)
-                else:
-                    word_pair = [ w.strip() for w in line.split("=") ]
-                    assert len(word_pair) == 2, 'Fileformaterror in "%s": \
-                            Not exactly one "=" in line %s' % ( file, i+1 )
-                    self.quizlist.append(word_pair)
-                    column = []; column.extend(word_pair)
-                    column.append(True)
-                    self.treestore.append(section, column)
-        # toggler
-        toggler = gtk.CellRendererToggle()
-        toggler.connect( 'toggled', self.on_treeview_toogled )
-        self.tvcolumn = gtk.TreeViewColumn(_("test"), toggler)
-        self.tvcolumn.add_attribute(toggler, "active", 2)
-        self.word_treeview.append_column(self.tvcolumn)
-        self.word_treeview.set_model(self.treestore)
-        #
-        f.close()
-
-    def get_quiz_from_treeview(self, row):
-        return [ row[0], row[1] ]
-
-    # Process "heading-tags" on reading quiz-files [see read_quiz_list(file)]
-
-    def set_default_tags(self):
-        self.on_tag_question()
-        self.on_tag_type()
-
-    def on_tag_language(self, word_pair):
-        for i, title in enumerate(word_pair):
-            self.tvcolumn = gtk.TreeViewColumn(title,
-                    gtk.CellRendererText(), text=i)
-            self.word_treeview.append_column(self.tvcolumn)
-        self.subquiz_combobox.append_text(
-                word_pair[0] + " → " + word_pair[1])
-        self.subquiz_combobox.append_text(
-                word_pair[1] + " → " + word_pair[0])
-        self.subquiz_combobox.set_active(0)
-
-    def on_tag_question(self, word_pair=["$what"]):
-        common = { "$what" : _("What is this?"), 
-                "$voc_test" : _("Please translate:") }
-        if word_pair[0] in common:
-            word_pair = [ common[word_pair[0]] ]
-        else:
-            self.question_topic = word_pair
-        for label in self.question_topic_labels:
-            label.set_markup("<b>%s</b>" % word_pair[0])
-
-    def on_tag_type(self, word_pair=None):
-        # show and hide combobox
-        if word_pair == None or word_pair[0] == "vocabulary":
-            self.subquiz_combobox.show()
-            visible_tabs = [ True, True, False ]
-        elif word_pair[0] == "questionnaire":
-            self.subquiz_combobox.hide()
-            visible_tabs = [ True, True, False ]
-        elif word_pair[0] == "flashcard":
-            self.subquiz_combobox.hide()
-            visible_tabs = [ False, False, True ]
-        else:
-            print _('Warning: unknown quiz type "%s"') % word_pair[0]
-            visible_tabs = [ True, True, True ]
-        # show and hide notebookpanels
-        for tab, visi in zip(self.main_notbook_tabs.itervalues(),visible_tabs):
-            for widget in tab:
-                if visi:
-                    widget.show()
-                else:
-                    widget.hide()
-
-    def on_tag_media(self, word_pair):
-        # TODO (Only needed with gstreamer support)
-        pass
-
-    def on_tag_generator(self, word_pair):
-        # TODO
-        pass
-
     # main_window handlers #
 
     def on_treeview_toogled(self, cell, path ):
         """ toggle selected CellRendererToggle Row """
         toggled_quizzes = []
-        self.treestore[path][2] = not self.treestore[path][2]
-        for child in self.treestore[path].iterchildren():
-            if child[2] != self.treestore[path][2]:
-                child[2] = self.treestore[path][2]
+        treestore = self.quiz_filer.treestore
+        treestore[path][2] = not treestore[path][2]
+        for child in treestore[path].iterchildren():
+            if child[2] != treestore[path][2]:
+                child[2] = treestore[path][2]
                 toggled_quizzes.append(self.get_quiz_from_treeview(child))
-        if self.treestore[path][2]:
+        if treestore[path][2]:
             self.quiz.add_quizzes(toggled_quizzes)
         else:
             self.quiz.remove_quizzes(toggled_quizzes)
 
     def on_quit(self, widget):
-        try:
-            if isinstance(self.quiz, Weighted_Quiz):
-                self.write_score_file(self.quiz.question_score)
-        finally:
-            gtk.main_quit()
+        for filer in self.quiz_filer_list:
+            filer.write_score_file()
+        gtk.main_quit()
 
     def on_main_window_window_state_event(self, widget, event):
         """ Snooze when minimized """
@@ -383,14 +239,139 @@ class Gui:
     def on_subquiz_combobox_changed(self, widget):
         new_status = widget.get_active()
         self.quiz.set_question_direction(new_status)
-        if len(self.question_topic) > 1:
+        if len(self.quiz_filer.question_topic) > 1:
             for label in self.question_topic_labels:
-                label.set_text(self.question_topic[new_status])
+                label.set_text(self.quiz_filer.question_topic[new_status])
         self.next_question()
 
     def on_main_notebook_switch_page(self, widget, gpointer, new_tab):
         if new_tab == 2:  # "Simple Quiz"-tab
             self.simple_question_button.grab_default()
+
+
+class Quiz_Filer:
+    """
+    Contains the parts of a quiz, that are not tested. A kind of "meta-data" as
+    well as loading and saving.
+
+    Note that the quiz-words are saved in a treestore.
+    """
+    SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
+    quiz_file_path = "quizzes/de-fr.drill"
+    type = "vocabulary"
+    all_subquizzes = []
+    treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, 
+            gobject.TYPE_BOOLEAN )
+    quiz = None
+    question_topic = [ _("What is this?"), _("What is this?") ]
+    data_name = [ _("Question"), _("Answer") ]
+
+    def __init__(self, quiz_file_path=None):
+        if quiz_file_path != None:
+            self.quiz_file_path = quiz_file_path
+        score = self.read_score_file()
+        self.read_quiz_list(self.quiz_file_path)
+        self.quiz = Queued_Quiz(self.quizlist, score)
+
+    # read and write files
+
+    def read_score_file(self, type="", score_file=None):
+        " Reads a score-file for a given quiz_file "
+        # from Gui
+        if score_file == None:
+            score_file = self._get_score_file(self.quiz_file_path, type)
+        try:
+            f = open(score_file)
+        except IOError:
+            return {}
+        return pickle.load(f)
+
+    def write_score_file(self, type=""):
+        " Reads a score-file for a given quiz_file "
+        if isinstance(self.quiz, Weighted_Quiz):
+            score_file = self._get_score_file(self.quiz_file_path, type)
+            if not os.path.exists(os.path.dirname(score_file)):
+                os.makedirs(os.path.dirname(score_file))
+            f = open(score_file, "w")
+            pickle.dump(self.quiz.question_score, f)
+            f.close()
+
+    def _get_score_file(self, quiz_file, type):
+        # from Gui
+        return self.SCORE_PATH + os.path.basename(quiz_file) + \
+                '_' + type + ".score"
+
+    def read_quiz_list(self, file):
+        """
+        Reads a .drill-file
+        """
+        tag_dict = { "language" : self.on_tag_language, 
+                "question" : self.on_tag_question, 
+                "type" : self.on_tag_type,
+                "media" : self.on_tag_media,
+                "generator" : self.on_tag_generator }
+        # Read file and add to quizlist and treestore
+        f = open(file)
+        self.quizlist = []
+        section = None
+
+        for i, line in enumerate(f.readlines()):
+            line = line.strip()
+            if len(line) > 0:
+                if line[0] == '#':
+                    continue
+                elif line[0] == '!':
+                    colon = line.index(":")
+                    tag = line[1:colon]
+                    word_pair = [ w.strip() for w in line[colon+1:].split("=")]
+                    if tag in tag_dict:
+                        tag_dict[tag](word_pair)
+                    else:
+                        print _('Warning: unknown tag "%s"') % tag
+                elif line[0] == '[':
+                    line = line[1:-1]
+                    word_pair = [ w.strip() for w in line.split("=", 1) ]
+                    if len(word_pair) < 2:
+                        word_pair.append("")
+                    column = []; column.extend(word_pair)
+                    column.append(True)
+                    section = self.treestore.append(None, column)
+                else:
+                    word_pair = [ w.strip() for w in line.split("=") ]
+                    assert len(word_pair) == 2, 'Fileformaterror in "%s": \
+                            Not exactly one "=" in line %s' % ( file, i+1 )
+                    self.quizlist.append(word_pair)
+                    column = []; column.extend(word_pair)
+                    column.append(True)
+                    self.treestore.append(section, column)
+        f.close()
+
+    # Process "heading-tags" on reading quiz-files [see read_quiz_list(file)]
+
+    def on_tag_language(self, word_pair):
+        self.data_name = word_pair
+        self.all_subquizzes = [ word_pair[0] + " → " + word_pair[1],
+                word_pair[1] + " → " + word_pair[0] ]
+
+    def on_tag_question(self, word_pair=["$what"]):
+        common = { "$what" : _("What is this?"), 
+                "$voc_test" : _("Please translate:") }
+        if word_pair[0] in common:
+            word_pair = [ common[word_pair[0]], common[word_pair[0]] ]
+        elif len(word_pair) == 1:
+            word_pair.append(word_pair[0])
+        self.question_topic = word_pair
+
+    def on_tag_type(self, word_pair=None):
+        self.type = word_pair[0]
+
+    def on_tag_media(self, word_pair):
+        # TODO (Only needed with gstreamer support)
+        pass
+
+    def on_tag_generator(self, word_pair):
+        # TODO
+        pass
 
 
 class Quiz:
