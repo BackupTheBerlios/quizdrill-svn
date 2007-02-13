@@ -121,7 +121,8 @@ class Gui:
         if quiz_filer.all_subquizzes == []:
             self.subquiz_combobox.hide()
         else:
-            #self.subquiz_combobox.clear()
+            for i in range(2):            # dirty clear combobox
+                self.subquiz_combobox.remove_text(0)
             for subquiz in quiz_filer.all_subquizzes:
                 self.subquiz_combobox.append_text(subquiz)
             self.subquiz_combobox.set_active(self.quiz.ask_from)
@@ -381,6 +382,7 @@ class Quiz:
     """
     DEFAULT_MULTICHOICE_LEN = 7
     quiz_pool = []
+    listoners = {"break_time" : [], "question_changed" : [] }
 
     def __init__(self, quiz_pool, ask_from=0, exam_length=15):
         self.answered = 0
@@ -390,6 +392,17 @@ class Quiz:
         self.ask_from = ask_from
         self.answer_to = 1 - ask_from
         self.add_quizzes(quiz_pool)
+
+    def connect(self, key, func):
+        self.listoners.append[key](func)
+
+    def disconnect(self, key, func):
+        if func in self.listoners[key]:
+            self.listoners[key].remove(func)
+
+    def notify(self, key):
+        for func in self.listoners[key]:
+            func()
 
     def next(self):
         """ ask next question """
@@ -450,6 +463,9 @@ class Quiz:
         for quiz in rm_quizzes:
             self.quiz_pool.remove(quiz)
         self._refit_multichoice_len()
+        if self.question in rm_quizzes:
+            self._select_question()
+            self.notify("question_changed")
 
     def _refit_multichoice_len(self):
         if len(self.quiz_pool) < self.DEFAULT_MULTICHOICE_LEN:
