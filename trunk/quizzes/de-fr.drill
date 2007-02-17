@@ -183,39 +183,6 @@ schwarz=noir(e)
 weiß=blanc(he)
 
 
-[Weitere=autre]
-
-die Dose=la boîte
-die Wanderung=la promenade
-am Strand=au bard de la mer
-der Strand=le plage
-das Lagerfeuer=le feu de comp
-der Wunsch=le souhait
-der Wolf=le loup
-der Regenschirm=la parapluie
-der Inhalt=le contenu
-der Stift=le stylo
-die Flasche=la bouteille
-das Blatt=la feuille
-das Buch=le livre
-das Mäppchen=la trousse
-das Radiergummie=la gomme
-das Taschentuch=la mouchoir
-die Brille=les lunettes (f)
-der Ring=l'anneau (m)
-das Kleidungsstück=le vêtement
-der Lärm=le bruit
-die Schäune=la grange
-das Werkzeug=l'outil (m)
-die Woche=la semaine
-das Geschenk=le cadeau
-das Schiff=le bateau
-der Hut=le chapeau
-die Hörbücher (s)=les pièces radiophoniques (f)
-der Handschuh=le gant
-der Einkaufszentrum=la grande surface
-die Überlandlinie=le cars
-
 genug=assez
 zwischen=entre
 zusammen=ensemble
@@ -304,3 +271,39 @@ die Nase=le nez
 der Mund=la bouche
 die Haare=les cheveux (f)
 die Haut=la peau
+
+
+[Weitere=autre]
+
+die Dose=la boîte
+die Wanderung=la promenade
+am Strand=au bard de la mer
+der Strand=le plage
+das Lagerfeuer=le feu de comp
+der Wunsch=le souhait
+der Wolf=le loup
+der Regenschirm=la parapluie
+der Inhalt=le contenu
+der Stift=le stylo
+die Flasche=la bouteille
+das Blatt=la feuille
+das Buch=le livre
+das Mäppchen=la trousse
+das Radiergummie=la gomme
+das Taschentuch=la mouchoir
+die Brille=les lunettes (f)
+der Ring=l'anneau (m)
+das Kleidungsstück=le vêtement
+der Lärm=le bruit
+die Schäune=la grange
+das Werkzeug=l'outil (m)
+die Woche=la semaine
+das Geschenk=le cadeau
+das Schiff=le bateau
+der Hut=le chapeau
+die Hörbücher (s)=les pièces radiophoniques (f)
+der Handschuh=le gant
+der Einkaufszentrum=la grande surface
+die Überlandlinie=le cars
+
+
