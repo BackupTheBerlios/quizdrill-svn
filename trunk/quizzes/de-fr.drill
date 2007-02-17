@@ -278,15 +278,51 @@ die Haut=la peau
 die Nationalität=la nationalité
 der Fremde=l'étranger (m)
 die Fremde=l'étrangère (f)
+die Sprache=la langue
+
 deutsch=allemand(e)
 französisch=français(e)
+englisch=anglais(e)
+britisch=britannique
 spanisch=espagnol(e)
+italienisch=italien(ne)
 österreichisch=autrichien(ne)
+schweizerisch=suisse
+helvetisch=helvétique
+dänisch=danois(e)
+norwegisch=norvégien(ne)
+schwedisch=suédois(e)
+#finnisch=finnois(e)
+finnisch=finlandais(e)
+russisch=russe
+polnisch=polonais(e)
+rumänisch=roumain(e)
 europäisch=européen(ne)
+
+chinesisch=chinois(e)
+#mandarin=mandarin
+japanisch=japonais(e)
+
+amerikanisch=américain(e)
+anglo-amerikanisch=anglo-américain(e)
+us-amerikanisch=états-unien(ne)
+kanadisch=canadien(ne)
+mexikanisch=mexicain(e)
+chilenisch=chilien(ne)
+peruanisch=péruvien(ne)
+brasilianisch=brésilien(ne)
+argentinisch=argentin(e)
+uruguayanisch=uruguayen(ne)
+
+
+USA=des États-Unis d'Amérique
 
 
 [Weitere=autre]
 
+der Tod=la mort
+der Tote=le mort
+die Tote=la morte
 die Dose=la boîte
 die Wanderung=la promenade
 am Strand=au bard de la mer
