@@ -104,6 +104,8 @@ class Gui:
         Set the Userinterface to test a different Quiz (represented by a 
         Quiz_Filer object or randomly selected).
         """
+        if quiz_filer == None:
+            quiz_filer = random.select(self.quiz_filer_list)
         self.quiz_filer = quiz_filer
         self.quiz = quiz_filer.quiz
         self.update_gui()
@@ -275,9 +277,9 @@ class Quiz_Filer:
                 gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
         if quiz_file_path != None:
             self.quiz_file_path = quiz_file_path
+        quizlist = self.read_quiz_list(self.quiz_file_path)
         score = self.read_score_file()
-        self.read_quiz_list(self.quiz_file_path)
-        self.quiz = Queued_Quiz(self.quizlist, score)
+        self.quiz = Quiz(quizlist)
         self.quiz.next()
 
     # read and write files
@@ -319,7 +321,7 @@ class Quiz_Filer:
                 "generator" : self.on_tag_generator }
         # Read file and add to quizlist and treestore
         f = open(file)
-        self.quizlist = []
+        quizlist = []
         section = None
 
         for i, line in enumerate(f.readlines()):
@@ -347,11 +349,12 @@ class Quiz_Filer:
                     word_pair = [ w.strip() for w in line.split("=") ]
                     assert len(word_pair) == 2, 'Fileformaterror in "%s": \
                             Not exactly one "=" in line %s' % ( file, i+1 )
-                    self.quizlist.append(word_pair)
+                    quizlist.append(word_pair)
                     column = []; column.extend(word_pair)
                     column.append(True)
                     self.treestore.append(section, column)
         f.close()
+        return quizlist
 
     # Process "heading-tags" on reading quiz-files [see read_quiz_list(file)]
 
@@ -387,10 +390,10 @@ class Quiz:
     multiple quiz
     """
     DEFAULT_MULTICHOICE_LEN = 7
-    quiz_pool = []
     listoners = {"break_time" : [], "question_changed" : [] }
 
     def __init__(self, quiz_pool, ask_from=0, exam_length=15):
+        self.quiz_pool = []
         self.answered = 0
         self.correct_answered = 0
         self.exam_length = exam_length
