@@ -77,7 +77,9 @@ class Gui:
         self.flash_answer_label = gw("flash_answer_label")
         self.progressbar1 = gw("progressbar1")
         # start quiz
-        self.quiz_filer_list.append(Quiz_Filer())
+        quiz_filer = Quiz_Filer()
+        quiz_filer.quiz.next()
+        self.quiz_filer_list.append(quiz_filer)
         self.switch_quiz(self.quiz_filer_list[0])
         # signals
         xml.signal_autoconnect(self)
@@ -85,6 +87,9 @@ class Gui:
     def next_question(self):
         if not self.quiz.next():
             self.start_relax_time(self.break_length)
+        self.update_gui()
+
+    def update_gui(self):
         for label in self.question_labels:
             label.set_text(self.quiz.question[self.quiz.ask_from])
         self.simple_answer_entry.set_text("")
@@ -103,7 +108,7 @@ class Gui:
         """
         self.quiz_filer = quiz_filer
         self.quiz = quiz_filer.quiz
-        self.next_question()
+        self.update_gui()
         # show and hide notebookpanels
         if not quiz_filer.type in self.SHOW_TABS:
             print _('Warning: unknown quiz type "%s"') % quiz_filer.type
@@ -263,7 +268,6 @@ class Quiz_Filer:
     all_subquizzes = []
     treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, 
             gobject.TYPE_BOOLEAN )
-    quiz = None
     question_topic = [ _("What is this?"), _("What is this?") ]
     data_name = [ _("Question"), _("Answer") ]
 
