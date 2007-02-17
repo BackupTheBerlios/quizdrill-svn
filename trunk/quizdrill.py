@@ -77,9 +77,7 @@ class Gui:
         self.flash_answer_label = gw("flash_answer_label")
         self.progressbar1 = gw("progressbar1")
         # start quiz
-        quiz_filer = Quiz_Filer()
-        quiz_filer.quiz.next()
-        self.quiz_filer_list.append(quiz_filer)
+        self.quiz_filer_list.append(Quiz_Filer())
         self.switch_quiz(self.quiz_filer_list[0])
         # signals
         xml.signal_autoconnect(self)
@@ -138,6 +136,8 @@ class Gui:
                     quiz_filer.question_topic[self.quiz.ask_from])
         # treeview
         ## Question/Answer-Columns
+        for column in self.word_treeview.get_columns():
+            self.word_treeview.remove_column(column)
         for i, title in enumerate(quiz_filer.data_name):
             tvcolumn = gtk.TreeViewColumn(title,
                     gtk.CellRendererText(), text=i)
@@ -217,7 +217,8 @@ class Gui:
         chooser.set_current_folder(os.path.dirname(self.quiz_file_path))
         response = chooser.run()
         if response == gtk.RESPONSE_OK:
-            self.generate_quiz(chooser.get_filename())
+            self.quiz_filer_list = [Quiz_Filer(chooser.get_filename())]
+            self.switch_quiz(self.quiz_filer_list[0])
         chooser.destroy()
 
     def on_multi_question_answer_button_clicked(self, widget, data=None):
@@ -266,17 +267,18 @@ class Quiz_Filer:
     quiz_file_path = "quizzes/de-fr.drill"
     type = "vocabulary"
     all_subquizzes = []
-    treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, 
-            gobject.TYPE_BOOLEAN )
     question_topic = [ _("What is this?"), _("What is this?") ]
     data_name = [ _("Question"), _("Answer") ]
 
     def __init__(self, quiz_file_path=None):
+        self.treestore = gtk.TreeStore(gobject.TYPE_STRING, 
+                gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
         if quiz_file_path != None:
             self.quiz_file_path = quiz_file_path
         score = self.read_score_file()
         self.read_quiz_list(self.quiz_file_path)
         self.quiz = Queued_Quiz(self.quizlist, score)
+        self.quiz.next()
 
     # read and write files
 
