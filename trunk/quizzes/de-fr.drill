@@ -18,7 +18,6 @@ sieben=sept
 acht=huit
 neun=neuf
 zehn=dix
-
 elf=onze
 zwölf=douze
 dreizehn=treize
@@ -29,7 +28,6 @@ siebzehn=dix-sept
 achzehn=dix-huit
 neunzehn=dix-neuf
 zwanzig=vingt
-
 einundzwanzig=vingt-et-un
 zweiundzwanzig=vingt-deux
 dreiundzwanzig=vingt-trois
@@ -39,12 +37,8 @@ vierzig=quarante
 fünfzig=cinquante
 sechszig=soixante
 siebzig=soixante-dix
-einundsiebzig=soixante-onze
 achzig=quatre-vingt
-einundachzig=quatre-vingt-un
 neunzig=quatre-vingt-dix
-einundneunzig=quatre-vingt-onze
-
 einhundert=cent
 zweihundert=deux cents
 dreihundert=trois cents
@@ -78,17 +72,10 @@ das Jahr (Zeitspanne)=l'année (f)
 der Morgen (Zeitspanne)=la matinée
 der Abend (Zeitspanne)=la soirée
 der Morgen=le matin
-am Mittag=à midi
-der Nachmittag=l'après-midi
+am Mitttag=à midi
+der Nachmitttag=l'après-midi
 der Abend=le soir
 die Uhr=l'heure (f)
-# die Taschenuhr=la montre
-die Armbanduhr=la montre
-#die Standuhr=la horloge
-#die Wanduhr=la horloge
-die Turmuhr=la horloge
-#die Stoppuhr=le chrono
-die Stoppuhr=le chronomètre
 
 Montag=lundi
 Dienstag=mardi
@@ -125,13 +112,12 @@ die Hauptspeise=le plat
 
 der Salat=la salade
 das Brot=le pain
-die Zwiebelsuppe=la soupe à l'oignon
+die Zwibelsuppe=la soupe à l'oignon
 
 die Ente=le canard
 das Rind=la viande
-das Brathähnchen=le poulet rôti
+das geröstete Hänchen=le poulet rôti
 der Fisch=le poisson
-das Gift=le poison
 der Lachs=le saumon
 
 die Käse=le fromage
@@ -154,8 +140,8 @@ der Kuchen=le gâteau
 der Mandelkuchen=la tarte aux amandes
 die gefüllte Schokolade=le chocolat fourrés
 
-der Kellner=le garçon
-die Kellnerin=la serveuse
+der Kelner=le garçon
+die Kelnerin=la serveuse
 
 das Wechselgeld=la monnaie
 die Karte=la carte
@@ -195,8 +181,25 @@ grau=gris(e)
 rosa=rose
 schwarz=noir(e)
 weiß=blanc(he)
-braun=brun(e)
-kastanienfarben=marron
+
+
+genug=assez
+zwischen=entre
+zusammen=ensemble
+allgemein=général
+regelmäßig=régulièrement
+jede=chaque
+besonders=tellement
+nächste=prochaine
+letzte=dernière
+letzter=dernier
+vor (zeitlich)=avant
+vor (Zeitdauer)=il y a
+vor (ortsbezogen)=devant
+deshalb=c'est pourquoi
+gratis=gratuit(e)
+besser=meilleur(e)
+erholsam=reposant(e)
 
 
 [Verben=verbe]
@@ -213,7 +216,7 @@ lesen=lire
 kaufen=acheter
 rufen=appeler
 bezahlen=payer
-anbieten / schenken=offrir
+anbeiten / schenken=offrir
 verlassen=quitter
 essen=manger
 haben=avoir
@@ -270,10 +273,22 @@ die Haare=les cheveux (f)
 die Haut=la peau
 
 
+[Nationalitäten=nationalités]
+
+die Nationalität=la nationalité
+der Fremde=l'étranger (m)
+die Fremde=l'étrangère (f)
+deutsch=allemand(e)
+französisch=français(e)
+spanisch=espagnol(e)
+österreichisch=autrichien(ne)
+europäisch=européen(ne)
+
+
 [Weitere=autre]
 
 die Dose=la boîte
-der Spaziergang=la promenade
+die Wanderung=la promenade
 am Strand=au bard de la mer
 der Strand=le plage
 das Lagerfeuer=le feu de comp
@@ -303,20 +318,4 @@ der Handschuh=le gant
 der Einkaufszentrum=la grande surface
 die Überlandlinie=le cars
 
-genug=assez
-zwischen=entre
-zusammen=ensemble
-allgemein=général
-regelmäßig=régulièrement
-jede=chaque
-besonders=tellement
-nächste=prochaine
-letzte=dernière
-letzter=dernier
-vor (zeitlich)=avant
-vor (Zeitdauer)=il y a
-vor (ortsbezogen)=devant
-deshalb=c'est pourquoi
-gratis=gratuit(e)
-besser=meilleur(e)
-erholsam=reposant(e)
+
