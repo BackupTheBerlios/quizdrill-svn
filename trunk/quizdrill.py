@@ -88,6 +88,10 @@ class Gui:
         self.update_gui()
 
     def update_gui(self):
+        """
+        (re-)set all the user-noeditable text (labels etc.).
+        Used when a new quiz is loaded, a new question is asked.
+        """
         for label in self.question_labels:
             label.set_text(self.quiz.question[self.quiz.ask_from])
         self.simple_answer_entry.set_text("")
@@ -176,19 +180,7 @@ class Gui:
 
     # main_window handlers #
 
-    def on_treeview_toogled(self, cell, path ):
-        """ toggle selected CellRendererToggle Row """
-        toggled_quizzes = []
-        treestore = self.quiz_filer.treestore
-        treestore[path][2] = not treestore[path][2]
-        for child in treestore[path].iterchildren():
-            if child[2] != treestore[path][2]:
-                child[2] = treestore[path][2]
-                toggled_quizzes.append(self.get_quiz_from_treeview(child))
-        if treestore[path][2]:
-            self.quiz.add_quizzes(toggled_quizzes)
-        else:
-            self.quiz.remove_quizzes(toggled_quizzes)
+    ## all (or indebendant of) tabs ##
 
     def on_quit(self, widget):
         for filer in self.quiz_filer_list:
@@ -223,6 +215,36 @@ class Gui:
             self.switch_quiz(self.quiz_filer_list[0])
         chooser.destroy()
 
+    def on_main_notebook_switch_page(self, widget, gpointer, new_tab):
+        if new_tab == 2:  # "Simple Quiz"-tab
+            self.simple_question_button.grab_default()
+
+    ## words-/settings-tab ##
+
+    def on_subquiz_combobox_changed(self, widget):
+        new_status = widget.get_active()
+        self.quiz.set_question_direction(new_status)
+        if len(self.quiz_filer.question_topic) > 1:
+            for label in self.question_topic_labels:
+                label.set_text(self.quiz_filer.question_topic[new_status])
+        self.next_question()
+
+    def on_treeview_toogled(self, cell, path ):
+        """ toggle selected CellRendererToggle Row """
+        toggled_quizzes = []
+        treestore = self.quiz_filer.treestore
+        treestore[path][2] = not treestore[path][2]
+        for child in treestore[path].iterchildren():
+            if child[2] != treestore[path][2]:
+                child[2] = treestore[path][2]
+                toggled_quizzes.append(self.get_quiz_from_treeview(child))
+        if treestore[path][2]:
+            self.quiz.add_quizzes(toggled_quizzes)
+        else:
+            self.quiz.remove_quizzes(toggled_quizzes)
+
+    ## questionaskting-tabs (simple/multi/flash) ##
+
     def on_multi_question_answer_button_clicked(self, widget, data=None):
         if self.quiz.check(widget.get_label()):
             self.next_question()
@@ -244,18 +266,6 @@ class Gui:
                     self.flash_answer_buttons.index(widget))
         self.next_question()
         self.flash_notebook.set_current_page(0)
-
-    def on_subquiz_combobox_changed(self, widget):
-        new_status = widget.get_active()
-        self.quiz.set_question_direction(new_status)
-        if len(self.quiz_filer.question_topic) > 1:
-            for label in self.question_topic_labels:
-                label.set_text(self.quiz_filer.question_topic[new_status])
-        self.next_question()
-
-    def on_main_notebook_switch_page(self, widget, gpointer, new_tab):
-        if new_tab == 2:  # "Simple Quiz"-tab
-            self.simple_question_button.grab_default()
 
 
 class Quiz_Filer:
@@ -403,6 +413,7 @@ class Quiz:
         self.add_quizzes(quiz_pool)
 
     def connect(self, key, func):
+        """ Note connect, disconnect, notify aren't used yet """
         self.listoners.append[key](func)
 
     def disconnect(self, key, func):
