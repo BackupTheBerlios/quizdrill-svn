@@ -229,7 +229,8 @@ class Gui:
         chooser = gtk.FileChooserDialog("Open Quiz", None, 
                 gtk.FILE_CHOOSER_ACTION_OPEN, (gtk.STOCK_CANCEL, 
                 gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
-        chooser.set_current_folder(os.path.dirname(self.quiz_file_path))
+        chooser.set_current_folder(
+                os.path.abspath(os.path.dirname(self.quiz_file_path)))
         response = chooser.run()
         if response == gtk.RESPONSE_OK:
             self.quiz_filer_list = [Quiz_Filer(chooser.get_filename())]

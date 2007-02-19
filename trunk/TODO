@@ -24,6 +24,9 @@ Program
         * support learning strategies: e.g. Mnemonic[2] 
         * word said after correct answer on vocabulary tests
     * Test multiple quizzes
+        * UI: one list with all quizzes, mod with add/open/close menu-items
+            * but what should be done with bidirectional tests?
+                * needs activation explicitly and then asks
         * switch them between relax-times (not snoozing) as switching topics
           is unnecessarily difficult
 * improve UI

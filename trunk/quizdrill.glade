@@ -21,6 +21,13 @@
                 <child>
                   <widget class="GtkMenu" id="menuitem3_menu">
                     <child>
+                      <widget class="GtkImageMenuItem" id="imagemenuitem2">
+                        <property name="label" translatable="yes">gtk-add</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkImageMenuItem" id="Öffnen1">
                         <property name="visible">True</property>
                         <property name="label">gtk-open</property>
@@ -32,6 +39,13 @@
                     <child>
                       <widget class="GtkSeparatorMenuItem" id="separatormenuitem1">
                         <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="imagemenuitem3">
+                        <property name="label" translatable="yes">gtk-close</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
                       </widget>
                     </child>
                     <child>
@@ -605,47 +619,36 @@
                             <property name="n_rows">4</property>
                             <property name="n_columns">2</property>
                             <child>
-                              <widget class="GtkLabel" id="label4">
+                              <widget class="GtkButton" id="flash_answer_button2">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">No, ...</property>
-                              </widget>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label6">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Yes, ...</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkButton" id="flash_answer_button5">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">5 - no problem</property>
+                                <property name="label" translatable="yes">2 - but it's getting there</property>
                                 <signal name="clicked" handler="on_flash_answer_button_clicked"/>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkButton" id="flash_answer_button4">
+                              <widget class="GtkButton" id="flash_answer_button1">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">4 - after short hesitation</property>
+                                <property name="label" translatable="yes">1 - but it seemed familiar</property>
                                 <signal name="clicked" handler="on_flash_answer_button_clicked"/>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkButton" id="flash_answer_button0">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">0 - not at all</property>
+                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
                               </packing>
                             </child>
                             <child>
@@ -662,37 +665,48 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkButton" id="flash_answer_button0">
+                              <widget class="GtkButton" id="flash_answer_button4">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">0 - not at all</property>
+                                <property name="label" translatable="yes">4 - after short hesitation</property>
                                 <signal name="clicked" handler="on_flash_answer_button_clicked"/>
                               </widget>
                               <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkButton" id="flash_answer_button1">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">1 - but it seemed familiar</property>
-                                <signal name="clicked" handler="on_flash_answer_button_clicked"/>
-                              </widget>
-                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkButton" id="flash_answer_button2">
+                              <widget class="GtkButton" id="flash_answer_button5">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">2 - but it's getting there</property>
+                                <property name="label" translatable="yes">5 - no problem</property>
                                 <signal name="clicked" handler="on_flash_answer_button_clicked"/>
                               </widget>
                               <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
                               </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label6">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Yes, ...</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label4">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">No, ...</property>
+                              </widget>
                             </child>
                           </widget>
                           <packing>
@@ -842,37 +856,53 @@
                         <property name="n_rows">3</property>
                         <property name="n_columns">2</property>
                         <child>
-                          <widget class="GtkSpinButton" id="spinbutton3">
+                          <widget class="GtkSpinButton" id="spinbutton1">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="adjustment">15 1 100 5 10 10</property>
-                            <property name="climb_rate">1</property>
+                            <property name="adjustment">5 0 100 1 10 10</property>
                             <accessibility>
-                              <atkrelation target="label14" type="labelled-by"/>
+                              <atkrelation target="label5" type="labelled-by"/>
                             </accessibility>
                           </widget>
                           <packing>
                             <property name="left_attach">1</property>
                             <property name="right_attach">2</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
                             <property name="y_options"></property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkSpinButton" id="spinbutton2">
+                          <widget class="GtkLabel" id="label5">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="adjustment">10 0 600 5 10 10</property>
-                            <property name="climb_rate">1</property>
-                            <property name="numeric">True</property>
+                            <property name="xpad">3</property>
+                            <property name="label" translatable="yes">Snooze length in min:</property>
+                            <property name="tooltip" translatable="yes">How long to wait after the exam is interrupted before continueing the testing.</property>
                             <accessibility>
-                              <atkrelation target="label15" type="labelled-by"/>
+                              <atkrelation target="spinbutton1" type="label-for"/>
                             </accessibility>
                           </widget>
                           <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                            <property name="x_options">GTK_FILL</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label14">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="yalign">0</property>
+                            <property name="xpad">3</property>
+                            <property name="label" translatable="yes">Exam length:</property>
+                            <property name="tooltip" translatable="yes">How many questions are asked into there is a break.</property>
+                            <accessibility>
+                              <atkrelation target="spinbutton3" type="label-for"/>
+                            </accessibility>
+                          </widget>
+                          <packing>
+                            <property name="x_options">GTK_FILL</property>
                             <property name="y_options"></property>
                           </packing>
                         </child>
@@ -896,53 +926,37 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="label14">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="yalign">0</property>
-                            <property name="xpad">3</property>
-                            <property name="label" translatable="yes">Exam length:</property>
-                            <property name="tooltip" translatable="yes">How many questions are asked into there is a break.</property>
-                            <accessibility>
-                              <atkrelation target="spinbutton3" type="label-for"/>
-                            </accessibility>
-                          </widget>
-                          <packing>
-                            <property name="x_options">GTK_FILL</property>
-                            <property name="y_options"></property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label5">
-                            <property name="visible">True</property>
-                            <property name="xpad">3</property>
-                            <property name="label" translatable="yes">Snooze length in min:</property>
-                            <property name="tooltip" translatable="yes">How long to wait after the exam is interrupted before continueing the testing.</property>
-                            <accessibility>
-                              <atkrelation target="spinbutton1" type="label-for"/>
-                            </accessibility>
-                          </widget>
-                          <packing>
-                            <property name="top_attach">2</property>
-                            <property name="bottom_attach">3</property>
-                            <property name="x_options">GTK_FILL</property>
-                            <property name="y_options"></property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkSpinButton" id="spinbutton1">
+                          <widget class="GtkSpinButton" id="spinbutton2">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="adjustment">5 0 100 1 10 10</property>
+                            <property name="adjustment">10 0 600 5 10 10</property>
+                            <property name="climb_rate">1</property>
+                            <property name="numeric">True</property>
                             <accessibility>
-                              <atkrelation target="label5" type="labelled-by"/>
+                              <atkrelation target="label15" type="labelled-by"/>
                             </accessibility>
                           </widget>
                           <packing>
                             <property name="left_attach">1</property>
                             <property name="right_attach">2</property>
-                            <property name="top_attach">2</property>
-                            <property name="bottom_attach">3</property>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkSpinButton" id="spinbutton3">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="adjustment">15 1 100 5 10 10</property>
+                            <property name="climb_rate">1</property>
+                            <accessibility>
+                              <atkrelation target="label14" type="labelled-by"/>
+                            </accessibility>
+                          </widget>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                             <property name="y_options"></property>
                           </packing>
                         </child>
