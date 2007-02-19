@@ -44,13 +44,13 @@ class Gui:
     quiz_file_path = "quizzes/de-fr.drill"
     break_length = 900000    # 900,000 ms: 15min
     snooze_length = 300000   # 300,000 ms:  5min
-    timer_id = 0
-    quiz_filer_list = []
 
     def __init__(self):
+        self.timer_id = 0
+        self.quiz_filer_list = []
+        # widgets #
         xml = gtk.glade.XML(self.GLADE_FILE, "main_window", APP)
         gw = xml.get_widget
-        # widgets
         self.main_window = gw("main_window")
         self.main_notbook_tabs = {
                 "multi"  : [ gw("multi_tab_label"), gw("multi_tab_vbox") ], 
@@ -79,10 +79,10 @@ class Gui:
         sb = self.statusbar1 = gw("statusbar1")
         self.statusbar_contextid = { "last_answer" : 
                 sb.get_context_id( "The answer to the last asked question." ) }
-        # start quiz
+        # start quiz #
         self.quiz_filer_list.append(Quiz_Filer())
         self.switch_quiz(self.quiz_filer_list[0])
-        # signals
+        # signals #
         xml.signal_autoconnect(self)
 
     def next_question(self):
@@ -100,7 +100,7 @@ class Gui:
         self.simple_answer_entry.set_text("")
         self.progressbar1.set_fraction(
                 float(self.quiz.answered) / self.quiz.session_length)
-        # set multiquiz answers
+        # set multiquiz answers #
         for button, text in zip(
                 self.multi_question_buttons,self.quiz.multi_choices):
             button.set_label(text)
@@ -303,14 +303,14 @@ class Quiz_Filer:
 
     Note that the quiz-words are saved in a treestore.
     """
-    SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
-    quiz_file_path = "quizzes/de-fr.drill"
-    type = "vocabulary"
-    all_subquizzes = []
-    question_topic = [ _("What is this?"), _("What is this?") ]
-    data_name = [ _("Question"), _("Answer") ]
 
     def __init__(self, quiz_file_path=None):
+        self.SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
+        self.quiz_file_path = "quizzes/de-fr.drill"
+        self.type = "vocabulary"
+        self.all_subquizzes = []
+        self.question_topic = [ _("What is this?"), _("What is this?") ]
+        self.data_name = [ _("Question"), _("Answer") ]
         self.treestore = gtk.TreeStore(gobject.TYPE_STRING, 
                 gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
         if quiz_file_path != None:
@@ -426,9 +426,9 @@ class Quiz:
     multiple choice
     """
     DEFAULT_MULTICHOICE_LEN = 7
-    listoners = {"break_time" : [], "question_changed" : [] }
 
     def __init__(self, quiz_pool, ask_from=0, exam_length=15):
+        self.listoners = {"break_time" : [], "question_changed" : [] }
         self.quiz_pool = []
         self.answered = 0
         self.correct_answered = 0
