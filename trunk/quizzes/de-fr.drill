@@ -72,8 +72,8 @@ das Jahr (Zeitspanne) = l'année (f)
 der Morgen (Zeitspanne) = la matinée
 der Abend (Zeitspanne) = la soirée
 der Morgen = le matin
-am Mitttag = à midi
-der Nachmitttag = l'après-midi
+am Mittag = à midi
+der Nachmittag = l'après-midi
 der Abend = le soir
 die Uhr = l'heure (f)
 
@@ -84,6 +84,8 @@ Donnerstag = jeudi
 Freitag = vendredi
 Samstag = samedi
 Sonntag = dimanche
+
+im Jahre 1991 = en 1991
 
 
 [Restaurant = restaurant]
@@ -114,12 +116,11 @@ der Salat = la salade
 das Brot = le pain
 die Zwibelsuppe = la soupe à l'oignon
 
-das Fleisch = la viande
-das Rind = le bœuf
 die Ente = le canard
-das geröstete Hänchen = le poulet rôti
+die Gans = l'oie (f)
+das Rind = la viande
+das geröstete Hähnchen = le poulet rôti
 der Fisch = le poisson
-das Gift = le poison
 der Lachs = le saumon
 
 die Käse = le fromage
@@ -141,7 +142,6 @@ der Keks = le biscuit
 der Kuchen = le gâteau
 der Mandelkuchen = la tarte aux amandes
 die gefüllte Schokolade = le chocolat fourrés
-der türkische Honig = le nougat
 
 der Kelner = le garçon
 die Kelnerin = la serveuse
@@ -214,7 +214,7 @@ sich hinsetzen = s'asseoir
 es tut mir leid = je suis désolé(e)
 finden = trouver
 leben = vivre
-sterben = mourir
+sterben = motir
 lesen = lire
 kaufen = acheter
 rufen = appeler
@@ -264,6 +264,10 @@ verleihen = prêter
 sich erholen = se reposer
 warten = attendre
 zeigen = montrer
+treffen = rencontrer
+erzählen = racontrer
+sich erheben = se lever
+sich waschen = se laver
 
 
 [Körper = corps]
