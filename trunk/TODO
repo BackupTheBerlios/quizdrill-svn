@@ -35,8 +35,6 @@ Program
     * switch treeview colons, when test direction changes
     * easy edit of quizfile (open-in-editor or edit directly + save)
     * logo/icon
-    * show question to wrong multi choice answer 
-        (requires change of data structure)
 * gconf-support
     * last/recent quiz
     * config-options

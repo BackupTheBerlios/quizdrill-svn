@@ -34,3 +34,5 @@ char *s = N_("Yes, ...");
 char *s = N_("_Edit");
 char *s = N_("_File");
 char *s = N_("_Help");
+char *s = N_("gtk-add");
+char *s = N_("gtk-close");

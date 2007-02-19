@@ -268,13 +268,18 @@ class Gui:
     ## questionaskting-tabs (simple/multi/flash) ##
 
     def on_multi_question_answer_button_clicked(self, widget, data=None):
-        if self.quiz.check(widget.get_label()):
+        answer = widget.get_label()
+        if self.quiz.check(answer):
             self.redisplay_correctly_answered(self.quiz.question)
             self.next_question()
         else:
             widget.set_sensitive(False)
-            # TODO: on statusbar1: show question to selected answer #
+            # statusbar1: show question to selected answer #
+            text = _("To '%(quest)s' '%(ans)s' would be the correct answer.") \
+                    % { "ans" : answer, 
+                    "quest" : self.quiz.get_question_to_answer(answer) }
             self.statusbar1.pop(self.statusbar_contextid["last_answer"])
+            self.statusbar1.push(self.statusbar_contextid["last_answer"], text)
 
     def on_simple_question_button_clicked(self, widget, data=None):
         if self.quiz.check(self.simple_answer_entry.get_text().strip()):
@@ -450,6 +455,11 @@ class Quiz:
         """ Call the registered functions for a given key """
         for func in self.listoners[key]:
             func()
+
+    def get_question_to_answer(self, answer):
+        for q in self.quiz_pool:
+            if q[self.answer_to] == answer:
+                return q[self.ask_from]
 
     def next(self):
         """ ask next question """
