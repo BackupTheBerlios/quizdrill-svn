@@ -28,7 +28,7 @@ Program
             * but what should be done with bidirectional tests?
                 * needs activation explicitly and then asks
         * switch them between relax-times (not snoozing) as switching topics
-          is unnecessarily difficult
+          is unnecessarily difficult (for humans)
 * improve UI
     * support system-tray (notify when breaks over)
     * accessibility support
@@ -44,7 +44,7 @@ Program
 
 Documentation
 -------------
-* needed ...
+* always need more ...
 
 Quiz
 ----
