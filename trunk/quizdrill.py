@@ -174,6 +174,8 @@ class Gui:
         tvcolumn.add_attribute(toggler, "active", 2)
         self.word_treeview.append_column(tvcolumn)
         self.word_treeview.set_model(quiz_filer.treestore)
+        # clean statusbar #
+        self.statusbar1.pop(self.statusbar_contextid["last_answer"])
 
     def get_quiz_from_treeview(self, row):
         return [ row[0], row[1] ]
@@ -270,11 +272,15 @@ class Gui:
             self.next_question()
         else:
             widget.set_sensitive(False)
+            # TODO: on statusbar1: show question to selected answer #
+            self.statusbar1.pop(self.statusbar_contextid["last_answer"])
 
     def on_simple_question_button_clicked(self, widget, data=None):
         if self.quiz.check(self.simple_answer_entry.get_text().strip()):
             self.redisplay_correctly_answered(self.quiz.question)
             self.next_question()
+        else:
+            self.statusbar1.pop(self.statusbar_contextid["last_answer"])
     
     def on_flash_question_button_clicked(self, widget, date=None):
         self.flash_answer_label.set_text(
