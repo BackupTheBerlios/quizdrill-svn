@@ -416,7 +416,7 @@ class Quiz_Filer:
 class Quiz:
     """
     A simple random-selecting vocabulary test, with simple quiz and 
-    multiple quiz
+    multiple choice
     """
     DEFAULT_MULTICHOICE_LEN = 7
     listoners = {"break_time" : [], "question_changed" : [] }
@@ -440,6 +440,7 @@ class Quiz:
             self.listoners[key].remove(func)
 
     def notify(self, key):
+        """ Call the registered functions for a given key """
         for func in self.listoners[key]:
             func()
 
@@ -532,7 +533,7 @@ class Weighted_Quiz(Quiz):
         self.score_sum = self._gen_score_sum()
 
     def _select_question(self):
-        "selcet next question"
+        """ selcet next question """
         while True:
             Quiz._select_question(self)
             bound = random.random() * 1.01     # to avoid infinit loops
@@ -540,6 +541,11 @@ class Weighted_Quiz(Quiz):
                 return
 
     def check(self, solution):
+        """ 
+        Check if a given answer is correct.
+
+        Note: This changes the score of a given question (on correct answers).
+        """
         if Quiz.check(self, solution):
             self._update_score(self.question[self.ask_from], 
                     self.tries == 0)
@@ -548,6 +554,12 @@ class Weighted_Quiz(Quiz):
             return False
 
     def set_answer_quality(self, quality):
+        """
+        The equivalent to 'check' for flashcard tests. Rading should be on a
+        score from 0 (worst) to 5 (best) according to the SM-2 Algor.
+
+        Note: Currently only only evaluates if > 3 or not.
+        """
         self._update_score(self.question[self.ask_from], quality > 3)
 
     def _update_score(self, word, correct_answered):
