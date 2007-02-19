@@ -14,26 +14,26 @@ Program
         * (better) selection of next quiz for the learning strategy
             * start with the SuperMemo v2[1] algorithm
               PROBLEM: how to score the answer (0-5), without making the
-                user do this manually, wich slows the testing down 
-                considerbly. Using the time needed to answer does not help as
-                the user most likly will get interupted by other work, 
-                phone, ...
+                user do this manually, which slows the testing down 
+                considerably. Using the time needed to answer does not help as
+                the user will get interrupted by other work, phone, ...
               IDEA: 0: wrong in multiple choice (mc); 1: right in mc
                 2: right in simple quiz (sq) after peaking in mc
                 3: wrong in sq with more than 1 try; 4: wrong in sq with 1 try
-                5: right at first try
+                5: right at first try (doesn't seem to be that accurate)
         * support learning strategies: e.g. Mnemonic[2] 
         * word said after correct answer on vocabulary tests
     * Test multiple quizzes
         * switch them between relax-times (not snoozing) as switching topics
           is unnecessarily difficult
 * improve UI
-    * give feedback on Simple Quiz (e.g. misspelled words coloured red)
     * support system-tray (notify when breaks over)
     * accessibility support
     * switch treeview colons, when test direction changes
     * easy edit of quizfile (open-in-editor or edit directly + save)
     * logo/icon
+    * show question to wrong multi choice answer 
+        (requires change of data structure)
 * gconf-support
     * last/recent quiz
     * config-options
