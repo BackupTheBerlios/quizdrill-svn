@@ -20,7 +20,7 @@ Program
               IDEA: 0: wrong in multiple choice (mc); 1: right in mc
                 2: right in simple quiz (sq) after peaking in mc
                 3: wrong in sq with more than 1 try; 4: wrong in sq with 1 try
-                5: right at first try (doesn't seem to be that accurate)
+                5: right at first try (3-5 don't seem to be that good).
         * support learning strategies: e.g. Mnemonic[2] 
         * word said after correct answer on vocabulary tests
     * Test multiple quizzes
