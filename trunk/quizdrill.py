@@ -76,6 +76,9 @@ class Gui:
                 gw("flash_answer_button5") ]
         self.flash_answer_label = gw("flash_answer_label")
         self.progressbar1 = gw("progressbar1")
+        sb = self.statusbar1 = gw("statusbar1")
+        self.statusbar_contextid = { "last_answer" : 
+                sb.get_context_id( "The answer to the last asked question." ) }
         # start quiz
         self.quiz_filer_list.append(Quiz_Filer())
         self.switch_quiz(self.quiz_filer_list[0])
@@ -103,6 +106,22 @@ class Gui:
             button.set_label(text)
             button.set_sensitive(True)
 
+    def redisplay_correctly_answered(self, last_question):
+        """
+        Displays the last answer (currently on the StatusBar). This is so
+        the user has the possibility to review again especially after many
+        faulty answers (simple quiz) or surprised/unknows right answer (multi
+        choice). No use on flashcard.
+        """
+        # To translators: This is displayed on the statusbar so try to keep it 
+        #    short. The answer should be shown rather then the text or the 
+        #    question if the bar is too short
+        text = _("'%(answer)s' to '%(question)s' was correct.") % {
+                "answer" : last_question[self.quiz.answer_to],
+                "question" : last_question[self.quiz.ask_from] }
+        self.statusbar1.pop(self.statusbar_contextid["last_answer"])
+        self.statusbar1.push(self.statusbar_contextid["last_answer"], text)
+
     def switch_quiz(self, quiz_filer=None):
         """
         Set the Userinterface to test a different Quiz (represented by a 
@@ -113,9 +132,9 @@ class Gui:
         self.quiz_filer = quiz_filer
         self.quiz = quiz_filer.quiz
         self.update_gui()
-        # show and hide notebookpanels
+        # show and hide notebookpanels #
         if not quiz_filer.type in self.SHOW_TABS:
-            print _('Warning: unknown quiz type "%s"') % quiz_filer.type
+            print _('Warning: unknown quiz type "%s".') % quiz_filer.type
             type = "all"
         else:
             type = self.quiz_filer.type
@@ -126,7 +145,7 @@ class Gui:
                     widget.show()
                 else:
                     widget.hide()
-        # show, hide and settext of combobox
+        # show, hide and settext of combobox #
         if quiz_filer.all_subquizzes == []:
             self.subquiz_combobox.hide()
         else:
@@ -140,15 +159,15 @@ class Gui:
         for label in self.question_topic_labels:
             label.set_markup("<b>%s</b>" % 
                     quiz_filer.question_topic[self.quiz.ask_from])
-        # treeview
-        ## Question/Answer-Columns
+        # treeview #
+        ## Question/Answer-Columns ##
         for column in self.word_treeview.get_columns():
             self.word_treeview.remove_column(column)
         for i, title in enumerate(quiz_filer.data_name):
             tvcolumn = gtk.TreeViewColumn(title,
                     gtk.CellRendererText(), text=i)
             self.word_treeview.append_column(tvcolumn)
-        ## toggler
+        ## toggler ##
         toggler = gtk.CellRendererToggle()
         toggler.connect( 'toggled', self.on_treeview_toogled )
         tvcolumn = gtk.TreeViewColumn(_("test"), toggler)
@@ -159,7 +178,7 @@ class Gui:
     def get_quiz_from_treeview(self, row):
         return [ row[0], row[1] ]
 
-    # Timer
+    # Timer #
 
     def start_relax_time(self, break_length, minimize=True):
         """
@@ -247,12 +266,14 @@ class Gui:
 
     def on_multi_question_answer_button_clicked(self, widget, data=None):
         if self.quiz.check(widget.get_label()):
+            self.redisplay_correctly_answered(self.quiz.question)
             self.next_question()
         else:
             widget.set_sensitive(False)
 
     def on_simple_question_button_clicked(self, widget, data=None):
         if self.quiz.check(self.simple_answer_entry.get_text().strip()):
+            self.redisplay_correctly_answered(self.quiz.question)
             self.next_question()
     
     def on_flash_question_button_clicked(self, widget, date=None):
@@ -296,7 +317,6 @@ class Quiz_Filer:
 
     def read_score_file(self, type="", score_file=None):
         " Reads a score-file for a given quiz_file "
-        # from Gui
         if score_file == None:
             score_file = self._get_score_file(self.quiz_file_path, type)
         try:
@@ -316,7 +336,6 @@ class Quiz_Filer:
             f.close()
 
     def _get_score_file(self, quiz_file, type):
-        # from Gui
         return self.SCORE_PATH + os.path.basename(quiz_file) + \
                 '_' + type + ".score"
 
@@ -346,7 +365,7 @@ class Quiz_Filer:
                     if tag in tag_dict:
                         tag_dict[tag](word_pair)
                     else:
-                        print _('Warning: unknown tag "%s"') % tag
+                        print _('Warning: unknown tag "%s".') % tag
                 elif line[0] == '[':
                     line = line[1:-1]
                     word_pair = [ w.strip() for w in line.split("=", 1) ]

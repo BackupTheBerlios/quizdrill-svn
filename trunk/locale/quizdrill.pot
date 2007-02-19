@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-13 10:54+0100\n"
+"POT-Creation-Date: 2007-02-19 01:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,33 +16,38 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: quizdrill.py:109
+#: quizdrill.py:117
 #, python-format
-msgid "Warning: unknown quiz type \"%s\""
+msgid "'%(answer)s' to '%(question)s' was correct."
 msgstr ""
 
-#: quizdrill.py:142
+#: quizdrill.py:135
+#, python-format
+msgid "Warning: unknown quiz type \"%s\"."
+msgstr ""
+
+#: quizdrill.py:171
 msgid "test"
 msgstr ""
 
-#: quizdrill.py:266 quizdrill.py:357
+#: quizdrill.py:301 quizdrill.py:396
 msgid "What is this?"
 msgstr ""
 
-#: quizdrill.py:267
+#: quizdrill.py:302
 msgid "Question"
 msgstr ""
 
-#: quizdrill.py:267
+#: quizdrill.py:302
 msgid "Answer"
 msgstr ""
 
-#: quizdrill.py:330
+#: quizdrill.py:368
 #, python-format
-msgid "Warning: unknown tag \"%s\""
+msgid "Warning: unknown tag \"%s\"."
 msgstr ""
 
-#: quizdrill.py:358
+#: quizdrill.py:397
 msgid "Please translate:"
 msgstr ""
 

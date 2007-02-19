@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-13 10:54+0100\n"
+"POT-Creation-Date: 2007-02-19 01:10+0100\n"
 "PO-Revision-Date: 2007-01-24 21:17+0100\n"
 "Last-Translator: Adam Schmalhofer <schmalhof@users.berlios.de>\n"
 "Language-Team: German <quizdrill-main@lists.berlios.de>\n"
@@ -17,33 +17,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: quizdrill.py:109
+#: quizdrill.py:117
 #, python-format
-msgid "Warning: unknown quiz type \"%s\""
-msgstr "Warnung: unbekannter Quiztyp \"%s\""
+msgid "'%(answer)s' to '%(question)s' was correct."
+msgstr "„%(answer)s“ zu „%(question)s“ war richtig."
 
-#: quizdrill.py:142
+#: quizdrill.py:135
+#, python-format
+msgid "Warning: unknown quiz type \"%s\"."
+msgstr "Warnung: Unbekannter Quiztyp \"%s\"."
+
+#: quizdrill.py:171
 msgid "test"
 msgstr "testen"
 
-#: quizdrill.py:266 quizdrill.py:357
+#: quizdrill.py:301 quizdrill.py:396
 msgid "What is this?"
 msgstr "Was ist das?"
 
-#: quizdrill.py:267
+#: quizdrill.py:302
 msgid "Question"
 msgstr "Frage"
 
-#: quizdrill.py:267
+#: quizdrill.py:302
 msgid "Answer"
 msgstr "Antwort"
 
-#: quizdrill.py:330
+#: quizdrill.py:368
 #, python-format
-msgid "Warning: unknown tag \"%s\""
-msgstr "Warnung: unbekannter Tag \"%s\""
+msgid "Warning: unknown tag \"%s\"."
+msgstr "Warnung: unbekannter Tag \"%s\"."
 
-#: quizdrill.py:358
+#: quizdrill.py:397
 msgid "Please translate:"
 msgstr "Übersetze:"
 
