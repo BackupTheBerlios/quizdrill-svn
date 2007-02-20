@@ -10,7 +10,7 @@
                 <short>Use timer</short>
                 <long>
                     Whether or not the timer should be used. If it is used
-                    quizdrill will take a break after $exam_length questions.
+                    there will be a break after a given number of questions.
                 </long>
             </locale>
         </schema>
@@ -34,10 +34,10 @@
             <type>int</type>
             <default>10</default>
             <locale name="C">
-                <short>Break length</short>
+                <short>Break length in min</short>
                 <long>
-                    How long quizdrill waits after the exam is finished into
-                    quizdrill starts asking the questions again.
+                    How long to wait (in minuets) after the exam is finished 
+                    before continuing the quiz.
                 </long>
             </locale>
         </schema>
@@ -48,10 +48,10 @@
             <type>int</type>
             <default>5</default>
             <locale name="C">
-                <short>Snooze length</short>
+                <short>Snooze length in min</short>
                 <long>
-                    How long quizdrill waits after the exam is interrupted into
-                    quizdrill starts asking the questions again.
+                    How long to wait (in minuets) after the exam is interrupted 
+                    before continuing the quiz.
                 </long>
             </locale>
         </schema>
@@ -62,7 +62,7 @@
             <type>string</type>
             <default>/usr/share/quizdrill/quizzes/en-fr.drill</default>
             <locale name="C">
-                <short>Default quiz</short>
+                <short>Startup quiz</short>
                 <long>
                     Which quiz should be loaded on startup. This might be 
                     changed on closing quizdrill.

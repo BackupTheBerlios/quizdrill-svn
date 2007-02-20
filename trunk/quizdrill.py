@@ -137,7 +137,7 @@ class Gui:
         faulty answers (simple quiz) or surprised/unknows right answer (multi
         choice). No use on flashcard.
         """
-        # To translators: This is displayed on the statusbar so try to keep it 
+        # TRANSLATORS: This is displayed on the statusbar so try to keep it 
         #    short. The answer should be shown rather then the text or the 
         #    question if the bar is too short
         text = _("'%(answer)s' to '%(question)s' was correct.") % {
