@@ -79,11 +79,35 @@ class Gui:
         sb = self.statusbar1 = gw("statusbar1")
         self.statusbar_contextid = { "last_answer" : 
                 sb.get_context_id( "The answer to the last asked question." ) }
+        # gconf #
+        #try:
+        #    import gconf
+        #else:
+        #    self._init_gconf()
         # start quiz #
         self.quiz_filer_list.append(Quiz_Filer())
         self.switch_quiz(self.quiz_filer_list[0])
-        # signals #
+        # connect signals #
         xml.signal_autoconnect(self)
+
+    def _init_gconf(self):
+        """ 
+        Set configoptions from gconf.
+        
+        Note: Very experimenal; Needs additional errorhandling
+        """
+        USE_TIMER_KEY = '/apps/quizdrill/timer/use_timer'
+        BREAK_LENGTH_KEY = '/apps/quizdrill/timer/break_length'
+        SNOOZE_LENGTH_KEY = '/apps/quizdrill/timer/snooze_length'
+        DEFAULT_QUIZ_KEY = '/apps/quizdrill/default_quiz'
+        #
+        client = self.gconf_client = gconf.client_get_default()
+        #schema = 
+        self.use_timer = client.get_bool(USE_TIMER_KEY)
+        self.exam_length = client.get_int(EXAM_LENGTH_KEY)
+        self.break_length = client.get_int(BREAK_LENGTH_KEY)
+        self.snooze_length = client.get_int(SNOOZE_LENGTH_KEY)
+        self.quiz_file_path = client.get_string(DEFAULT_QUIZ_KEY)
 
     def next_question(self):
         if not self.quiz.next():
