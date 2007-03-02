@@ -3,7 +3,7 @@
 !question: $voc_test
 
 
-[Zahlen = nombres]
+[Zahlen = Nombres]
 
 die Zahl = le nombre
 
@@ -52,7 +52,7 @@ zehntausend = dix mille
 ungefähr dreißig = trentaine
 
 
-[Zeit = temps]
+[Zeit = Temps]
 
 Januar = janvier
 Februar = février
@@ -88,7 +88,7 @@ Sonntag = dimanche
 im Jahre 1991 = en 1991
 
 
-[Restaurant = restaurant]
+[Restaurant = Restaurant]
 
 der Eiskaffee = le café glacé
 der koffeinfreier Kaffe = le café décaféiné
@@ -154,7 +154,7 @@ der Streichholz = l'allumette (f)
 die Zigarette = la cigarette
 
 
-[Frage = question]
+[Frage = Question]
 
 wie = comment
 warum = pourquoi
@@ -166,7 +166,7 @@ zu welcher Zeit = à quel heure
 was = qu'est-ce que
 
 
-[Richtung = direction]
+[Richtung = Direction]
 
 der Norden = le nord
 der Osten = l'est (m)
@@ -174,7 +174,7 @@ der Süden = le sud
 der Westen = l'ouest (m)
 
 
-[Farben = couleur]
+[Farben = Couleurs]
 
 rot = rouge
 blau = bleu(e)
@@ -205,7 +205,7 @@ besser = meilleur(e)
 erholsam = reposant(e)
 
 
-[Verben = verbe]
+[Verben = Verbes]
 
 glauben = croire
 aufstehen = se lever
@@ -270,7 +270,7 @@ sich erheben = se lever
 sich waschen = se laver
 
 
-[Körper = corps]
+[Körper = Corps]
 
 die Augen (n) = les yeux (m)
 das Auge = l'oeil (m)
@@ -280,7 +280,7 @@ die Haare = les cheveux (f)
 die Haut = la peau
 
 
-[Nationalitäten = nationalités]
+[Nationalitäten = Nationalités]
 
 die Nationalität = la nationalité
 der Fremde = l'étranger (m)
@@ -325,7 +325,7 @@ uruguayanisch = uruguayen(ne)
 USA = des États-Unis d'Amérique
 
 
-[Weitere = autre]
+[Weitere = Autre]
 
 der Tod = la mort
 der Tote = le mort
