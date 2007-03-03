@@ -347,5 +347,9 @@ class DrillBuilder:
 
 if __name__ == "__main__":
     builder = DrillBuilder()
-    builder.convert_drill_file(sys.argv[1], sys.argv[2])
+    if len(sys.argv) == 3:
+        builder.convert_drill_file(sys.argv[1], sys.argv[2])
+    else: 
+        print _('Usage: %s [.drill.builder-file] [wikipedia.xml-file]') \
+                % sys.argv[0]
 
