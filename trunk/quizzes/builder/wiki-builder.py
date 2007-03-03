@@ -41,7 +41,8 @@ class AbstractQuizBuilder:
             answer_filter=None):
         self.quiz_dict = {}
         # Filtering #
-        filter_dict = { "brackets" : self.filter_brackets, None : pass }
+        filter_dict = { "brackets" : self.filter_brackets, 
+                None : self.filter_echo }
         self.category_filter = filter_dict[category_filter]
         self.question_filter = filter_dict[question_filter]
         self.answer_filter = filter_dict[answer_filter]
@@ -59,6 +60,12 @@ class AbstractQuizBuilder:
                 str += "\n" + self.question_filter(question[0]) + " = " + \
                         self.answer_filter(question[1])
         self.append_file.write(str)
+
+    def filter_echo(self, text):
+        """
+        Simple pass-through filter.
+        """
+        return text
 
     def filter_brackets(self, text):
         """
