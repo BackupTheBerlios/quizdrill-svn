@@ -33,14 +33,46 @@ locale.bindtextdomain(APP, DIR)
 locale.textdomain(APP)
 
 
+class AbstractQuizBuilder:
+    def __init__(self, category_filter, question_filter, answer_filter):
+        self.quiz_dict = {}
+        # Filtering #
+        filter_dict = { "brackets" : self.filter_brackets }
+        self.category_filter = filter_dict[category_filter]
+        self.question_filter = filter_dict[question_filter]
+        self.answer_filter = filter_dict[answer_filter]
+
+    # Writing Quiz_data #
+
+    def write_quiz_data(self):
+        """
+        Append the quiz-data to the .drill-file.
+        """
+        str = ""
+        for cat in self.quiz_dict.keys():
+            str += "\n\n\n[" + cat + "]\n"
+            for question in self.quiz_dict[cat]:
+                str += "\n" + question[0] + " = " + question[1]
+        self.append_file.write(str)
+
+    def filter_brackets(self, text):
+        """
+        Remove brackets as they often contain extra information, that isn't
+        provided on all articles (so the user can't know when to type it and
+        when not) and often not what the user wants to be tested on (e.g. 
+        city name in a different language, which might not be (easily) typable.
+        """
+        text = re.compile(r"\(.*?\)").sub("", text)
+        text = re.compile(r"\{.*?\}").sub("", text)
+        text = re.compile(r"\[.*?\]").sub("", text)
+        return text
+
 class AbstractMediaWikiHandler(ContentHandler):
     """
     Processes a MediaWiki pages-articles.xml Database Backup dump[1] and 
-    generates a Quizdrill quiz.
+    passes the article to separate_article implemented by a child.
 
     [1]: http://meta.wikimedia.org/wiki/Data_dumps
-
-    TODO: Spin-off class WikipediaArticleHandler.
     """
     def __init__(self, encoding="utf-8"):
         # Sax #
@@ -83,34 +115,33 @@ class AbstractMediaWikiHandler(ContentHandler):
         if self.in_title_field:
             self.title += unicode.encode(content, self.encoding)
 
+    # Processing Article #
     def separate_article(self, content):
         """
         Needs to be implemented by the child. Processes the actual article.
         """
-        pass
+        print 'Warning: "separate_article" should not be called on \
+                AbstractWikipediaHandler'
 
-class WikipediaArticleHandler(AbstractMediaWikiHandler):
+class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
     def __init__(self, append_file, template_tag, 
             category_tag, question_tag, answer_tag,
             category_filter, question_filter, answer_filter,
             one_of_categories=[], encoding="utf-8",
             wiki_cat_namespace=["category"]):
         AbstractMediaWikiHandler.__init__(self, encoding)
+        AbstractQuizBuilder.__init__(self, 
+                category_filter, question_filter, answer_filter)
         self.append_file = open(append_file, "a")
         # Regular Expressions #
         self.re_flags = re.DOTALL | re.IGNORECASE
         self.template_tag = re.compile(r" ").sub(r"[\s_]", template_tag)
         # Quiz Generating #
-        filter_dict = { "brackets" : self.filter_brackets }
         self.wiki_cat_namespace = wiki_cat_namespace
         self.category_tag = category_tag
         self.question_tag = question_tag
         self.answer_tag = answer_tag
-        self.category_filter = filter_dict[category_filter]
-        self.question_filter = filter_dict[question_filter]
-        self.answer_filter = filter_dict[answer_filter]
         self.one_of_categories = one_of_categories
-        self.quiz_dict = {}
 
     def separate_article(self, text):
         """
@@ -143,7 +174,7 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler):
         for infobox in unnested_template_re.findall(text):
             infobox_dict = self.separate_infobox(infobox)
             infobox_dict.update(dict)
-            self.append_quiz_data(infobox_dict)
+            self.append_template_to_quiz_data(infobox_dict)
         #print dict["_article"]
 
     def select_one_of_categories(self, dict):
@@ -212,24 +243,12 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler):
         """
         return re.compile(r"([\s_\n]|&nbsp;)+").sub(" ", text)
 
-    def filter_brackets(self, text):
-        """
-        Remove brackets as they often contain extra information, that isn't
-        provided on all articles (so the user can't know when to type it and
-        when not) and often not what the user wants to be tested on (e.g. 
-        city name in a different language, which might not be (easily) typable.
-        """
-        text = re.compile(r"\(.*?\)").sub("", text)
-        text = re.compile(r"\{.*?\}").sub("", text)
-        text = re.compile(r"\[.*?\]").sub("", text)
-        return text
-
     # Writing Quiz Data #
     
-    def append_quiz_data(self, dict):
+    def append_template_to_quiz_data(self, dict):
         """
-        Generate the quiz_data of a template (as a dictionary) and append it 
-        to self.quiz_dict.
+        Generate the quiz_data from a mediawiki-template (as a dictionary) and 
+        append it to self.quiz_dict.
         """
         if self.category_tag in dict:
             cat = self.category_filter(dict[self.category_tag])
@@ -256,17 +275,6 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler):
             self.quiz_dict[cat] = [[question, answer]]
         else:
             self.quiz_dict[cat].append([question, answer])
-
-    def write_quiz_data(self):
-        """
-        Append the quiz-data to the .drill-file.
-        """
-        str = ""
-        for cat in self.quiz_dict.keys():
-            str += "\n\n\n[" + cat + "]\n"
-            for question in self.quiz_dict[cat]:
-                str += "\n" + question[0] + " = " + question[1]
-        self.append_file.write(str)
 
     # Misc #
 
