@@ -59,13 +59,14 @@ class WikipediaHandler(ContentHandler):
         self.re_flags = re.DOTALL | re.IGNORECASE
         self.template_tag = re.compile(r" ").sub(r"[\s_]", template_tag)
         # Quiz Generating #
+        filter_dict = { "brackets" : self.filter_brackets }
         self.wiki_cat_namespace = wiki_cat_namespace
         self.category_tag = category_tag
         self.question_tag = question_tag
         self.answer_tag = answer_tag
-        self.category_filter = self.filter_brackets
-        self.question_filter = self.filter_brackets
-        self.answer_filter = self.filter_brackets
+        self.category_filter = filter_dict[category_filter]
+        self.question_filter = filter_dict[question_filter]
+        self.answer_filter = filter_dict[answer_filter]
         self.one_of_categories = one_of_categories
         self.quiz_dict = {}
         # Output #
