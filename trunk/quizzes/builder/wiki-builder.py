@@ -34,10 +34,14 @@ locale.textdomain(APP)
 
 
 class AbstractQuizBuilder:
-    def __init__(self, category_filter, question_filter, answer_filter):
+    """
+    Implements the appending of the Quiz-data to the .drill-file.
+    """
+    def __init__(self, category_filter=None, question_filter=None, 
+            answer_filter=None):
         self.quiz_dict = {}
         # Filtering #
-        filter_dict = { "brackets" : self.filter_brackets }
+        filter_dict = { "brackets" : self.filter_brackets, None : pass }
         self.category_filter = filter_dict[category_filter]
         self.question_filter = filter_dict[question_filter]
         self.answer_filter = filter_dict[answer_filter]
@@ -50,9 +54,10 @@ class AbstractQuizBuilder:
         """
         str = ""
         for cat in self.quiz_dict.keys():
-            str += "\n\n\n[" + cat + "]\n"
+            str += "\n\n\n[" + self.category_filter(cat) + "]\n"
             for question in self.quiz_dict[cat]:
-                str += "\n" + question[0] + " = " + question[1]
+                str += "\n" + self.question_filter(question[0]) + " = " + \
+                        self.answer_filter(question[1])
         self.append_file.write(str)
 
     def filter_brackets(self, text):
@@ -124,6 +129,11 @@ class AbstractMediaWikiHandler(ContentHandler):
                 AbstractWikipediaHandler'
 
 class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
+    """
+    Processes a MediaWiki database_dump (see class AbstractMediaWikiHandler),
+    extracts data from the categories and named-templates (e.g. infoboxes
+    and personendaten) and generates a .drill-file from it.
+    """
     def __init__(self, append_file, template_tag, 
             category_tag, question_tag, answer_tag,
             category_filter, question_filter, answer_filter,
@@ -177,17 +187,19 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
             self.append_template_to_quiz_data(infobox_dict)
         #print dict["_article"]
 
-    def select_one_of_categories(self, dict):
+    def select_one_of_categories(self, article_dict):
         """
+        Generate the 'select_one_categories' values from the dictionary of
+        the current wikipedia-page beeing processed.
         """
-        categories = dict["_cat"]
+        categories = article_dict["_cat"]
         for cat_list in self.one_of_categories:
             for cat in cat_list[1:]:
                 if cat in categories:
-                    dict[cat_list[0]] = cat
+                    article_dict[cat_list[0]] = cat
                     break
             else:
-                dict[cat_list[0]] = "_None_of" + cat_list[0]
+                article_dict[cat_list[0]] = "_None_of" + cat_list[0]
 
     def separate_infobox(self, infobox):
         """
@@ -251,7 +263,7 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
         append it to self.quiz_dict.
         """
         if self.category_tag in dict:
-            cat = self.category_filter(dict[self.category_tag])
+            cat = dict[self.category_tag]
         else:
             cat = ""
             if self.category_tag != "":
@@ -259,13 +271,13 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
                         using "" instead' %\
                         ( self.category_tag, dict["_article"] )
         if self.question_tag in dict:
-            question = self.question_filter(dict[self.question_tag])
+            question = dict[self.question_tag]
         else:
             print 'Warning "%s" missing in a template in article "%s", \
                     skipping.' % ( self.question_tag, dict["_article"] )
             return
         if self.answer_tag in dict:
-            answer = self.answer_filter(dict[self.answer_tag])
+            answer = dict[self.answer_tag]
         else:
             print 'Warning "%s" missing in a template in article "%s", \
                     skipping.' % ( self.answer_tag, dict["_article"] )
@@ -293,6 +305,9 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
 
 
 class DrillBuilder:
+    """
+    Processes a .drill.builder-file and outputs a .drill-file.
+    """
     def __init__(self):
         self.encoding = "utf-8"
         self.one_of_categories = []
