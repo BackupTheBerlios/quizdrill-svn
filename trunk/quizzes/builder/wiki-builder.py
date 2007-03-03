@@ -33,7 +33,7 @@ locale.bindtextdomain(APP, DIR)
 locale.textdomain(APP)
 
 
-class WikipediaHandler(ContentHandler):
+class AbstractMediaWikiHandler(ContentHandler):
     """
     Processes a MediaWiki pages-articles.xml Database Backup dump[1] and 
     generates a Quizdrill quiz.
@@ -42,11 +42,7 @@ class WikipediaHandler(ContentHandler):
 
     TODO: Spin-off class WikipediaArticleHandler.
     """
-    def __init__(self, append_file, template_tag, 
-            category_tag, question_tag, answer_tag,
-            category_filter, question_filter, answer_filter, 
-            one_of_categories=[], encoding="utf-8", 
-            wiki_cat_namespace=["category"]):
+    def __init__(self, encoding="utf-8"):
         # Sax #
         self.encoding = "utf-8"
         self.DATA_FIELD = "text"
@@ -55,23 +51,8 @@ class WikipediaHandler(ContentHandler):
         self.in_title_field = False
         self.content = ""
         self.title = ""
-        # Regular Expressions #
-        self.re_flags = re.DOTALL | re.IGNORECASE
-        self.template_tag = re.compile(r" ").sub(r"[\s_]", template_tag)
-        # Quiz Generating #
-        filter_dict = { "brackets" : self.filter_brackets }
-        self.wiki_cat_namespace = wiki_cat_namespace
-        self.category_tag = category_tag
-        self.question_tag = question_tag
-        self.answer_tag = answer_tag
-        self.category_filter = filter_dict[category_filter]
-        self.question_filter = filter_dict[question_filter]
-        self.answer_filter = filter_dict[answer_filter]
-        self.one_of_categories = one_of_categories
-        self.quiz_dict = {}
         # Output #
         self.log_file = "log"
-        self.append_file = open(append_file, "a")
         #self.log("=== " + time.ctime() + " ===")
 
     def parse(self, file):
@@ -102,7 +83,34 @@ class WikipediaHandler(ContentHandler):
         if self.in_title_field:
             self.title += unicode.encode(content, self.encoding)
 
-    # Regualar Expression methods #
+    def separate_article(self, content):
+        """
+        Needs to be implemented by the child. Processes the actual article.
+        """
+        pass
+
+class WikipediaArticleHandler(AbstractMediaWikiHandler):
+    def __init__(self, append_file, template_tag, 
+            category_tag, question_tag, answer_tag,
+            category_filter, question_filter, answer_filter,
+            one_of_categories=[], encoding="utf-8",
+            wiki_cat_namespace=["category"]):
+        AbstractMediaWikiHandler.__init__(self, encoding)
+        self.append_file = open(append_file, "a")
+        # Regular Expressions #
+        self.re_flags = re.DOTALL | re.IGNORECASE
+        self.template_tag = re.compile(r" ").sub(r"[\s_]", template_tag)
+        # Quiz Generating #
+        filter_dict = { "brackets" : self.filter_brackets }
+        self.wiki_cat_namespace = wiki_cat_namespace
+        self.category_tag = category_tag
+        self.question_tag = question_tag
+        self.answer_tag = answer_tag
+        self.category_filter = filter_dict[category_filter]
+        self.question_filter = filter_dict[question_filter]
+        self.answer_filter = filter_dict[answer_filter]
+        self.one_of_categories = one_of_categories
+        self.quiz_dict = {}
 
     def separate_article(self, text):
         """
@@ -318,7 +326,7 @@ class DrillBuilder:
         builder.parse(database)
 
     def on_tag_builder(self, word_pair):
-        builder_dict = {"WikipediaArticle" : WikipediaHandler }
+        builder_dict = {"WikipediaArticle" : WikipediaArticleHandler }
         assert len(word_pair) == 2, _('Error: tag $builder does not have \
                 exactly one "=".')
         assert word_pair[0] in builder_dict, _('Error: unknown builder "%s".')\
