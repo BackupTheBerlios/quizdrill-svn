@@ -284,9 +284,7 @@ class DrillBuilder:
         self.one_of_categories = []
 
     def convert_drill_file(self, file, database):
-        file_out = file.replace(".builder", "")
-        if file_out == file:
-            file_out += ".orinal"
+        file_out = file.replace(".builder", "") + ".original"
         fin = open(file)
         fout = open(file_out, "w")
         tag_dict = { "build_to" : self.on_tag_build_to, 
