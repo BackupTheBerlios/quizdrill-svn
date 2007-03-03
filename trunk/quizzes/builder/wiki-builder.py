@@ -57,19 +57,16 @@ class WikipediaHandler(ContentHandler):
         self.title = ""
         # Regular Expressions #
         self.re_flags = re.DOTALL | re.IGNORECASE
-        self.template_tag = re.compile(r" ").sub(r"[\s_]", "Infobox Staat")
+        self.template_tag = re.compile(r" ").sub(r"[\s_]", template_tag)
         # Quiz Generating #
-        self.wiki_cat_namespace = [ "category", "kategorie" ]
-        self.category_tag = "_Kontinent"
-        self.question_tag = "_article"
-        self.answer_tag = "HAUPTSTADT"
+        self.wiki_cat_namespace = wiki_cat_namespace
+        self.category_tag = category_tag
+        self.question_tag = question_tag
+        self.answer_tag = answer_tag
         self.category_filter = self.filter_brackets
         self.question_filter = self.filter_brackets
         self.answer_filter = self.filter_brackets
-        self.one_of_categories = [["_Kontinent", "Staat in Europa", 
-                "Staat in Afrika", "Staat in Afrika", "Staat in Nordamerika", 
-                "Staat in Südamerika", "Staat in Mittelamerika", 
-                "Staat in Asien", "Staat in Australien und Ozeanien"]]
+        self.one_of_categories = one_of_categories
         self.quiz_dict = {}
         # Output #
         self.log_file = "log"
