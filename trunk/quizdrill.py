@@ -41,7 +41,7 @@ class Gui:
             "questionnaire" : [ True, True, False ],
             "flashcard" : [ False, False, True ],
             "all" : [ True, True, True ] }
-    quiz_file_path = "quizzes/de-fr.drill"
+    quiz_file_path = "quizzes/deu-fra.drill"
     break_length = 900000    # 900,000 ms: 15min
     snooze_length = 300000   # 300,000 ms:  5min
 
