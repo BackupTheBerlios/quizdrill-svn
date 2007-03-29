@@ -37,8 +37,8 @@ gettext.textdomain(APP)
 
 class Gui:
     GLADE_FILE = "quizdrill.glade"
-    SHOW_TABS = { "vocabulary" : [ True, True, False], 
-            "questionnaire" : [ True, True, False ],
+    SHOW_TABS = { "vocabulary" : [ True, True, True], 
+            "questionnaire" : [ True, True, True ],
             "flashcard" : [ False, False, True ],
             "all" : [ True, True, True ] }
     quiz_file_path = "quizzes/deu-fra.drill"
