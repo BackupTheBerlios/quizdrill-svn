@@ -335,7 +335,7 @@ class Quiz_Filer:
 
     def __init__(self, quiz_file_path=None):
         self.SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
-        self.quiz_file_path = "quizzes/de-fr.drill"
+        self.quiz_file_path = "quizzes/deu-fra.drill"
         self.type = "vocabulary"
         self.all_subquizzes = []
         self.question_topic = [ _("What is this?"), _("What is this?") ]
