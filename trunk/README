@@ -2,8 +2,8 @@ About
 =====
 Quizdrill is a program to test mostly memorizing tasks to excess. It was 
 inspired by langdrill[1], a language drill program, which itself was inspired 
-by JavaDrill[2]. No code came from either, however the quizzes en-fr.drill, 
-en-ja.drill, en-ja_romaji.drill and en-sv.drill are taken directly from 
+by JavaDrill[2]. No code came from either, however the quizzes eng-fra.drill, 
+eng-jpn.drill, eng-jpn_romaji.drill and eng-svd.drill are taken directly from 
 langdrill (french.drill, japanese.drill, romaji.drill and swedish.drill). 
 Quizdrill offers multiple choice test as well as simple test (where you type 
 the answer). As opposed to langdrill quizdrill should ask the questions 

@@ -346,7 +346,7 @@ class Quiz_Filer:
             self.quiz_file_path = quiz_file_path
         quizlist = self.read_quiz_list(self.quiz_file_path)
         score = self.read_score_file()
-        self.quiz = Quiz(quizlist)
+        self.quiz = Weighted_Quiz(quizlist)
         self.quiz.next()
 
     # read and write files
@@ -719,7 +719,8 @@ class Queued_Quiz(Weighted_Quiz):
                 rm_scored_quizzes.append(quiz)
         Weighted_Quiz.remove_quizzes(self, rm_scored_quizzes)
         self._insure_min_quiz_num()
-                
+
+
 if __name__ == "__main__":
     gui = Gui()
     gtk.main()
