@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2007, Adam Schmalhofer
-# Developed by Adam Schmalhofer <schmalhof@users.berlios.de>
+# Copyright (C) 2007, Adam Schmalhofer <schmalhof@users.berlios.de>
+# Developed at http://quizdrill.berlios.de/
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
