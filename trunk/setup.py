@@ -21,15 +21,16 @@
 from distutils.core import setup
 
 setup(name='quizdrill', 
-        version='0.1.1', 
+        version='0.2.0',
         description='',
         author='Adam Schmalhofer',
         author_email='schmalhof@users.berlios.de',
-        url='http://developer.berlios.de/projects/quizdrill/',
+        url='http://quizdrill.berlios.de/',
         py_modules=['quizdrill'],
-        data_files=[('quizzes', ['quizzes/de-fr.drill', 'quizzes/en-fr.drill', 
-            'quizzes/en-ja.drill', 'quizzes/en-ja_roma.drill', 
-            'quizzes/sn-sv.drill', 'quizzes/fr_verb.drill']),
+        data_files=[('quizzes', ['quizzes/deu-fra.drill', 
+            'quizzes/eng-fra.drill', 'quizzes/eng-jpn.drill', 
+            'quizzes/eng-jpn_romaji.drill', 'quizzes/eng-svd.drill', 
+            'quizzes/fra_verb.drill']),
             ('po', ['po/de.po']),
-            ('doc', ['README', 'TODO', 'GPL-2', 'Changelog'])]
+            ('doc', ['README', 'TODO', 'GPL-2', 'Changes'])]
         )

@@ -1,0 +1,9 @@
+README
+GPL-2
+COPYING
+Changes
+gettext-mo-files.sh
+quizdrill.py
+setup.py
+quizzes/builder/wiki-builder.py
+include quizzes/*.drill

@@ -1,0 +1,13 @@
+* renamed quizzes to use the iso 639-3 language code
+* made .po-folder more like the standard
+* added .schemas.in file
+* extended de-fr.diff (thanks to oliver)
+* Statusbar shows last answer
+* added Flashcard mode (!type: flashcard)
+* rearanged traslation files (e.g. created po-dir)
+* added: ask only selected quizzes
+* Snooze on minimize
+* Quizzes get added in batches once the previous words are known
+
+0.1.0: 2007-02-02
+* Initial Release
