@@ -70,10 +70,8 @@ class Gui:
                 gw("button15"), gw("button16"), gw("button17") ]
         self.simple_question_button = gw("simple_question_button")
         self.flash_notebook = gw("flash_notebook")
-        self.flash_answer_buttons = [ gw("flash_answer_button0"), 
-                gw("flash_answer_button1"), gw("flash_answer_button2"), 
-                gw("flash_answer_button3"), gw("flash_answer_button4"), 
-                gw("flash_answer_button5") ]
+        self.flash_answer_buttons = [ 
+                gw("flash_answer_button_no"), gw("flash_answer_button_yes") ]
         self.flash_answer_label = gw("flash_answer_label")
         self.progressbar1 = gw("progressbar1")
         sb = self.statusbar1 = gw("statusbar1")
@@ -596,12 +594,12 @@ class Weighted_Quiz(Quiz):
 
     def set_answer_quality(self, quality):
         """
-        The equivalent to 'check' for flashcard tests. Rading should be on a
-        score from 0 (worst) to 5 (best) according to the SM-2 Algor.
-
-        Note: Currently only only evaluates if > 3 or not.
+        The equivalent to 'check' for flashcard tests. 0: Wrong, 1: Correct.
+        
+        Future: Rating will be on a score from 0 (worst) to 5 (best) for the 
+        SM-2 Algor.
         """
-        self._update_score(self.question[self.ask_from], quality > 3)
+        self._update_score(self.question[self.ask_from], quality == 1)
 
     def _update_score(self, word, correct_answered):
         """
