@@ -7,3 +7,5 @@ quizdrill.py
 setup.py
 quizzes/builder/wiki-builder.py
 include quizzes/*.drill
+include po/*.po
+include po/POTFILES.*
