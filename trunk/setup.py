@@ -22,7 +22,9 @@ from setuptools import setup
 
 setup(name='quizdrill', 
         version='0.2.0',
-        description='',
+        description='A learning-by-testing program.',
+        long_description="""A learning-by-testing program to learn quickly, 
+            mostly memorizing tasks like vocabulary.""",
         author='Adam Schmalhofer',
         author_email='schmalhof@users.berlios.de',
         url='http://quizdrill.berlios.de/',
