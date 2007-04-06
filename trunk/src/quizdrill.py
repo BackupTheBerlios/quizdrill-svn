@@ -36,12 +36,12 @@ gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 
 class Gui:
-    GLADE_FILE = "quizdrill.glade"
+    GLADE_FILE = "data/quizdrill.glade"
     SHOW_TABS = { "vocabulary" : [ True, True, True], 
             "questionnaire" : [ True, True, True ],
             "flashcard" : [ False, False, True ],
             "all" : [ True, True, True ] }
-    quiz_file_path = "quizzes/deu-fra.drill"
+    quiz_file_path = "../quizzes/deu-fra.drill"
     break_length = 900000    # 900,000 ms: 15min
     snooze_length = 300000   # 300,000 ms:  5min
 
@@ -333,7 +333,7 @@ class Quiz_Filer:
 
     def __init__(self, quiz_file_path=None):
         self.SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
-        self.quiz_file_path = "quizzes/deu-fra.drill"
+        self.quiz_file_path = "../quizzes/deu-fra.drill"
         self.type = "vocabulary"
         self.all_subquizzes = []
         self.question_topic = [ _("What is this?"), _("What is this?") ]
@@ -719,6 +719,9 @@ class Queued_Quiz(Weighted_Quiz):
         self._insure_min_quiz_num()
 
 
-if __name__ == "__main__":
+def main():
     gui = Gui()
     gtk.main()
+
+if __name__ == "__main__":
+    main()

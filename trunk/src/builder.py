@@ -384,11 +384,15 @@ class DrillBuilder:
     def on_tag_one_of_categories(self, word_pair):
         self.one_of_categories = word_pair
 
-if __name__ == "__main__":
+
+def build():
     builder = DrillBuilder()
     if len(sys.argv) == 3:
         builder.convert_drill_file(sys.argv[1], sys.argv[2])
     else: 
         print _('Usage: %s [.drill.builder-file] [wikipedia.xml-file]') \
                 % sys.argv[0]
+
+if __name__ == "__main__":
+    build()
 

@@ -28,11 +28,17 @@ setup(name='quizdrill',
         author='Adam Schmalhofer',
         author_email='schmalhof@users.berlios.de',
         url='http://quizdrill.berlios.de/',
-        py_modules=['quizdrill'],
+        package_dir={'quizdrill': 'src'},
+        packages=['quizdrill'],
+        package_data={'quizdrill': 'data/quizdrill.glade'},
         data_files=[('quizzes', ['quizzes/deu-fra.drill', 
             'quizzes/eng-fra.drill', 'quizzes/eng-jpn.drill', 
             'quizzes/eng-jpn_romaji.drill', 'quizzes/eng-svd.drill', 
             'quizzes/fra_verb.drill']),
             ('po', ['po/de.po']),
-            ('doc', ['README', 'TODO', 'GPL-2', 'Changes'])]
+            ('doc', ['README', 'TODO', 'GPL-2', 'Changes'])],
+        entry_points={
+            'console_scripts': [ 'quiz_builder=quizdrill.builder:build' ],
+            'gui_scripts': [ 'quizdrill=quizdrill.gui:main' ]
+            }
         )
