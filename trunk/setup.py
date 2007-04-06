@@ -30,7 +30,7 @@ setup(name='quizdrill',
         url='http://quizdrill.berlios.de/',
         package_dir={'quizdrill': 'src'},
         packages=['quizdrill'],
-        package_data={'quizdrill': 'data/quizdrill.glade'},
+        package_data={'quizdrill': ['data/quizdrill.glade']},
         data_files=[('quizzes', ['quizzes/deu-fra.drill', 
             'quizzes/eng-fra.drill', 'quizzes/eng-jpn.drill', 
             'quizzes/eng-jpn_romaji.drill', 'quizzes/eng-svd.drill', 
@@ -38,7 +38,7 @@ setup(name='quizdrill',
             ('po', ['po/de.po']),
             ('doc', ['README', 'TODO', 'GPL-2', 'Changes'])],
         entry_points={
-            'console_scripts': [ 'quiz_builder=quizdrill.builder:build' ],
-            'gui_scripts': [ 'quizdrill=quizdrill.gui:main' ]
+            'console_scripts': [ 'quiz_builder = quizdrill.builder:build' ],
+            'gui_scripts': [ 'quizdrill = quizdrill.gui:main' ]
             }
         )
