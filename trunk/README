@@ -28,8 +28,8 @@ Dependencies
 
 Usage
 -----
-Once you have the dependencies installed, start the program quizdrill.py. The 
-different quizzes can be found in the quizzes folder. There is no need to 
+Once you have the dependencies installed, start the program src/quizdrill.py. 
+The different quizzes can be found in the quizzes folder. There is no need to 
 install (e.g. make install etc.) and currently it is not supported either.
 
 Quizdrill is designed to really drill you while you are working on the 
