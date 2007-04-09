@@ -29,7 +29,7 @@ import locale
 import gettext
 _ = gettext.gettext
 APP = "quizdrill"
-DIR = "locale"
+DIR = "../locale"
 locale.bindtextdomain(APP, DIR)
 locale.textdomain(APP)
 gettext.bindtextdomain(APP, DIR)
