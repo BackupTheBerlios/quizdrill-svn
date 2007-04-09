@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-20 05:09+0100\n"
+"POT-Creation-Date: 2007-04-09 04:08+0200\n"
 "PO-Revision-Date: 2007-01-24 21:17+0100\n"
 "Last-Translator: Adam Schmalhofer <schmalhof@users.berlios.de>\n"
 "Language-Team: German <quizdrill-main@lists.berlios.de>\n"
@@ -19,161 +19,143 @@ msgstr ""
 
 #. TRANSLATORS: This is displayed on the statusbar so try to keep it
 #. short. The answer should be shown rather then the text or the
-#. question if the bar is too short
-#: ../quizdrill.py:143
+#. question if the bar is too short.
+#: ../src/quizdrill.py:141
 #, python-format
 msgid "'%(answer)s' to '%(question)s' was correct."
 msgstr "„%(answer)s“ zu „%(question)s“ war richtig."
 
-#: ../quizdrill.py:161
+#: ../src/quizdrill.py:159
 #, python-format
 msgid "Warning: unknown quiz type \"%s\"."
 msgstr "Warnung: Unbekannter Quiztyp \"%s\"."
 
-#: ../quizdrill.py:197
+#: ../src/quizdrill.py:195
 msgid "test"
 msgstr "testen"
 
 #. statusbar1: show question to selected answer #
-#: ../quizdrill.py:302
+#: ../src/quizdrill.py:300
 #, python-format
 msgid "To '%(quest)s' '%(ans)s' would be the correct answer."
 msgstr "Zu „%(quest)s“ wäre „%(ans)s“ die richtige Antwort."
 
-#: ../quizdrill.py:341 ../quizdrill.py:432
+#: ../src/quizdrill.py:339 ../src/quizdrill.py:430
 msgid "What is this?"
 msgstr "Was ist das?"
 
-#: ../quizdrill.py:342
+#: ../src/quizdrill.py:340
 msgid "Question"
 msgstr "Frage"
 
-#: ../quizdrill.py:342
+#: ../src/quizdrill.py:340
 msgid "Answer"
 msgstr "Antwort"
 
-#: ../quizdrill.py:404
+#: ../src/quizdrill.py:402
 #, python-format
 msgid "Warning: unknown tag \"%s\"."
 msgstr "Warnung: unbekannter Tag \"%s\"."
 
-#: ../quizdrill.py:433
+#: ../src/quizdrill.py:431
 msgid "Please translate:"
 msgstr "Übersetze:"
 
-#: ../quizdrill.glade.h:1
-msgid "0 - not at all"
-msgstr "0 - überhaupt nicht"
-
-#: ../quizdrill.glade.h:2
-msgid "1 - but it seemed familiar"
-msgstr "1 - aber es schien bekannt"
-
-#: ../quizdrill.glade.h:3
-msgid "2 - but it's getting there"
-msgstr "2 - aber es wird besser"
-
-#: ../quizdrill.glade.h:4
-msgid "3 - but I needed a bit"
-msgstr "3 - aber ich habe eine Weile gebraucht"
-
-#: ../quizdrill.glade.h:5
-msgid "4 - after short hesitation"
-msgstr "4 - nach kurzer Überlegung"
-
-#: ../quizdrill.glade.h:6
-msgid "5 - no problem"
-msgstr "5 - keine Probleme"
-
-#: ../quizdrill.glade.h:7
+#: ../src/data/quizdrill.glade.h:1
 msgid "<b>Solution:</b>"
 msgstr "<b>Lösung:</b>"
 
-#: ../quizdrill.glade.h:8
+#: ../src/data/quizdrill.glade.h:2
 msgid "<b>Subquiz:</b>"
 msgstr "<b>Teilquiz:</b>"
 
-#: ../quizdrill.glade.h:9
+#: ../src/data/quizdrill.glade.h:3
 msgid "<b>Timer:</b>"
 msgstr "<b>Stoppuhr:</b>"
 
-#: ../quizdrill.glade.h:10
+#: ../src/data/quizdrill.glade.h:4
 msgid "Break length in min:"
 msgstr "Pausenlänge in min:"
 
-#: ../quizdrill.glade.h:11
+#: ../src/data/quizdrill.glade.h:5
 msgid "Did you remember it correctly?"
 msgstr "Haben Sie dies richtig beantwortet?"
 
-#: ../quizdrill.glade.h:12
+#: ../src/data/quizdrill.glade.h:6
 msgid "Evaluate"
 msgstr "Bewerten"
 
-#: ../quizdrill.glade.h:13
+#: ../src/data/quizdrill.glade.h:7
 msgid "Exam length:"
 msgstr "Prüfungslänge:"
 
-#: ../quizdrill.glade.h:14
+#: ../src/data/quizdrill.glade.h:8
 msgid "Flashcard"
 msgstr "Karteikarten"
 
-#: ../quizdrill.glade.h:15 ../quizdrill.schemas.in.h:3
-msgid ""
-"How long to wait (in minuets) after the exam is finished before continuing "
-"the quiz."
-msgstr ""
-"Wielange (in minuten) nach Prüfungsende gewartet wird, bis das Testen "
-"fortgesetzt wird."
-
-#: ../quizdrill.glade.h:16 ../quizdrill.schemas.in.h:4
-msgid ""
-"How long to wait (in minuets) after the exam is interrupted before "
-"continuing the quiz."
-msgstr ""
-"Wielange (in minuten) nach einer Unterbrechung der Prüfung gewartet wird, "
-"bis das Testen fortgesetzt wird."
-
-#: ../quizdrill.glade.h:17 ../quizdrill.schemas.in.h:5
-msgid "How many questions are asked into there is a break."
-msgstr "Anzahl der gestellten Fragen bis eine Pause genommen wird."
-
-#: ../quizdrill.glade.h:18
+#: ../src/data/quizdrill.glade.h:9
 msgid "Multiple Choice"
 msgstr "Mehrfachauswahl"
 
-#: ../quizdrill.glade.h:19
-msgid "No, ..."
-msgstr "Nein, ..."
-
-#: ../quizdrill.glade.h:20
+#: ../src/data/quizdrill.glade.h:10
 msgid "Quizdrill"
 msgstr "Quizdrill"
 
-#: ../quizdrill.glade.h:21
+#: ../src/data/quizdrill.glade.h:11
 msgid "Quizdrill Preferences"
 msgstr "Quizdill Einstellungen"
 
-#: ../quizdrill.glade.h:22
+#: ../src/data/quizdrill.glade.h:12
 msgid "Show solution"
 msgstr "Lösung zeigen"
 
-#: ../quizdrill.glade.h:23
+#: ../src/data/quizdrill.glade.h:13
 msgid "Simple Quiz"
 msgstr "Einfacher Quiz"
 
-#: ../quizdrill.glade.h:24
+#: ../src/data/quizdrill.glade.h:14
 msgid "Snooze length in min:"
 msgstr "Schlummerzeit in min:"
 
-#: ../quizdrill.glade.h:25
+#: ../src/data/quizdrill.glade.h:15
 msgid "Statistics"
 msgstr "Statistiken"
 
-#: ../quizdrill.glade.h:26
+#: ../src/data/quizdrill.glade.h:16
+msgid ""
+"This program is free software; you can redistribute it and/or modify it "
+"under the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for "
+"more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License along with "
+"this program; if not, write to the Free Software Foundation, Inc., 59 Temple "
+"Place - Suite 330, Boston, MA 02111-1307, USA."
+msgstr ""
+"Dieses Programm ist freie Software; Sie können es weitergeben und/oder "
+"modifizieren im Sinne der GNU General Public License wie sie von der Free "
+"Software Foundation veröffentlicht wird; entweder Version 2, oder "
+"(wahlweise) jede neuere Version.\n"
+"\n"
+"Dieses Programm wird in der Hoffnung vertrieben, dass es nützlich ist, "
+"jedoch OHNE JEDE GARANTIE; selbst ohne die implizite Garantie der "
+"TAUGLICHKEIT oder der EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie die GNU "
+"General Public License für weitere Details.\n"
+"\n"
+"Sie sollten eine Kopie der GNU General Public License mit diesem Programm "
+"erhalten haben; wenn nicht, dann schreiben Sie an Free Software Foundation, "
+"Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
+
+#: ../src/data/quizdrill.glade.h:21
 msgid "Use _timer"
 msgstr "Stopp_uhr benutzen"
 
-#: ../quizdrill.glade.h:27 ../quizdrill.schemas.in.h:9
+#: ../src/data/quizdrill.glade.h:22 ../quizdrill.schemas.in.h:9
 msgid ""
 "Whether or not the timer should be used. If it is used there will be a break "
 "after a given number of questions."
@@ -181,28 +163,24 @@ msgstr ""
 "Ob die Stoppuhr verwendet werden soll. Wenn ja wird gibt es nach einer "
 "angegebenen Anzahl an Fragen zur Pause auffordern."
 
-#: ../quizdrill.glade.h:28
+#: ../src/data/quizdrill.glade.h:23
 msgid "Words"
 msgstr "Wörter"
 
-#: ../quizdrill.glade.h:29
-msgid "Yes, ..."
-msgstr "Ja, ..."
-
-#: ../quizdrill.glade.h:30
+#: ../src/data/quizdrill.glade.h:24
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: ../quizdrill.glade.h:31
+#: ../src/data/quizdrill.glade.h:25
 msgid "_File"
 msgstr "_Datei"
 
-#: ../quizdrill.glade.h:32
+#: ../src/data/quizdrill.glade.h:26
 msgid "_Help"
 msgstr "_Hilfe"
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../quizdrill.glade.h:34
+#: ../src/data/quizdrill.glade.h:28
 msgid "translators-credits"
 msgstr "Deutsch (de): Adam Schmalhofer"
 
@@ -213,6 +191,26 @@ msgstr "Pausenlänge in min"
 #: ../quizdrill.schemas.in.h:2
 msgid "Exam length"
 msgstr "Prüfungslänge"
+
+#: ../quizdrill.schemas.in.h:3
+msgid ""
+"How long to wait (in minuets) after the exam is finished before continuing "
+"the quiz."
+msgstr ""
+"Wielange (in minuten) nach Prüfungsende gewartet wird, bis das Testen "
+"fortgesetzt wird."
+
+#: ../quizdrill.schemas.in.h:4
+msgid ""
+"How long to wait (in minuets) after the exam is interrupted before "
+"continuing the quiz."
+msgstr ""
+"Wielange (in minuten) nach einer Unterbrechung der Prüfung gewartet wird, "
+"bis das Testen fortgesetzt wird."
+
+#: ../quizdrill.schemas.in.h:5
+msgid "How many questions are asked into there is a break."
+msgstr "Anzahl der gestellten Fragen bis eine Pause genommen wird."
 
 #: ../quizdrill.schemas.in.h:6
 msgid "Snooze length in min"
@@ -233,3 +231,27 @@ msgid ""
 msgstr ""
 "Welcher quiz beim starten benutzt werden soll. Dies ängert sich womöglich "
 "nach dem beenden von quizdrill"
+
+#~ msgid "0 - not at all"
+#~ msgstr "0 - überhaupt nicht"
+
+#~ msgid "1 - but it seemed familiar"
+#~ msgstr "1 - aber es schien bekannt"
+
+#~ msgid "2 - but it's getting there"
+#~ msgstr "2 - aber es wird besser"
+
+#~ msgid "3 - but I needed a bit"
+#~ msgstr "3 - aber ich habe eine Weile gebraucht"
+
+#~ msgid "4 - after short hesitation"
+#~ msgstr "4 - nach kurzer Überlegung"
+
+#~ msgid "5 - no problem"
+#~ msgstr "5 - keine Probleme"
+
+#~ msgid "No, ..."
+#~ msgstr "Nein, ..."
+
+#~ msgid "Yes, ..."
+#~ msgstr "Ja, ..."
