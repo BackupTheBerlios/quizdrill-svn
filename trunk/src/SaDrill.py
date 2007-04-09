@@ -47,6 +47,7 @@ class SaDrill:
         Parse a .drill or .build file.
         """
         self.current_drill_file = drill_file
+        f = open(drill_file)
         head_tag_dict = self.head_tag_dict
         build_tag_dict = self.build_tag_dict
 
