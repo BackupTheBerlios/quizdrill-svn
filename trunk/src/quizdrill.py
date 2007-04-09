@@ -137,7 +137,7 @@ class Gui:
         """
         # TRANSLATORS: This is displayed on the statusbar so try to keep it 
         #    short. The answer should be shown rather then the text or the 
-        #    question if the bar is too short
+        #    question if the bar is too short.
         text = _("'%(answer)s' to '%(question)s' was correct.") % {
                 "answer" : last_question[self.quiz.answer_to],
                 "question" : last_question[self.quiz.ask_from] }
