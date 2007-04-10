@@ -31,7 +31,8 @@ class SaDrill:
     Note: This is not used anywhere yet.
     """
 
-    def __init__(self, head_tag_dict={}, build_tag_dict={}):
+    def __init__(self, head_tag_dict={}, build_tag_dict={}, 
+            mandatory_head_tags=[], mandatory_build_tags=[]):
         self.head_tag_dict = { 
                 "language" : self.on_default_head_tag, 
                 "question" : self.on_default_head_tag, 
@@ -46,6 +47,8 @@ class SaDrill:
                 }
         self.head_tag_dict.update(head_tag_dict)
         self.build_tag_dict.update(build_tag_dict)
+        self.mandatory_head_tags=set(mandatory_head_tags)
+        self.mandatory_build_tags=set(mandatory_build_tags)
 
     def parse(self, drill_file):
         """
@@ -55,6 +58,8 @@ class SaDrill:
         f = open(drill_file)
         head_tag_dict = self.head_tag_dict
         build_tag_dict = self.build_tag_dict
+        used_mandatory_head_tags=set(None)
+        used_mandatory_build_tags=set(None)
 
         for i, line in enumerate(f.readlines()):
             line = line.strip()
@@ -67,6 +72,9 @@ class SaDrill:
                     tag = line[1:colon]
                     word_pair = [ w.strip() for w in line[colon+1:].split("=")]
                     if tag in head_tag_dict:
+                        if tag in self.mandatory_head_tags and \
+                                not tag in used_mandatory_head_tags:
+                            used_mandatory_head_tags.add(tag)
                         head_tag_dict[tag](word_pair)
                     else:
                         print _('Warning: unknown head-tag "%s".') % tag
@@ -81,6 +89,9 @@ class SaDrill:
                     tag = line[1:colon]
                     word_pair = [ w.strip() for w in line[colon+1:].split("=")]
                     if tag in build_tag_dict:
+                        if tag in self.mandatory_build_tag and \
+                                not tag in used_mandatory_build_tag:
+                            used_mandatory_build_tag.add(tag)
                         build_tag_dict[tag](word_pair)
                     else:
                         print _('Warning: unknown build-tag "%s".') % tag
@@ -92,6 +103,11 @@ class SaDrill:
                     on_question(line, word_pair, None, type)
         f.close()
         self.current_drill_file = None
+        # check if all mandatory tags were present #
+        missing_tags = ( self.mandatory_head_tags - used_mandatory_head_tags )\
+                | ( self.mandatory_build_tags - used_mandatory_build_tags )
+        if missing_tags != set([]):
+            print _('Error: missing mandatory tag "%s".') % missing_tags
 
     def on_comment(self, as_text, word_pair=None, tag=None, type='#'):
         """
