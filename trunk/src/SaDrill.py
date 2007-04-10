@@ -93,35 +93,35 @@ class SaDrill:
         f.close()
         self.current_drill_file = None
 
-    def on_comment(as_text, word_pair=None, tag=None, type='#'):
+    def on_comment(self, as_text, word_pair=None, tag=None, type='#'):
         """
         Processes a comment line of an .drill or .build file. Overload this
         method so something is actually done.
         """
         pass
 
-    def on_section(as_text, word_pair, tag=None, type='['):
+    def on_section(self, as_text, word_pair, tag=None, type='['):
         """
         Processes a section line of an .drill or .build file. Overload this
         method so something is actually done.
         """
         pass
 
-    def on_question(as_text, word_pair, tag=None, type=''):
+    def on_question(self, as_text, word_pair, tag=None, type=''):
         """
         Processes a question-answer line of an .drill or .build file. Overload 
         this method so something is actually done.
         """
         pass
 
-    def on_default_head_tag(as_text, word_pair, tag, type='!'):
+    def on_default_head_tag(self, as_text, word_pair, tag, type='!'):
         """
         Processes a header line of an .drill or .build file. Overload this
         method so something is actually done.
         """
         pass
 
-    def on_default_build_tag(as_text, word_pair, tag, type='$'):
+    def on_default_build_tag(self, as_text, word_pair, tag, type='$'):
         """
         Processes a builder line of an .drill or .build file. Overload this
         method so something is actually done.
