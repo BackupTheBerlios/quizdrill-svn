@@ -23,25 +23,25 @@ pygtk.require('2.0')
 import gobject, gtk, gtk.glade
 import random
 import os, os.path
+from pkg_resources import resource_filename
 import cPickle as pickle
-# i18n
+# i18n #
 import locale
 import gettext
 _ = gettext.gettext
 APP = "quizdrill"
-DIR = "../locale"
+DIR = resource_filename(__name__, "../locale")
 locale.bindtextdomain(APP, DIR)
 locale.textdomain(APP)
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 
 class Gui:
-    GLADE_FILE = "data/quizdrill.glade"
+    GLADE_FILE = resource_filename(__name__, "data/quizdrill.glade")
     SHOW_TABS = { "vocabulary" : [ True, True, True], 
             "questionnaire" : [ True, True, True ],
             "flashcard" : [ False, False, True ],
             "all" : [ True, True, True ] }
-    quiz_file_path = "../quizzes/deu-fra.drill"
     break_length = 900000    # 900,000 ms: 15min
     snooze_length = 300000   # 300,000 ms:  5min
 
@@ -333,7 +333,6 @@ class Quiz_Filer:
 
     def __init__(self, quiz_file_path=None):
         self.SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
-        self.quiz_file_path = "../quizzes/deu-fra.drill"
         self.type = "vocabulary"
         self.all_subquizzes = []
         self.question_topic = [ _("What is this?"), _("What is this?") ]
@@ -342,7 +341,13 @@ class Quiz_Filer:
                 gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
         if quiz_file_path != None:
             self.quiz_file_path = quiz_file_path
-        quizlist = self.read_quiz_list(self.quiz_file_path)
+        else:
+            self.quiz_file_path = resource_filename(__name__, 
+                    "../quizzes/deu-fra.drill")
+        try:
+            quizlist = self.read_quiz_list(self.quiz_file_path)
+        except IOError:
+            quizlist = [[ "", "" ]]
         score = self.read_score_file()
         self.quiz = Weighted_Quiz(quizlist)
         self.quiz.next()
