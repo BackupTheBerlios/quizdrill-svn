@@ -457,7 +457,8 @@ class Quiz:
     DEFAULT_MULTICHOICE_LEN = 7
 
     def __init__(self, quiz_pool, ask_from=0, exam_length=15):
-        self.listoners = {"break_time" : [], "question_changed" : [] }
+        self.listoners = {"break_time" : [], "question_changed" : [],
+                "direction_changed" : [] }
         self.quiz_pool = []
         self.answered = 0
         self.correct_answered = 0
@@ -541,11 +542,14 @@ class Quiz:
     def set_question_direction(self, direction):
         """
         Set which part is the question and which the answer.
-        Only makes with vocabulary-like quizzes
+        Only makes sense with vocabulary-like quizzes.
+
+        Note: Most likely you will want to ask for a next question.
         """
-        if direction in [0, 1]:
+        if direction in [0, 1] and self.ask_from != direction:
             self.ask_from = direction
             self.answer_to = 1 - direction
+            self.notify('direction_changed')
 
     def add_quizzes(self, new_quizzes):
         self.quiz_pool.extend(new_quizzes)
