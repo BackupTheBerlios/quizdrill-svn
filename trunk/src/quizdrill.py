@@ -18,6 +18,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+from SaDrill import SaDrill
+
 import pygtk
 pygtk.require('2.0')
 import gobject, gtk, gtk.glade
@@ -323,7 +325,7 @@ class Gui:
         self.flash_notebook.set_current_page(0)
 
 
-class Quiz_Filer:
+class Quiz_Filer(SaDrill):
     """
     Contains the parts of a quiz, that are not tested. A kind of "meta-data" as
     well as loading and saving.
@@ -332,6 +334,12 @@ class Quiz_Filer:
     """
 
     def __init__(self, quiz_file_path=None):
+        tag_dict = { "language" : self.on_tag_language, 
+                "question" : self.on_tag_question, 
+                "type" : self.on_tag_type,
+                "media" : self.on_tag_media,
+                "generator" : self.on_tag_generator }
+        SaDrill.__init__(self, head_tag_dict=tag_dict)
         self.SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
         self.type = "vocabulary"
         self.all_subquizzes = []
@@ -382,56 +390,41 @@ class Quiz_Filer:
         """
         Reads a .drill-file
         """
-        tag_dict = { "language" : self.on_tag_language, 
-                "question" : self.on_tag_question, 
-                "type" : self.on_tag_type,
-                "media" : self.on_tag_media,
-                "generator" : self.on_tag_generator }
         # Read file and add to quizlist and treestore
-        f = open(file)
-        quizlist = []
-        section = None
-
-        for i, line in enumerate(f.readlines()):
-            line = line.strip()
-            if len(line) > 0:
-                if line[0] == '#':
-                    continue
-                elif line[0] == '!':
-                    colon = line.index(":")
-                    tag = line[1:colon]
-                    word_pair = [ w.strip() for w in line[colon+1:].split("=")]
-                    if tag in tag_dict:
-                        tag_dict[tag](word_pair)
-                    else:
-                        print _('Warning: unknown tag "%s".') % tag
-                elif line[0] == '[':
-                    line = line[1:-1]
-                    word_pair = [ w.strip() for w in line.split("=", 1) ]
-                    if len(word_pair) < 2:
-                        word_pair.append("")
-                    column = []; column.extend(word_pair)
-                    column.append(True)
-                    section = self.treestore.append(None, column)
-                else:
-                    word_pair = [ w.strip() for w in line.split("=") ]
-                    assert len(word_pair) == 2, 'Fileformaterror in "%s": \
-                            Not exactly one "=" in line %s' % ( file, i+1 )
-                    quizlist.append(word_pair)
-                    column = []; column.extend(word_pair)
-                    column.append(True)
-                    self.treestore.append(section, column)
-        f.close()
+        self.temp_quizlist = []
+        self.temp_section = None
+        self.parse(file)
+        quizlist = self.temp_quizlist
+        del self.temp_quizlist
+        del self.temp_section
         return quizlist
 
-    # Process "heading-tags" on reading quiz-files [see read_quiz_list(file)]
+    # SaDrill-API methods #
 
-    def on_tag_language(self, word_pair):
+    def on_section(self, as_text, word_pair, tag=None, type='['):
+        if len(word_pair) < 2:
+            word_pair.append("")
+        column = []; column.extend(word_pair)
+        column.append(True)
+        self.temp_section = self.treestore.append(None, column)
+
+    def on_question(self, as_text, word_pair, tag=None, type=''):
+        #assert len(word_pair) == 2, 'Fileformaterror in "%s": \
+        #        Not exactly one "=" in line %s' % ( file, i+1 )
+        self.temp_quizlist.append(word_pair)
+        column = []; column.extend(word_pair)
+        column.append(True)
+        self.treestore.append(self.temp_section, column)
+
+    # Process "heading-tags" on reading quiz-files [see read_quiz_list(file)] #
+
+    def on_tag_language(self, as_text, word_pair, tag='language', type='!'):
         self.data_name = word_pair
         self.all_subquizzes = [ word_pair[0] + " → " + word_pair[1],
                 word_pair[1] + " → " + word_pair[0] ]
 
-    def on_tag_question(self, word_pair=["$what"]):
+    def on_tag_question(self, as_text, word_pair=["$what"], 
+            tag='question', type='!'):
         common = { "$what" : _("What is this?"), 
                 "$voc_test" : _("Please translate:") }
         if word_pair[0] in common:
@@ -440,14 +433,14 @@ class Quiz_Filer:
             word_pair.append(word_pair[0])
         self.question_topic = word_pair
 
-    def on_tag_type(self, word_pair=None):
+    def on_tag_type(self, as_text, word_pair=None, tag='type', type='!'):
         self.type = word_pair[0]
 
-    def on_tag_media(self, word_pair):
+    def on_tag_media(self, as_text, word_pair, tag='media', type='!'):
         # TODO (Only needed with gstreamer support)
         pass
 
-    def on_tag_generator(self, word_pair):
+    def on_tag_generator(self, as_text, word_pair, tag='generator', type='!'):
         # TODO
         pass
 
