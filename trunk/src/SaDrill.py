@@ -26,9 +26,11 @@ DIR = "../locale"
 class SaDrill:
     """
     Simple API for .drill or a .build of it.
-    Accessing Quizdrill files similar to SAX (Simple API for XML).
+    Accessing Quizdrill files inspired by SAX (Simple API for XML).
 
-    Note: This is not used anywhere yet.
+    Calls different methods (on_*) depending on each line.
+    Meta- (!) and build-headers ($) call corresponding method registered
+    in self.head_tag_dict and self.build_tag_dict.
     """
 
     def __init__(self, head_tag_dict={}, build_tag_dict={}, 
@@ -58,8 +60,8 @@ class SaDrill:
         f = open(drill_file)
         head_tag_dict = self.head_tag_dict
         build_tag_dict = self.build_tag_dict
-        used_mandatory_head_tags=set(None)
-        used_mandatory_build_tags=set(None)
+        used_mandatory_head_tags=set([])
+        used_mandatory_build_tags=set([])
 
         for i, line in enumerate(f.readlines()):
             line = line.strip()
@@ -75,7 +77,7 @@ class SaDrill:
                         if tag in self.mandatory_head_tags and \
                                 not tag in used_mandatory_head_tags:
                             used_mandatory_head_tags.add(tag)
-                        head_tag_dict[tag](word_pair)
+                        head_tag_dict[tag](line, word_pair, None, type)
                     else:
                         print _('Warning: unknown head-tag "%s".') % tag
                 elif type == '[':
@@ -89,15 +91,17 @@ class SaDrill:
                     tag = line[1:colon]
                     word_pair = [ w.strip() for w in line[colon+1:].split("=")]
                     if tag in build_tag_dict:
-                        if tag in self.mandatory_build_tag and \
-                                not tag in used_mandatory_build_tag:
-                            used_mandatory_build_tag.add(tag)
-                        build_tag_dict[tag](word_pair)
+                        if tag in self.mandatory_build_tags and \
+                                not tag in used_mandatory_build_tags:
+                            used_mandatory_build_tags.add(tag)
+                        build_tag_dict[tag](line, word_pair, None, type)
                     else:
                         print _('Warning: unknown build-tag "%s".') % tag
                 else:
                     type = ''
                     word_pair = [ w.strip() for w in line.split("=") ]
+                    assert_str = 'Fileformaterror in "%s": Not exactly ' + \
+                            'one "=" in line %s'
                     assert len(word_pair) == 2, 'Fileformaterror in "%s": \
                             Not exactly one "=" in line %s' % ( file, i+1 )
                     on_question(line, word_pair, None, type)
