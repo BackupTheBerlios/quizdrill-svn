@@ -68,7 +68,7 @@ class SaDrill:
             if len(line) > 0:
                 type = line[0]
                 if type == '#':
-                    on_comment(line, None, None, type)
+                    self.on_comment(line, None, None, type)
                 elif type == '!':
                     colon = line.index(":")
                     tag = line[1:colon]
@@ -85,7 +85,7 @@ class SaDrill:
                     word_pair = [ w.strip() for w in line.split("=", 1) ]
                     if len(word_pair) < 2:
                         word_pair.append("")
-                    on_section(line, word_pair, None, type)
+                    self.on_section(line, word_pair, None, type)
                 elif type == '$':
                     colon = line.index(":")
                     tag = line[1:colon]
@@ -104,7 +104,7 @@ class SaDrill:
                             'one "=" in line %s'
                     assert len(word_pair) == 2, 'Fileformaterror in "%s": \
                             Not exactly one "=" in line %s' % ( file, i+1 )
-                    on_question(line, word_pair, None, type)
+                    self.on_question(line, word_pair, None, type)
         f.close()
         self.current_drill_file = None
         # check if all mandatory tags were present #
