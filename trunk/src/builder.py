@@ -18,6 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+from SaDrill import SaDrill
 
 from xml import sax
 from xml.sax.handler import ContentHandler
@@ -28,7 +29,7 @@ import locale
 import gettext
 _ = gettext.gettext
 APP = "quizdrill"
-DIR = "locale"
+DIR = "../locale"
 locale.bindtextdomain(APP, DIR)
 locale.textdomain(APP)
 
@@ -192,7 +193,6 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
             infobox_dict = self.separate_infobox(infobox)
             infobox_dict.update(dict)
             self.append_template_to_quiz_data(infobox_dict)
-        #print dict["_article"]
 
     def select_one_of_categories(self, article_dict):
         """
@@ -311,51 +311,40 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
             file.close()
 
 
-class DrillBuilder:
+class DrillBuilder(SaDrill):
     """
     Processes a .drill.builder-file and outputs a .drill-file.
+
+    Note: Still too specific to WikipediaArtikel builder-tags.
     """
     def __init__(self):
+        tag_dict = { "build_to" : self.on_tag_build_to, 
+                "builder" : self.on_tag_builder, 
+                "filter" : self.on_tag_filter,
+                "one_of_categories" : self.on_tag_one_of_categories, 
+                "wiki_cat_namespace" : self.on_tag_wiki_cat_namespace 
+                }
+        mandatory_tags = [ "build_to", "builder" ]
+        SaDrill.__init__(self, {}, tag_dict, {}, mandatory_tags)
         self.encoding = "utf-8"
         self.one_of_categories = []
 
     def convert_drill_file(self, file, database):
         file_out = file.replace(".builder", "") + ".original"
-        fin = open(file)
-        fout = open(file_out, "w")
-        tag_dict = { "build_to" : self.on_tag_build_to, 
-                "builder" : self.on_tag_builder, "filter" : self.on_tag_filter,
-                "one_of_categories" : self.on_tag_one_of_categories, 
-                "wiki_cat_namespace" : self.on_tag_wiki_cat_namespace }
-        found_tags = { "build_to" : False, "builder" : False }
-        for i, line in enumerate(fin.readlines()):
-            line = line.strip()
-            if len(line) == 0:
-                pass
-            elif line[0] == "$":
-                colon = line.index(":")
-                tag = line[1:colon]
-                word_pair = [ w.strip() for w in line[colon+1:].split("=")]
-                if tag in tag_dict:
-                    tag_dict[tag](word_pair)
-                    found_tags[tag] = True
-                else:
-                    print _('Warning: unknown tag "%s".') % tag
-            else:
-                fout.write(line + "\n")
-        for tag in found_tags.keys():
-            if not found_tags[tag]:
-                print _('Error: missing mandatory tag "%s".') % tag
-                sys.exit(1)
-        fin.close()
-        fout.close()
+        self._fout = open(file_out, "w")
+        self.parse(file)
+
+        self._fout.close()
         builder = self.builder_class(file_out, self.template_tag, 
                 self.category_tag, self.question_tag, self.answer_tag,
                 self.category_filter, self.question_filter, self.answer_filter,
                 self.one_of_categories, self.encoding, self.wiki_cat_namespace)
         builder.parse(database)
 
-    def on_tag_builder(self, word_pair):
+    def on_default_head(self, as_text, word_pair=None, tag=None, type='#'):
+        self._fout.write(as_text)
+
+    def on_tag_builder(self, as_text, word_pair, tag='builder', type='$'):
         builder_dict = {"WikipediaArticle" : WikipediaArticleHandler }
         assert len(word_pair) == 2, _('Error: tag $builder does not have \
                 exactly one "=".')
@@ -364,25 +353,27 @@ class DrillBuilder:
         self.builder_class = builder_dict[word_pair[0]]
         self.template_tag = word_pair[1]
 
-    def on_tag_build_to(self, word_pair):
+    def on_tag_build_to(self, as_text, word_pair, tag='build_to', type='$'):
         assert len(word_pair) == 3, _('Error: tag $build_to does not have \
                 exactly two "=".')
         self.category_tag = word_pair[0]
         self.question_tag = word_pair[1]
         self.answer_tag = word_pair[2]
 
-    def on_tag_filter(self, word_pair):
+    def on_tag_filter(self, as_text, word_pair, tag='filter', type='$'):
         while len(word_pair) > 3:
             word_pair.append(None)
         self.category_filter = word_pair[0]
         self.question_filter = word_pair[1]
         self.answer_filter = word_pair[2]
 
-    def on_tag_wiki_cat_namespace(self, word_pair):
+    def on_tag_wiki_cat_namespace(self, as_text, word_pair, 
+            tag='wiki_cat_namespace', type='$'):
         self.wiki_cat_namespace = word_pair
 
-    def on_tag_one_of_categories(self, word_pair):
-        self.one_of_categories = word_pair
+    def on_tag_one_of_categories(self, as_text, word_pair, 
+            tag='one_of_categories', type='$'):
+        self.one_of_categories.append(word_pair)
 
 
 def build():
