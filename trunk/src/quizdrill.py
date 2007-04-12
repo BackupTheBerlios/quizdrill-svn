@@ -109,11 +109,6 @@ class Gui:
         self.snooze_length = client.get_int(SNOOZE_LENGTH_KEY)
         self.quiz_file_path = client.get_string(DEFAULT_QUIZ_KEY)
 
-    def next_question(self):
-        if not self.quiz.next():
-            self.start_relax_time(self.break_length)
-        self.update_gui()
-
     def update_gui(self):
         """
         (re-)set all the user-noeditable text (labels etc.).
@@ -151,6 +146,10 @@ class Gui:
         Set the Userinterface to test a different Quiz (represented by a 
         Quiz_Filer object or randomly selected).
         """
+        # disconnect old listeners #
+        quiz_filer.quiz.disconnect('question_changed', self.update_gui)
+        quiz_filer.quiz.disconnect('break_time', self.start_relax_time)
+        # replace #
         if quiz_filer == None:
             quiz_filer = random.select(self.quiz_filer_list)
         self.quiz_filer = quiz_filer
@@ -200,18 +199,23 @@ class Gui:
         self.word_treeview.set_model(quiz_filer.treestore)
         # clean statusbar #
         self.statusbar1.pop(self.statusbar_contextid["last_answer"])
+        # connect listeners #
+        quiz_filer.quiz.connect('question_changed', self.update_gui)
+        quiz_filer.quiz.connect('break_time', self.start_relax_time)
 
     def get_quiz_from_treeview(self, row):
         return [ row[0], row[1] ]
 
     # Timer #
 
-    def start_relax_time(self, break_length, minimize=True):
+    def start_relax_time(self, break_length=None, minimize=True):
         """
         Iconify window as a break and deiconify it when it's over
 
         Note: There is a race condition. However this should be harmless
         """
+        if break_length == None:
+            break_length = self.break_length
         if self.timer_id:
             gobject.source_remove(self.timer_id)
         if minimize:
@@ -273,7 +277,7 @@ class Gui:
         if len(self.quiz_filer.question_topic) > 1:
             for label in self.question_topic_labels:
                 label.set_text(self.quiz_filer.question_topic[new_status])
-        self.next_question()
+        self.quiz.next()
 
     def on_treeview_toogled(self, cell, path ):
         """ toggle selected CellRendererToggle Row """
@@ -295,7 +299,7 @@ class Gui:
         answer = widget.get_label()
         if self.quiz.check(answer):
             self.redisplay_correctly_answered(self.quiz.question)
-            self.next_question()
+            self.quiz.next()
         else:
             widget.set_sensitive(False)
             # statusbar1: show question to selected answer #
@@ -308,7 +312,7 @@ class Gui:
     def on_simple_question_button_clicked(self, widget, data=None):
         if self.quiz.check(self.simple_answer_entry.get_text().strip()):
             self.redisplay_correctly_answered(self.quiz.question)
-            self.next_question()
+            self.quiz.next()
         else:
             self.statusbar1.pop(self.statusbar_contextid["last_answer"])
     
@@ -321,7 +325,7 @@ class Gui:
         if isinstance(self.quiz, Weighted_Quiz):
             self.quiz.set_answer_quality(
                     self.flash_answer_buttons.index(widget))
-        self.next_question()
+        self.quiz.next()
         self.flash_notebook.set_current_page(0)
 
 
@@ -464,15 +468,27 @@ class Quiz:
         self.add_quizzes(quiz_pool)
 
     def connect(self, key, func):
-        """ Note connect, disconnect, notify aren't used yet """
-        self.listoners.append[key](func)
+        """ 
+        Register a method func to be called when an event (key) happens.
+        Possible keys are:
+            'break_time'
+            'question_changed'
+        """
+        self.listoners[key].append(func)
 
     def disconnect(self, key, func):
+        """
+        Unregister a method, previously registered with connect. See connect
+        for more information.
+        """
         if func in self.listoners[key]:
             self.listoners[key].remove(func)
 
     def notify(self, key):
-        """ Call the registered functions for a given key """
+        """ 
+        Call the registered functions for a given key. See connect for
+        more information.
+        """
         for func in self.listoners[key]:
             func()
 
@@ -487,12 +503,11 @@ class Quiz:
         self.tries = 0
         self._select_question()
         self.multi_choices = self._gen_multi_choices()
+        self.notify('question_changed')
         # Time for relaxing ?
         if self.answered == self.session_length:
             self.session_length += self.exam_length
-            return False
-        else:
-            return True
+            self.notify('break_time')
 
     def _select_question(self):
         """ select next question """
