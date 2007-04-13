@@ -39,6 +39,6 @@ setup(name='quizdrill',
             ('doc', ['README', 'TODO', 'GPL-2', 'Changes'])],
         entry_points={
             'console_scripts': [ 'quiz_builder = quizdrill.builder:build' ],
-            'gui_scripts': [ 'quizdrill = quizdrill.gui:main' ]
+            'gui_scripts': [ 'quizdrill = quizdrill.quizdrill:main' ]
             }
         )
