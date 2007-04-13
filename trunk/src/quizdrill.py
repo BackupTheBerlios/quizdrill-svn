@@ -107,7 +107,10 @@ class Gui:
         self.exam_length = client.get_int(EXAM_LENGTH_KEY)
         self.break_length = client.get_int(BREAK_LENGTH_KEY)
         self.snooze_length = client.get_int(SNOOZE_LENGTH_KEY)
-        self.quiz_file_path = client.get_string(DEFAULT_QUIZ_KEY)
+        quiz_file_path = client.get_string(DEFAULT_QUIZ_KEY)
+        # start quiz #
+        self.quiz_filer_list.append(Quiz_Filer(quiz_file_path))
+        self.switch_quiz(self.quiz_filer_list[0])
 
     def update_gui(self):
         """
@@ -258,7 +261,8 @@ class Gui:
                 gtk.FILE_CHOOSER_ACTION_OPEN, (gtk.STOCK_CANCEL, 
                 gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
         chooser.set_current_folder(
-                os.path.abspath(os.path.dirname(self.quiz_file_path)))
+                os.path.abspath(os.path.dirname(
+                    self.quiz_filer.quiz_file_path)))
         response = chooser.run()
         if response == gtk.RESPONSE_OK:
             self.quiz_filer_list = [Quiz_Filer(chooser.get_filename())]
