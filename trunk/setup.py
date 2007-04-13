@@ -22,6 +22,8 @@ from setuptools import setup
 
 setup(name='quizdrill', 
         version='0.2.0',
+        license='GNU General Public License',
+        platforms = ['any'],
         description='A learning-by-testing program.',
         long_description="""A learning-by-testing program to learn quickly, 
             mostly memorizing tasks like vocabulary.""",
@@ -40,5 +42,17 @@ setup(name='quizdrill',
         entry_points={
             'console_scripts': [ 'quiz_builder = quizdrill.builder:build' ],
             'gui_scripts': [ 'quizdrill = quizdrill.quizdrill:main' ]
-            }
+            },
+        classifiers=[
+            'Development Status :: 4 - Beta',
+            'Environment :: X11 Applications :: Gnome',
+            'Intended Audience :: Education',
+            'Intended Audience :: End Users/Desktop',
+            'License :: OSI Approved :: GNU General Public License (GPL)',
+            'Natural Language :: English',
+            'Natural Language :: German',
+            'Operating System :: OS Independent',
+            'Programming Language :: Python',
+            'Topic :: Education :: Testing'
+            ]
         )
