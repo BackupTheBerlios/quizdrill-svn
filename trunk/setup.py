@@ -22,8 +22,9 @@ from setuptools import setup
 
 setup(name='quizdrill', 
         version='0.2.0',
+        requires=['pygtk > 2.0'],   # keyword not recognized; higher pygtk
         license='GNU General Public License',
-        platforms = ['any'],
+        platforms=['any'],
         description='A learning-by-testing program.',
         long_description="""A learning-by-testing program to learn quickly, 
             mostly memorizing tasks like vocabulary.""",
