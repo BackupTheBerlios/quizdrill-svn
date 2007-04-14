@@ -84,7 +84,7 @@ class AbstractQuizBuilder:
 class AbstractMediaWikiHandler(ContentHandler):
     """
     Processes a MediaWiki pages-articles.xml Database Backup dump[1] and 
-    passes the article to separate_article implemented by a child.
+    passes the article and title to separate_article implemented by a child.
 
     [1]: http://meta.wikimedia.org/wiki/Data_dumps
     """
@@ -108,6 +108,10 @@ class AbstractMediaWikiHandler(ContentHandler):
     # Sax XML-methods #
 
     def startElement(self, name, attr):
+        """
+        Remember if we are in an xml-element of interest (title_field or
+        data_field).
+        """
         if name == self.DATA_FIELD:
            self.in_data_field = True
            self.content = ""
@@ -116,6 +120,10 @@ class AbstractMediaWikiHandler(ContentHandler):
             self.title = ""
 
     def endElement(self, name):
+        """
+        Tracks whether we leave our xml-element of interest (title_field or 
+        data_field) and processes the article if we leave data_field.
+        """
         if name == self.DATA_FIELD:
             self.in_data_field = False
             if self.content:
@@ -124,6 +132,10 @@ class AbstractMediaWikiHandler(ContentHandler):
             self.in_title_field = False
 
     def characters(self, content):
+        """
+        Records the content if we are in an xml-element of interest
+        (title_field or data_field).
+        """
         if self.in_data_field:
             self.content += unicode.encode(content, self.encoding)
         if self.in_title_field:
@@ -135,7 +147,7 @@ class AbstractMediaWikiHandler(ContentHandler):
         Needs to be implemented by the child. Processes the actual article.
         """
         print 'Warning: "separate_article" should not be called on \
-                AbstractWikipediaHandler'
+                AbstractWikipediaHandler.'
 
 class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
     """
@@ -189,7 +201,7 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
         #
         text = comments_re.sub("", text)
         if nested_template_re.search(text):
-            self.log("Warning skipping nested templates in %s." % self.title)
+            self.log("Warning: Skipping nested templates in %s." % self.title)
         for infobox in unnested_template_re.findall(text):
             infobox_dict = self.separate_infobox(infobox)
             infobox_dict.update(dict)
@@ -275,19 +287,19 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
         else:
             cat = ""
             if self.category_tag != "":
-                print 'Warning "%s" missing in a template in article "%s", \
+                print 'Warning: "%s" missing in a template in article "%s", \
                         using "" instead' %\
                         ( self.category_tag, dict["_article"] )
         if self.question_tag in dict:
             question = dict[self.question_tag]
         else:
-            print 'Warning "%s" missing in a template in article "%s", \
+            print 'Warning: "%s" missing in a template in article "%s", \
                     skipping.' % ( self.question_tag, dict["_article"] )
             return
         if self.answer_tag in dict:
             answer = dict[self.answer_tag]
         else:
-            print 'Warning "%s" missing in a template in article "%s", \
+            print 'Warning: "%s" missing in a template in article "%s", \
                     skipping.' % ( self.answer_tag, dict["_article"] )
             return
         # actual adding to dictionary #
@@ -331,6 +343,10 @@ class DrillBuilder(SaDrill):
         self.one_of_categories = []
 
     def convert_drill_file(self, file, database):
+        """
+        Build a .drill-file from a .builder discription-file and a wikipedia-
+        xml-dumpfile.
+        """
         file_out = file.replace(".builder", "") + ".original"
         self._fout = open(file_out, "w")
         self.parse(file)
@@ -343,20 +359,23 @@ class DrillBuilder(SaDrill):
         builder.parse(database)
 
     def on_default_head_tag(self, as_text, word_pair=None, tag=None, type='#'):
+        """
+        Writes header-lines unfiltered to the new .drill-file.
+        """
         self._fout.write(as_text)
 
     def on_tag_builder(self, as_text, word_pair, tag='builder', type='$'):
         builder_dict = {"WikipediaArticle" : WikipediaArticleHandler }
-        assert len(word_pair) == 2, _('Error: tag $builder does not have \
-                exactly one "=".')
-        assert word_pair[0] in builder_dict, _('Error: unknown builder "%s".')\
-                % tag
+        assert len(word_pair) == 2, \
+                _('Error: Tag $builder does not have exactly one "=".')
+        assert word_pair[0] in builder_dict, \
+                _('Error: Unknown builder "%s".') % tag
         self.builder_class = builder_dict[word_pair[0]]
         self.template_tag = word_pair[1]
 
     def on_tag_build_to(self, as_text, word_pair, tag='build_to', type='$'):
-        assert len(word_pair) == 3, _('Error: tag $build_to does not have \
-                exactly two "=".')
+        assert len(word_pair) == 3, \
+                _('Error: Tag $build_to does not have exactly two "=".')
         self.category_tag = word_pair[0]
         self.question_tag = word_pair[1]
         self.answer_tag = word_pair[2]
@@ -378,6 +397,9 @@ class DrillBuilder(SaDrill):
 
 
 def build():
+    """
+    A console script for our endusers. 
+    """
     builder = DrillBuilder()
     if len(sys.argv) == 3:
         builder.convert_drill_file(sys.argv[1], sys.argv[2])
