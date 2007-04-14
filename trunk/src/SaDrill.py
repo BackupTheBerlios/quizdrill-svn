@@ -19,10 +19,53 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 from pkg_resources import resource_filename
-import gettext
-_ = gettext.gettext
+from gettext import gettext, ngettext
+_ = gettext
 APP = "quizdrill"
 DIR = resource_filename(__name__, "../locale")
+
+class SaDrillError(Exception):
+    """
+    Abstract Error that all Errors in SaDrill should be a subclass of.
+    """
+    def __init__(self, file):
+        self.file = file
+        self.str = _('Error in file "%s".') % file
+
+class MissingTagsError(SaDrillError):
+    """
+    This Error is raised when tags that have been listed as mandatory where not
+    found in the parsed file.
+    """
+    def __init__(self, file, tags):
+        self.file = file
+        self.tags = tags
+        self.str = ngettext('Error: Missing mandatory tag "%(t)s" in %(f)s.', 
+                'Error: Missing mandatory tags "%(t)s in %(f)s".', 
+                len(tags))% { "t" : tags, "f" : file }
+
+class WordPairError(SaDrillError):
+    """
+    This Error is raised when a 'word_pair's has a wrong number of elements. 
+    This is equivilent to a wrong number of '='s in a line.
+    """
+    def __init__(self, file, line):
+        self.line = line
+        self.file = file
+        self.str = _('Error: Wrong number of "=" in line %(l)s of file %(f)s.')\
+                % { "l" : line, "f" : file }
+
+class ValueError(SaDrillError):
+    """
+    This Error is raised when a unknown value appears in a word_pair. However
+    it can also be used for unknown tags which usally just give a Warning.
+    """
+    def __init__(self, file, line, value):
+        self.line = line
+        self.file = file
+        self.value = value
+        str = _('Error: Unknown value "%(v)s" in line %(l)s of file %(f)s.')\
+                % { 'v': value, 'l': line, 'f': file }
 
 class SaDrill:
     """
@@ -37,6 +80,7 @@ class SaDrill:
     def __init__(self, head_tag_dict={}, build_tag_dict={}, 
             mandatory_head_tags=[], mandatory_build_tags=[]):
         self.head_tag_dict = { 
+                " " : self.on_unknown_head_tag,
                 "language" : self.on_default_head_tag, 
                 "question" : self.on_default_head_tag, 
                 "type" : self.on_default_head_tag,
@@ -44,6 +88,7 @@ class SaDrill:
                 "generator" : self.on_default_head_tag 
                 }
         self.build_tag_dict = { 
+                " " : self.on_unknown_build_tag,
                 "build_to" : self.on_default_build_tag, 
                 "builder" : self.on_default_build_tag, 
                 "filter" : self.on_default_build_tag
@@ -78,9 +123,9 @@ class SaDrill:
                         if tag in self.mandatory_head_tags and \
                                 not tag in used_mandatory_head_tags:
                             used_mandatory_head_tags.add(tag)
-                        head_tag_dict[tag](line, word_pair, None, type)
+                        head_tag_dict[tag](line, word_pair, tag, type)
                     else:
-                        print _('Warning: unknown head-tag "%s".') % tag
+                        head_tag_dict[" "](line, word_pair, tag, type)
                 elif type == '[':
                     line = line[1:-1]
                     word_pair = [ w.strip() for w in line.split("=", 1) ]
@@ -95,16 +140,14 @@ class SaDrill:
                         if tag in self.mandatory_build_tags and \
                                 not tag in used_mandatory_build_tags:
                             used_mandatory_build_tags.add(tag)
-                        build_tag_dict[tag](line, word_pair, None, type)
+                        build_tag_dict[tag](line, word_pair, tag, type)
                     else:
-                        print _('Warning: unknown build-tag "%s".') % tag
+                        build_tag_dict[" "](line, word_pair, tag, type)
                 else:
                     type = ''
                     word_pair = [ w.strip() for w in line.split("=") ]
-                    assert_str = 'Fileformaterror in "%s": Not exactly ' + \
-                            'one "=" in line %s'
-                    assert len(word_pair) == 2, 'Fileformaterror in "%s": \
-                            Not exactly one "=" in line %s' % ( file, i+1 )
+                    if len(word_pair) != 2:
+                        raise WordPairError(drill_file, i+1)
                     self.on_question(line, word_pair, None, type)
         f.close()
         self.current_drill_file = None
@@ -112,7 +155,7 @@ class SaDrill:
         missing_tags = ( self.mandatory_head_tags - used_mandatory_head_tags )\
                 | ( self.mandatory_build_tags - used_mandatory_build_tags )
         if missing_tags != set([]):
-            print _('Error: missing mandatory tag "%s".') % missing_tags
+            raise MissingTagsError(drill_file, missing_tags)
 
     def on_comment(self, as_text, word_pair=None, tag=None, type='#'):
         """
@@ -142,6 +185,13 @@ class SaDrill:
         """
         pass
 
+    def on_unknown_head_tag(self, as_text, word_pair, tag, type='!'):
+        """
+        Processes a header line of an .drill or .build file. Overload this
+        method so something is actually done.
+        """
+        print _('Warning: Unknown head-tag "%s".') % tag
+
     def on_default_build_tag(self, as_text, word_pair, tag, type='$'):
         """
         Processes a builder line of an .drill or .build file. Overload this
@@ -149,3 +199,9 @@ class SaDrill:
         """
         pass
 
+    def on_unknown_build_tag(self, as_text, word_pair, tag, type='$'):
+        """
+        Processes a builder line of an .drill or .build file. Overload this
+        method so something is actually done.
+        """
+        print _('Warning: Unknown build-tag "%s".') % tag
