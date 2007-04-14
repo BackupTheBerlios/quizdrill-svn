@@ -341,7 +341,7 @@ class DrillBuilder(SaDrill):
                 self.one_of_categories, self.encoding, self.wiki_cat_namespace)
         builder.parse(database)
 
-    def on_default_head(self, as_text, word_pair=None, tag=None, type='#'):
+    def on_default_head_tag(self, as_text, word_pair=None, tag=None, type='#'):
         self._fout.write(as_text)
 
     def on_tag_builder(self, as_text, word_pair, tag='builder', type='$'):
