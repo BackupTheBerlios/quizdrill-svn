@@ -25,9 +25,12 @@ setup(name='quizdrill',
         requires=['pygtk > 2.0'],   # keyword not recognized; higher pygtk
         license='GNU General Public License',
         platforms=['any'],
-        description='A learning-by-testing program.',
+        # descriptions should be kept in sync with debian/control.
+        description='A learning-by-testing to excess program.',
         long_description="""A learning-by-testing program to learn quickly, 
-            mostly memorizing tasks like vocabulary.""",
+            mostly memorizing tasks like vocabulary. Quizdrill supports
+            multible choice, simple quiz as well as flash card testing.
+            Quizdrill was inspired by langdrill.""",
         author='Adam Schmalhofer',
         author_email='schmalhof@users.berlios.de',
         url='http://quizdrill.berlios.de/',
