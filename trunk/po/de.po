@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-09 04:08+0200\n"
+"POT-Creation-Date: 2007-04-15 02:47+0200\n"
 "PO-Revision-Date: 2007-01-24 21:17+0100\n"
 "Last-Translator: Adam Schmalhofer <schmalhof@users.berlios.de>\n"
 "Language-Team: German <quizdrill-main@lists.berlios.de>\n"
@@ -25,41 +25,86 @@ msgstr ""
 msgid "'%(answer)s' to '%(question)s' was correct."
 msgstr "„%(answer)s“ zu „%(question)s“ war richtig."
 
-#: ../src/quizdrill.py:159
+#: ../src/quizdrill.py:163
 #, python-format
 msgid "Warning: unknown quiz type \"%s\"."
 msgstr "Warnung: Unbekannter Quiztyp \"%s\"."
 
-#: ../src/quizdrill.py:195
+#: ../src/quizdrill.py:199
 msgid "test"
 msgstr "testen"
 
 #. statusbar1: show question to selected answer #
-#: ../src/quizdrill.py:300
+#: ../src/quizdrill.py:310
 #, python-format
 msgid "To '%(quest)s' '%(ans)s' would be the correct answer."
 msgstr "Zu „%(quest)s“ wäre „%(ans)s“ die richtige Antwort."
 
-#: ../src/quizdrill.py:339 ../src/quizdrill.py:430
+#: ../src/quizdrill.py:354 ../src/quizdrill.py:436
 msgid "What is this?"
 msgstr "Was ist das?"
 
-#: ../src/quizdrill.py:340
+#: ../src/quizdrill.py:355
 msgid "Question"
 msgstr "Frage"
 
-#: ../src/quizdrill.py:340
+#: ../src/quizdrill.py:355
 msgid "Answer"
 msgstr "Antwort"
 
-#: ../src/quizdrill.py:402
-#, python-format
-msgid "Warning: unknown tag \"%s\"."
-msgstr "Warnung: unbekannter Tag \"%s\"."
-
-#: ../src/quizdrill.py:431
+#: ../src/quizdrill.py:437
 msgid "Please translate:"
 msgstr "Übersetze:"
+
+#: ../src/SaDrill.py:33
+#, python-format
+msgid "Error in file \"%s\"."
+msgstr "Fehler in Datei „%s“."
+
+#: ../src/SaDrill.py:43
+#, python-format
+msgid "Error: Missing mandatory tag \"%(t)s\" in %(f)s."
+msgid_plural "Error: Missing mandatory tags \"%(t)s in %(f)s\"."
+msgstr[0] "Fehler: Notweniger tag „%(t)s“ in %(f)s fehlt."
+msgstr[1] "Fehler: Notweniger tags „%(t)s“ in %(f)s fehlen."
+
+#: ../src/SaDrill.py:55
+#, python-format
+msgid "Error: Wrong number of \"=\" in line %(l)s of file %(f)s."
+msgstr "Fehler: Falsche Anzahl an „=“ in Zeile %(l)s der Datei %(f)s."
+
+#: ../src/SaDrill.py:67
+#, python-format
+msgid "Error: Unknown value \"%(v)s\" in line %(l)s of file %(f)s."
+msgstr "Fehler: Unbekannter Wert „%(v)s“ in Zeile %(l)s der Datei %(f)s."
+
+#: ../src/SaDrill.py:193
+#, python-format
+msgid "Warning: Unknown head-tag \"%s\"."
+msgstr "Warnung: unbekannte Kopfzeile „%s“."
+
+#: ../src/SaDrill.py:207
+#, python-format
+msgid "Warning: Unknown build-tag \"%s\"."
+msgstr "Warnung: unbekannte Bauanweisung „%s“."
+
+#: ../src/builder.py:370
+msgid "Error: Tag $builder does not have exactly one \"=\"."
+msgstr "Fehler: Bauanweisung $builder hat nicht genau ein „=“."
+
+#: ../src/builder.py:372
+#, python-format
+msgid "Error: Unknown builder \"%s\"."
+msgstr "Fehler: Unbekannter Quizbauer „%s“."
+
+#: ../src/builder.py:378
+msgid "Error: Tag $build_to does not have exactly two \"=\"."
+msgstr "Fehler: Tag $build_to hat nicht genau zwei „=“."
+
+#: ../src/builder.py:407
+#, python-format
+msgid "Usage: %s [.drill.builder-file] [wikipedia.xml-file]"
+msgstr "Aufruf: %s [.drill.builder-Datei] [Wikipedia.xml-Datei]"
 
 #: ../src/data/quizdrill.glade.h:1
 msgid "<b>Solution:</b>"
@@ -230,28 +275,4 @@ msgid ""
 "quizdrill."
 msgstr ""
 "Welcher quiz beim starten benutzt werden soll. Dies ängert sich womöglich "
-"nach dem beenden von quizdrill"
-
-#~ msgid "0 - not at all"
-#~ msgstr "0 - überhaupt nicht"
-
-#~ msgid "1 - but it seemed familiar"
-#~ msgstr "1 - aber es schien bekannt"
-
-#~ msgid "2 - but it's getting there"
-#~ msgstr "2 - aber es wird besser"
-
-#~ msgid "3 - but I needed a bit"
-#~ msgstr "3 - aber ich habe eine Weile gebraucht"
-
-#~ msgid "4 - after short hesitation"
-#~ msgstr "4 - nach kurzer Überlegung"
-
-#~ msgid "5 - no problem"
-#~ msgstr "5 - keine Probleme"
-
-#~ msgid "No, ..."
-#~ msgstr "Nein, ..."
-
-#~ msgid "Yes, ..."
-#~ msgstr "Ja, ..."
+"nach dem beenden von quizdrill."
