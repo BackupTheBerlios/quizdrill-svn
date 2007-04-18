@@ -33,6 +33,8 @@ import gettext
 _ = gettext.gettext
 APP = "quizdrill"
 DIR = resource_filename(__name__, "../locale")
+if not os.path.exists(DIR):
+    DIR = '/usr/share/locale'
 locale.bindtextdomain(APP, DIR)
 locale.textdomain(APP)
 gettext.bindtextdomain(APP, DIR)

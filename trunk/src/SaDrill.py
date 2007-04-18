@@ -18,11 +18,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+import os.path
 from pkg_resources import resource_filename
+import locale
 from gettext import gettext, ngettext
 _ = gettext
 APP = "quizdrill"
 DIR = resource_filename(__name__, "../locale")
+if not os.path.exists(DIR):
+    DIR = '/usr/share/locale'
+locale.bindtextdomain(APP, DIR)
+locale.textdomain(APP)
 
 class SaDrillError(Exception):
     """

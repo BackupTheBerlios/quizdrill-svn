@@ -24,6 +24,7 @@ from xml import sax
 from xml.sax.handler import ContentHandler
 import re
 import sys
+import os.path
 from pkg_resources import resource_filename
 # i18n
 import locale
@@ -31,6 +32,8 @@ import gettext
 _ = gettext.gettext
 APP = "quizdrill"
 DIR = resource_filename(__name__, "../locale")
+if not os.path.exists(DIR):
+    DIR = '/usr/share/locale'
 locale.bindtextdomain(APP, DIR)
 locale.textdomain(APP)
 
