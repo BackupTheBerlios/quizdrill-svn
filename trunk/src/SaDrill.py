@@ -72,6 +72,17 @@ class ValueError(SaDrillError):
         self.value = value
         str = _('Error: Unknown value "%(v)s" in line %(l)s of file %(f)s.')\
                 % { 'v': value, 'l': line, 'f': file }
+        self.str = str
+
+class MissingQuestionsError(SaDrillError):
+    """
+    This Error is raised when no questions or answers are found in a quiz
+    file. On builder files this is normal and this error should not be
+    raised.
+    """
+    def __init__(self, file):
+        self.file = file
+        self.str = _('Error: No questions found in file %s.') % file
 
 class SaDrill:
     """
@@ -84,7 +95,8 @@ class SaDrill:
     """
 
     def __init__(self, head_tag_dict={}, build_tag_dict={}, 
-            mandatory_head_tags=[], mandatory_build_tags=[]):
+            mandatory_head_tags=[], mandatory_build_tags=[],
+            mandatory_has_questions=False):
         self.head_tag_dict = { 
                 " " : self.on_unknown_head_tag,
                 "language" : self.on_default_head_tag, 
@@ -103,6 +115,7 @@ class SaDrill:
         self.build_tag_dict.update(build_tag_dict)
         self.mandatory_head_tags=set(mandatory_head_tags)
         self.mandatory_build_tags=set(mandatory_build_tags)
+        self.mandatory_has_questions=mandatory_has_questions
 
     def parse(self, drill_file):
         """
@@ -114,6 +127,7 @@ class SaDrill:
         build_tag_dict = self.build_tag_dict
         used_mandatory_head_tags=set([])
         used_mandatory_build_tags=set([])
+        has_questions = False
 
         for i, line in enumerate(f.readlines()):
             line = line.strip()
@@ -154,7 +168,9 @@ class SaDrill:
                     word_pair = [ w.strip() for w in line.split("=") ]
                     if len(word_pair) != 2:
                         raise WordPairError(drill_file, i+1)
-                    self.on_question(line, word_pair, None, type)
+                    else:
+                        has_questions = True
+                        self.on_question(line, word_pair, None, type)
         f.close()
         self.current_drill_file = None
         # check if all mandatory tags were present #
@@ -162,6 +178,8 @@ class SaDrill:
                 | ( self.mandatory_build_tags - used_mandatory_build_tags )
         if missing_tags != set([]):
             raise MissingTagsError(drill_file, missing_tags)
+        if (not has_questions) and self.mandatory_has_questions:
+            raise MissingQuestionsError(drill_file)
 
     def on_comment(self, as_text, word_pair=None, tag=None, type='#'):
         """

@@ -18,7 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-from SaDrill import SaDrill
+from SaDrill import SaDrill, MissingQuestionsError
 
 import pygtk
 pygtk.require('2.0')
@@ -87,7 +87,12 @@ class Gui:
         #else:
         #    self._init_gconf()
         # start quiz #
-        self.quiz_filer_list.append(Quiz_Filer())
+        quiz_file_path = resource_filename(__name__, 
+                "../quizzes/deu-fra.drill")
+        try:
+            self.quiz_filer_list.append(Quiz_Filer(quiz_file_path))
+        except IOError, MissingQuestionsError:
+            self.quiz_filer_list.append(Quiz_Filer())
         self.switch_quiz(self.quiz_filer_list[0])
         # connect signals #
         xml.signal_autoconnect(self)
@@ -266,9 +271,19 @@ class Gui:
                 os.path.abspath(os.path.dirname(
                     self.quiz_filer.quiz_file_path)))
         response = chooser.run()
+        chooser.hide()
         if response == gtk.RESPONSE_OK:
-            self.quiz_filer_list = [Quiz_Filer(chooser.get_filename())]
-            self.switch_quiz(self.quiz_filer_list[0])
+            try:
+                self.quiz_filer_list = [Quiz_Filer(chooser.get_filename())]
+            except MissingQuestionsError:
+                error_text = _('No questions in file "%s".') % \
+                        chooser.get_filename()
+                message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, 
+                        buttons=gtk.BUTTONS_OK, message_format= error_text)
+                message.run()
+                message.destroy()
+            else:
+                self.switch_quiz(self.quiz_filer_list[0])
         chooser.destroy()
 
     def on_main_notebook_switch_page(self, widget, gpointer, new_tab):
@@ -349,7 +364,8 @@ class Quiz_Filer(SaDrill):
                 "type" : self.on_tag_type,
                 "media" : self.on_tag_media,
                 "generator" : self.on_tag_generator }
-        SaDrill.__init__(self, head_tag_dict=tag_dict)
+        SaDrill.__init__(self, head_tag_dict=tag_dict, 
+                mandatory_has_questions=True)
         self.SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
         self.type = "vocabulary"
         self.all_subquizzes = []
@@ -359,15 +375,14 @@ class Quiz_Filer(SaDrill):
                 gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
         if quiz_file_path != None:
             self.quiz_file_path = quiz_file_path
+            quizlist = self.read_quiz_list(self.quiz_file_path)
+            score = self.read_score_file()
         else:
             self.quiz_file_path = resource_filename(__name__, 
-                    "../quizzes/deu-fra.drill")
-        try:
-            quizlist = self.read_quiz_list(self.quiz_file_path)
-        except IOError:
-            quizlist = [[ "", "" ]]
-        score = self.read_score_file()
-        self.quiz = Weighted_Quiz(quizlist)
+                    "../quizzes/no-file.drill")
+            quizlist = [["", ""]]
+            score = {"": 0}
+        self.quiz = Weighted_Quiz(quizlist, score)
         self.quiz.next()
 
     # read and write files
