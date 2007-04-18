@@ -125,8 +125,8 @@ class Gui:
         self.progressbar1.set_fraction(
                 float(self.quiz.answered) / self.quiz.session_length)
         # set multiquiz answers #
-        for button, text in zip(
-                self.multi_question_buttons,self.quiz.multi_choices):
+        for button, text in zip(self.multi_question_buttons, 
+                self.quiz.multi_choices):
             button.set_label(text)
             button.set_sensitive(True)
 
@@ -283,7 +283,7 @@ class Gui:
         if len(self.quiz_filer.question_topic) > 1:
             for label in self.question_topic_labels:
                 label.set_text(self.quiz_filer.question_topic[new_status])
-        self.quiz.next()
+        self.quiz.new_question()
 
     def on_treeview_toogled(self, cell, path ):
         """ toggle selected CellRendererToggle Row """
@@ -504,13 +504,19 @@ class Quiz:
             if q[self.answer_to] == answer:
                 return q[self.ask_from]
 
-    def next(self):
-        """ ask next question """
-        # Generate new Test
+    def new_question(self):
+        """
+        Discard current question and ask a new one. 
+        """
         self.tries = 0
         self._select_question()
         self.multi_choices = self._gen_multi_choices()
         self.notify('question_changed')
+
+    def next(self):
+        """ ask next question """
+        # Generate new Test
+        self.new_question()
         # Time for relaxing ?
         if self.answered == self.session_length:
             self.session_length += self.exam_length
@@ -566,8 +572,12 @@ class Quiz:
             self.quiz_pool.remove(quiz)
         self._refit_multichoice_len()
         if self.question in rm_quizzes:
-            self._select_question()
-            self.notify("question_changed")
+            self.new_question()
+        else:
+            for q in self.multi_choices:
+                if q in rm_quizzes:
+                    self.new_question()
+                    break
 
     def _refit_multichoice_len(self):
         if len(self.quiz_pool) < self.DEFAULT_MULTICHOICE_LEN:
