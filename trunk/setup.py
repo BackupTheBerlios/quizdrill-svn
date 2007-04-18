@@ -22,7 +22,8 @@ from setuptools import setup
 
 setup(name='quizdrill', 
         version='0.2.0',
-        requires=['pygtk > 2.0'],   # keyword not recognized; higher pygtk
+        # prevents *_scripts from working when installed by debian package
+        #install_requires=['pygtk > 2.0'],   # much higher pygtk than written; 
         license='GNU General Public License',
         platforms=['any'],
         # descriptions should be kept in sync with debian/control.
