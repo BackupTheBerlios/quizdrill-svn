@@ -18,7 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-from os import listdir, spawnl, P_WAIT, makedirs
+from os import listdir, spawnlp, P_WAIT, makedirs
 from os.path import basename, normpath
 from glob import glob
 
@@ -26,6 +26,9 @@ def make_mo_gettext():
     """
     Calls 'msgfmt' from GNU gettext to genearte object files (.mo) from
     the translation files (.po).
+
+    Note: As this function usese the $PATH variable (with spawnlp) it doesn't
+      work under Windows.
     """
     print "Generating gettext mo files: "
     po_files = 'po/*.po'
@@ -41,12 +44,14 @@ def make_mo_gettext():
         except OSError, inst:
             if inst.strerror != 'File exists':
                 print 'Warning: ', inst.file, inst.strerror, 'ignoring.'
-        print lang_file, "+", mo_dir    # debugging
         # normalize path for windows #
         lang_file_norm = normpath(lang_file)
         mo_dir_norm = normpath(mo_dir)
         #
-        spawnl(P_WAIT, conv_program, lang_file_norm, "-o", mo_dir_norm)
+        mo_file = mo_dir_norm + "/quizdrill.mo"
+        #print conv_program, lang_file, "-o", mo_file    # debugging
+        spawnlp(P_WAIT, conv_program, conv_program, lang_file_norm, "-o", 
+                mo_file)
     print "done"
 
 
