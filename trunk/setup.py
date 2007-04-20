@@ -63,7 +63,7 @@ def make_setup():
     registration and distutils install.
     """
     setup(name='quizdrill', 
-            version='0.2.0',
+            version='0.2.0-rc1',
             # prevents *_scripts from working when installed by debian package
             # much higher minimum pygtk version is needed than written
             #install_requires=['pygtk > 2.0'],
