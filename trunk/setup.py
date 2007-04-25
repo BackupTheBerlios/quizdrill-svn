@@ -25,6 +25,87 @@ from os import listdir, spawnlp, P_WAIT, makedirs
 from os.path import basename, normpath
 from glob import glob
 
+from urllib import urlopen
+from string import Template, replace
+import re
+
+### Update documentation ###
+
+def update_doc_de():
+    """
+    Calls update_doc() with a predefined list of files for our German 
+    documentation on the wiki (OpenFacts, a MediaWiki).
+    """
+    url_base = 'http://openfacts.berlios.de/index-en.phtml?title=Quizdrill'
+    file_dict = [
+            [ url_base, 'Quizdrill.html', 'Quizdrill'],
+            [ url_base + '/Quiz_schreiben', 
+                'Quiz_schreiben.html', 'Quiz schreiben'],
+            [ url_base + '/Quiz_schreiben/Liste_der_Schlüsselwörter',
+                'Liste_der_Schlüsselwörter.html', 'Liste der Schlüsselwörter']
+            ]
+    output_folder="doc/de/"
+    additional_text='Eine aktuelle Version dieser Datei befindet sich ' \
+            'auf <a href="$url">unserer Wikiseite</a>.'
+    update_doc(file_dict, output_folder, additional_text)
+
+def update_doc_en():
+    """
+    Calls update_doc() with a predefined list of files for our English 
+    documentation on the wiki (OpenFacts, a MediaWiki).
+    """
+    url_base = 'http://openfacts.berlios.de/index-en.phtml?title=Quizdrill'
+    file_dict = [
+            [ url_base, 'Quizdrill.html', 'Quizdrill'],
+            [ url_base +'/Usage', 'Usage.html', 'Usage of Quizdrill'],
+            [ url_base + '/Testing', 'Testing.html', 'Manual Tests']
+            ]
+    output_folder="doc/en/"
+    additional_text='The current version of this file is availible at ' \
+            '<a href="$url">our wiki-page</a>.'
+    update_doc(file_dict, output_folder, additional_text)
+
+def update_doc(file_dict, output_folder, additional_text=""):
+    """
+    Download our documentation from the wiki (OpenFacts, a MediaWiki) and 
+    convert it so it nicely viewable offline.
+    """
+    top_of_html = Template(
+    '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitionsl//EN">'
+    '<html><head><title>$title</title></head>'
+    '<body>'
+    '<div id="addtext">$add_text</div>')
+    end_of_html = Template(r"</body></html>")
+    article_div_re = re.compile("<div id='article'>.*?</div>", re.DOTALL)
+    for remote_file, locale_file, title in file_dict:
+        try:
+            fin = urlopen(remote_file)
+        except:
+            print "Error: Couldn't read url %s." % remote_file
+        else:
+            html_in = fin.read()
+            article = article_div_re.findall(html_in)
+            if len(article) == 1:
+                article = article[0]
+                for url, lfile, forget in file_dict:
+                    article = replace(article, 'href="' + url + '"', 
+                            'href="' + lfile +'"')
+                mapping = { 'title': title, 'url': remote_file, 
+                        'add_text': additional_text }
+                fout = open(output_folder + locale_file, "w")
+                fout.write(
+                        Template(top_of_html.substitute(mapping)).\
+                                substitute(mapping)
+                        + article 
+                        + Template(end_of_html.substitute(mapping)).\
+                                substitute(mapping)
+                        )
+            else:
+                print "Error: %s doesn't contain an article-block." % \
+                        remote_file
+
+### Gettext ###
+
 def make_mo_gettext():
     """
     Calls 'msgfmt' from GNU gettext to genearte object files (.mo) from
@@ -56,6 +137,8 @@ def make_mo_gettext():
         spawnlp(P_WAIT, conv_program, conv_program, lang_file_norm, "-o", 
                 mo_file)
     print "done"
+
+### Setup ###
 
 def make_setup():
     """
@@ -111,5 +194,8 @@ def make_setup():
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'gettext-mo':
         make_mo_gettext()
+    elif len(sys.argv) > 1 and sys.argv[1] == 'update_doc':
+        update_doc_de()
+        update_doc_en()
     else:
         make_setup()
