@@ -144,6 +144,9 @@ def make_setup():
     """
     The setuptools setup packaging for eggs, Python Cheese Shop 
     registration and distutils install.
+
+    Note: Don't forget to update your documentation with "setup update_doc"
+      before calling "setup sdist" or "setup bdist*".
     """
     setup(name='quizdrill', 
             version='0.2.0-rc1',
@@ -166,12 +169,17 @@ def make_setup():
             package_dir={'quizdrill': 'src'},
             packages=['quizdrill'],
             package_data={'quizdrill': ['data/quizdrill.glade']},
-            data_files=[('quizzes', ['quizzes/deu-fra.drill', 
+            data_files=[
+                ('quizzes', ['quizzes/deu-fra.drill', 
                 'quizzes/eng-fra.drill', 'quizzes/eng-jpn.drill', 
                 'quizzes/eng-jpn_romaji.drill', 'quizzes/eng-svd.drill', 
-                'quizzes/fra_verb.drill']),
+                'quizzes/fra_verb.drill']
+                ),
                 ('po', ['po/de.po']),
-                ('doc', ['README', 'TODO', 'GPL-2', 'Changes'])],
+                ('doc', ['README', 'TODO', 'GPL-2', 'Changes']),
+                ('doc/html-de', ['doc/de/*']),
+                ('doc/html-en', ['doc/en/*'])
+                ],
             entry_points={
                 'console_scripts': [ 'quiz_builder = quizdrill.builder:build' ],
                 'gui_scripts': [ 'quizdrill = quizdrill.quizdrill:main' ]
