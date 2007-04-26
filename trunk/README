@@ -1,8 +1,14 @@
+This file should only give a short overview. More information is available at
+our `wiki page`_ (even with a `German version`_).
+
+.. _wiki page: http://openfacts.berlios.de/index-en.phtml?title=Quizdrill
+.. _German version: http://openfacts.berlios.de/index.phtml?title=Quizdrill
+
 About
 =====
 Quizdrill is a program to test mostly memorizing tasks to excess. It was 
-inspired by langdrill[1], a language drill program, which itself was inspired 
-by JavaDrill[2]. No code came from either, however the quizzes eng-fra.drill, 
+inspired by langdrill_, a language drill program, which itself was inspired 
+by JavaDrill_. No code came from either, however the quizzes eng-fra.drill, 
 eng-jpn.drill, eng-jpn_romaji.drill and eng-svd.drill are taken directly from 
 langdrill (french.drill, japanese.drill, romaji.drill and swedish.drill). 
 Quizdrill offers multiple choice test as well as simple test (where you type 
@@ -10,8 +16,16 @@ the answer). As opposed to langdrill quizdrill should ask the questions
 depending on previous answers to make learning as efficient as possible. Note 
 however, that a lot of work still needs to be done.
 
-Other testing programs that might be of interest to you include granule[3] 
-AKFQuiz[4], Pauker[5] or mnemosyne[6].
+.. _langdrill: http://storm.prohosting.com/borco/programming/langdrill.html
+.. _JavaDrill: http://www.righto.com/java/fonts/learn.html
+
+Other testing programs that might be of interest to you include granule_,
+AKFQuiz_, Pauker_, or mnemosyne_.
+
+.. _granule: http://granule.sourceforge.net
+.. _AKFQuiz: http://akfquiz.akfoerster.de/
+.. _Pauker: http://sourceforge.net/projects/pauker/
+.. _mnemosyne: http://mnemosyne-proj.sourceforge.net/
 
 Licence
 -------
@@ -23,28 +37,54 @@ details.
 
 Dependencies
 ------------
-* python[7] (tested with 2.4)
-* pygtk[8]  (tested with 2.8.6)
+* python_ (tested with 2.4)
+* pygtk_  (tested with 2.8.6)
+
+.. _python: http://www.python.org/
+.. _pygtk: http://www.pygtk.org/
+
+Install
+-------
+There is no need to install quizdrill. If you have the dependencies installed, 
+just start it directly at src/quizdrill.py (e.g. with "python
+src/quizdrill.py"). 
+
+It can however be installed if you prefer that. The easiest way is the standard
+distutils way "python setup.py install". To install it in your home directory
+use the option "--home" or for a different folder the "--prefix" option. For 
+more details see the `Installing Python Manual`_.
+
+.. _Installing Python Manual: http://www.python.org/doc/current/inst/inst.html
+
+To use the standard packaging (or installer) for your system build it with:
+
+   python setup.py bdist_win           for a Windows Installer
+   python setup.py bdist_rpm           for a Linux RPM-Package
+   fakeroot dpkg-buildpackage -b       for a Linux Debian-Package
+
+and then install the package (or installer) the way you are used to for your
+OS.
 
 Usage
 -----
-Once you have the dependencies installed, start the program src/quizdrill.py. 
-The different quizzes can be found in the quizzes folder. There is no need to 
-install (e.g. make install etc.) and currently it is not supported either.
-
 Quizdrill is designed to really drill you while you are working on the 
 computer. After you answered some questions, it will minimize (iconify) and 
 wait until your break is over (15min). You can however minimize it at any time 
 and continue later. It will however unminimize to remind you (after 5min).
 
+The different quizzes can be found in the quizzes folder. Just load one of
+theme and test it.
+
 Help needed
 ===========
 Quizdrill is a new Project and could use a lot of help. The easiest way and 
 very appreciated is to send in your quizzes or extend the ones included. 
-Feature requests, bug reports and patches are very welcomed at the project page 
-at berlios: http://developer.berlios.de/projects/quizdrill
+Feature requests, bug reports and patches are very welcomed at the 
+`project page at berlios`_. Questions and feedback can be sent to the 
+`mailing list`_.
 
-Questions and feedback can be sent to the mailing list[9].
+.. _project page at berlios: http://developer.berlios.de/projects/quizdrill
+.. _mailing list: quizdrill-main@lists.berlios.de
 
 Adding new Quizzes
 ==================
@@ -64,8 +104,8 @@ langdrill drill files are by design very similar to quizdrill's. The only
 difference are the header lines. To convert a langdrill drill file, replace the 
 [Application]-section with
 
-!type: vocabulary
-!language: <value of "directSenseName">=<value of "reverseSenseName">
+   !type: vocabulary
+   !language: <value of "directSenseName">=<value of "reverseSenseName">
 
 and that is it. Note however, that quizdrill has a style-guideline for the 
 quizfiles, which you might want to follow. However this can be done quickly and 
@@ -78,16 +118,3 @@ To offer an easy and efficient way for "learning-by-testing", this includes
 creating programs to do the testing (tracking the results and selecting the 
 next question), the different tests from many different topics (vocabulary, 
 spelling, geography, math, ...) and documentation.
-
-
-Footnotes
-=========
-[1] http://storm.prohosting.com/borco/programming/langdrill.html
-[2] http://www.righto.com/java/fonts/learn.html
-[3] http://granule.sourceforge.net
-[4] http://akfquiz.akfoerster.de/
-[5] http://sourceforge.net/projects/pauker/
-[6] http://mnemosyne-proj.sourceforge.net/
-[7] http://www.python.org/
-[8] http://www.pygtk.org/
-[9] quizdrill-main@lists.berlios.de
