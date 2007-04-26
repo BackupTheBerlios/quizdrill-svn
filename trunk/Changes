@@ -1,4 +1,4 @@
-0.2.0-rc1: 2007-04-20 (Highlights)
+0.2.0-rc1: 2007-04-26 (Highlights)
 * Build quizzes automaticly from a wikipedia-dump.
 * Renamed quizzes to use the iso 639-3 language code.
 * Extended de-fr.diff (thanks to oliver).
