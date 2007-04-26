@@ -100,6 +100,7 @@ def update_doc(file_dict, output_folder, additional_text=""):
                         + Template(end_of_html.substitute(mapping)).\
                                 substitute(mapping)
                         )
+                print "Updated %s." % locale_file
             else:
                 print "Error: %s doesn't contain an article-block." % \
                         remote_file
