@@ -121,7 +121,7 @@ class Gui:
 
     def update_gui(self):
         """
-        (re-)set all the user-noeditable text (labels etc.).
+        (re-)set all the user-non-editable text (labels etc.).
         Used when a new quiz is loaded, a new question is asked.
         """
         for label in self.question_labels:
@@ -134,6 +134,8 @@ class Gui:
                 self.quiz.multi_choices):
             button.set_label(text)
             button.set_sensitive(True)
+        # set flash card to front side #
+        self.flash_notebook.set_current_page(0)
 
     def redisplay_correctly_answered(self, last_question):
         """
@@ -347,7 +349,6 @@ class Gui:
             self.quiz.set_answer_quality(
                     self.flash_answer_buttons.index(widget))
         self.quiz.next()
-        self.flash_notebook.set_current_page(0)
 
 
 class Quiz_Filer(SaDrill):
