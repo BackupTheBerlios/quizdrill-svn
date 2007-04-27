@@ -377,7 +377,7 @@ class DrillBuilder(SaDrill):
         """
         Writes header-lines unfiltered to the new .drill-file.
         """
-        self._fout.write(as_text)
+        self._fout.write(as_text + "\n")
 
     def on_tag_builder(self, as_text, word_pair, tag='builder', type='$'):
         builder_dict = {"WikipediaArticle" : WikipediaArticleHandler }
