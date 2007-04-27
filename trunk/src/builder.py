@@ -160,7 +160,7 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
     """
     def __init__(self, append_file, template_tag, 
             category_tag, question_tag, answer_tag,
-            category_filter, question_filter, answer_filter,
+            category_filter=None, question_filter=None, answer_filter=None,
             one_of_categories=[], encoding="utf-8",
             wiki_cat_namespace=["category"]):
         AbstractMediaWikiHandler.__init__(self, encoding)
@@ -352,6 +352,7 @@ class DrillBuilder(SaDrill):
         """
         file_out = file.replace(".builder", "") + ".original"
         self._fout = open(file_out, "w")
+        self._init_default_values()
         self.parse(file)
 
         self._fout.close()
@@ -360,6 +361,17 @@ class DrillBuilder(SaDrill):
                 self.category_filter, self.question_filter, self.answer_filter,
                 self.one_of_categories, self.encoding, self.wiki_cat_namespace)
         builder.parse(database)
+
+    def _init_default_values(self):
+        """
+        Set default values for tags that don't have to be listed in a 
+        .builder-file.
+        """
+        self.category_tag=["category"]
+        self.category_filter = self.question_filter = self.answer_filter = None
+        self.one_of_categories=[]
+        self.encoding="utf-8"
+        self.wiki_cat_namespace=["category"]
 
     def on_default_head_tag(self, as_text, word_pair=None, tag=None, type='#'):
         """
