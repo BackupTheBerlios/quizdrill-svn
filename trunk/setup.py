@@ -57,7 +57,12 @@ def update_doc_en():
     url_base = 'http://openfacts.berlios.de/index-en.phtml?title=Quizdrill'
     file_dict = [
             [ url_base, 'Quizdrill.html', 'Quizdrill'],
+            [ url_base +'/Install', 'Install.html', 'Installing Quizdrill'],
             [ url_base +'/Usage', 'Usage.html', 'Usage of Quizdrill'],
+            [ url_base +'/Writing_Quizzes', 'Writing_Quizzes.html', 
+                'Writing Quizzes for Quizdrill'],
+            [ url_base +'/Simular_Programs', 'simular_programs.html', 
+                'Programs Simular to Quizdrill'],
             [ url_base + '/Testing', 'Testing.html', 'Manual Tests']
             ]
     output_folder="doc/en/"
@@ -171,15 +176,12 @@ def make_setup():
             packages=['quizdrill'],
             package_data={'quizdrill': ['data/quizdrill.glade']},
             data_files=[
-                ('quizzes', ['quizzes/deu-fra.drill', 
-                'quizzes/eng-fra.drill', 'quizzes/eng-jpn.drill', 
-                'quizzes/eng-jpn_romaji.drill', 'quizzes/eng-svd.drill', 
-                'quizzes/fra_verb.drill']
-                ),
+                ('quizzes', listdir('quizzes/')),
+                ('quizzes/builder', listdir('quizzes/builder/')),
                 ('po', ['po/de.po']),
                 ('doc', ['README', 'TODO', 'GPL-2', 'Changes']),
-                ('doc/html-de', ['doc/de/*']),
-                ('doc/html-en', ['doc/en/*'])
+                ('doc/html-de', listdir('doc/de/')),
+                ('doc/html-en', listdir('doc/en/'))
                 ],
             entry_points={
                 'console_scripts': [ 'quiz_builder = quizdrill.builder:build' ],
