@@ -120,7 +120,7 @@ def make_mo_gettext():
     Note: As this function usese the $PATH variable (with spawnlp) it doesn't
       work under Windows.
     """
-    print "Generating gettext mo files: "
+    print "Generating gettext mo files:",
     po_files = 'po/*.po'
     mo_base_dir = 'locale/%s/LC_MESSAGES/'
     conv_program = 'msgfmt'
@@ -128,7 +128,7 @@ def make_mo_gettext():
     for lang_file in glob(po_files):
         language = basename(lang_file)[:-3]
         mo_dir = mo_base_dir % language
-        print language + " "
+        print language,
         try:
             makedirs(mo_dir)
         except OSError, inst:
@@ -142,7 +142,7 @@ def make_mo_gettext():
         #print conv_program, lang_file, "-o", mo_file    # debugging
         spawnlp(P_WAIT, conv_program, conv_program, lang_file_norm, "-o", 
                 mo_file)
-    print "done"
+    print "."
 
 ### Setup ###
 
