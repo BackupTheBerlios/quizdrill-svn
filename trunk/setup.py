@@ -142,7 +142,7 @@ def make_mo_gettext():
         #print conv_program, lang_file, "-o", mo_file    # debugging
         spawnlp(P_WAIT, conv_program, conv_program, lang_file_norm, "-o", 
                 mo_file)
-    print "."
+    print "\b."
 
 ### Setup ###
 
