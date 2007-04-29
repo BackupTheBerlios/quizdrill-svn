@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-18 22:35+0200\n"
+"POT-Creation-Date: 2007-04-29 17:40+0200\n"
 "PO-Revision-Date: 2007-01-24 21:17+0100\n"
 "Last-Translator: Adam Schmalhofer <schmalhof@users.berlios.de>\n"
 "Language-Team: German <quizdrill-main@lists.berlios.de>\n"
@@ -20,39 +20,39 @@ msgstr ""
 #. TRANSLATORS: This is displayed on the statusbar so try to keep it
 #. short. The answer should be shown rather then the text or the
 #. question if the bar is too short.
-#: ../src/quizdrill.py:148
+#: ../src/quizdrill.py:150
 #, python-format
 msgid "'%(answer)s' to '%(question)s' was correct."
 msgstr "„%(answer)s“ zu „%(question)s“ war richtig."
 
-#: ../src/quizdrill.py:170
+#: ../src/quizdrill.py:172
 #, python-format
 msgid "Warning: unknown quiz type \"%s\"."
 msgstr "Warnung: Unbekannter Quiztyp \"%s\"."
 
-#: ../src/quizdrill.py:206
+#: ../src/quizdrill.py:208
 msgid "test"
 msgstr "testen"
 
 #. statusbar1: show question to selected answer #
-#: ../src/quizdrill.py:321
+#: ../src/quizdrill.py:327
 #, python-format
 msgid "To '%(quest)s' '%(ans)s' would be the correct answer."
 msgstr "Zu „%(quest)s“ wäre „%(ans)s“ die richtige Antwort."
 
-#: ../src/quizdrill.py:366 ../src/quizdrill.py:449
+#: ../src/quizdrill.py:371 ../src/quizdrill.py:452
 msgid "What is this?"
 msgstr "Was ist das?"
 
-#: ../src/quizdrill.py:367
+#: ../src/quizdrill.py:372
 msgid "Question"
 msgstr "Frage"
 
-#: ../src/quizdrill.py:367
+#: ../src/quizdrill.py:372
 msgid "Answer"
 msgstr "Antwort"
 
-#: ../src/quizdrill.py:450
+#: ../src/quizdrill.py:453
 msgid "Please translate:"
 msgstr "Übersetze:"
 
@@ -80,33 +80,33 @@ msgstr "Fehler: Unbekannter Wert „%(v)s“ in Zeile %(l)s der Datei %(f)s."
 
 #: ../src/SaDrill.py:85
 #, python-format
-msgid "Error: No questions found in file %s."
+msgid "Error: No questions found in file \"%s\"."
 msgstr "Fehler: Es wurde keine Frage in Datei „%s“ gefunden."
 
-#: ../src/SaDrill.py:215
+#: ../src/SaDrill.py:217
 #, python-format
 msgid "Warning: Unknown head-tag \"%s\"."
 msgstr "Warnung: unbekannte Kopfzeile „%s“."
 
-#: ../src/SaDrill.py:229
+#: ../src/SaDrill.py:231
 #, python-format
 msgid "Warning: Unknown build-tag \"%s\"."
 msgstr "Warnung: unbekannte Bauanweisung „%s“."
 
-#: ../src/builder.py:373
+#: ../src/builder.py:385
 msgid "Error: Tag $builder does not have exactly one \"=\"."
 msgstr "Fehler: Bauanweisung $builder hat nicht genau ein „=“."
 
-#: ../src/builder.py:375
+#: ../src/builder.py:387
 #, python-format
 msgid "Error: Unknown builder \"%s\"."
 msgstr "Fehler: Unbekannter Quizbauer „%s“."
 
-#: ../src/builder.py:381
+#: ../src/builder.py:393
 msgid "Error: Tag $build_to does not have exactly two \"=\"."
 msgstr "Fehler: Tag $build_to hat nicht genau zwei „=“."
 
-#: ../src/builder.py:410
+#: ../src/builder.py:422
 #, python-format
 msgid "Usage: %s [.drill.builder-file] [wikipedia.xml-file]"
 msgstr "Aufruf: %s [.drill.builder-Datei] [Wikipedia.xml-Datei]"

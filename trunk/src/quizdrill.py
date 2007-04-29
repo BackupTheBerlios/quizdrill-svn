@@ -277,11 +277,9 @@ class Gui:
         if response == gtk.RESPONSE_OK:
             try:
                 self.quiz_filer_list = [Quiz_Filer(chooser.get_filename())]
-            except MissingQuestionsError:
-                error_text = _('No questions in file "%s".') % \
-                        chooser.get_filename()
+            except MissingQuestionsError, e:
                 message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, 
-                        buttons=gtk.BUTTONS_OK, message_format= error_text)
+                        buttons=gtk.BUTTONS_OK, message_format=e.str)
                 message.run()
                 message.destroy()
             else:

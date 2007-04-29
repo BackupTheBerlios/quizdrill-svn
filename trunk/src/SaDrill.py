@@ -82,7 +82,7 @@ class MissingQuestionsError(SaDrillError):
     """
     def __init__(self, file):
         self.file = file
-        self.str = _('Error: No questions found in file %s.') % file
+        self.str = _('Error: No questions found in file "%s".') % file
 
 class SaDrill:
     """
