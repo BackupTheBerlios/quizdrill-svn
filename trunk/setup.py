@@ -22,7 +22,8 @@ from setuptools import setup
 import sys
 
 from os import listdir, spawnlp, P_WAIT, makedirs
-from os.path import basename, normpath
+import os.path
+from os.path import basename, normpath, isfile
 from glob import glob
 
 from urllib import urlopen
@@ -176,15 +177,18 @@ def make_setup():
             packages=['quizdrill'],
             package_data={'quizdrill': ['data/quizdrill.glade']},
             data_files=[
-                ('quizzes', listdir('quizzes/')),
-                ('quizzes/builder', listdir('quizzes/builder/')),
-                ('po', ['po/de.po']),
+                ('quizzes', [ os.path.join('quizzes/', file)
+                    for file in listdir('quizzes/') if isfile(file)]),
+                ('quizzes/builder', [ os.path.join('quizzes/builder', file)
+                    for file in listdir('quizzes/builder/') if isfile(file)]),
                 ('doc', ['README', 'TODO', 'GPL-2', 'Changes']),
-                ('doc/html-de', listdir('doc/de/')),
-                ('doc/html-en', listdir('doc/en/'))
+                ('doc/html-de', [ os.path.join('doc/de/', file)
+                    for file in listdir('doc/de/') if isfile(file) ] ),
+                ('doc/html-en', [ os.path.join('doc/en/', file)
+                    for file in listdir('doc/en/') if isfile(file) ] ),
                 ],
             entry_points={
-                'console_scripts': [ 'quiz_builder = quizdrill.builder:build' ],
+                'console_scripts': [ 'quiz_builder = quizdrill.builder:build'],
                 'gui_scripts': [ 'quizdrill = quizdrill.quizdrill:main' ]
                 },
             classifiers=[
