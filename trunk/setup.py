@@ -156,7 +156,7 @@ def make_setup():
       before calling "setup sdist" or "setup bdist*".
     """
     setup(name='quizdrill', 
-            version='0.2.0-rc1',
+            version='0.2.0-rc2',
             # prevents *_scripts from working when installed by debian package
             # much higher minimum pygtk version is needed than written
             #install_requires=['pygtk > 2.0'],
