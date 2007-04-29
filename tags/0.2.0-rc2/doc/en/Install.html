@@ -1,0 +1,17 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitionsl//EN"><html><head><title>Installing Quizdrill</title></head><body><div id="addtext">The current version of this file is availible at <a href="http://openfacts.berlios.de/index-en.phtml?title=Quizdrill/Install">our wiki-page</a>.</div><div id='article'><h1 class='pagetitle'>Quizdrill/Install</h1><p class='subtitle'><I>OpenFacts, the Open Source Knowledge Database</I></p><p class='subpages'>&lt; <a href="Quizdrill.html" class='internal' title="Quizdrill">Quizdrill</a>
+
+<p>There is no need to install quizdrill. If you have the dependencies installed,
+just start it directly at src/quizdrill.py (e.g. with "<code>python
+src/quizdrill.py</code>").
+<p>
+It can however be installed if you prefer that. The easiest way is the standard distutils way "<code>python setup.py install</code>". To install it in your home directory use the option "<code>--home</code>" or for a different folder the "--prefix" option. For more details see the <a href='http://www.python.org/doc/current/inst/inst.html' class='external' title="http://www.python.org/doc/current/inst/inst.html">Installing Python Manual</a>.
+<p>
+To use the standard packaging (or installer) for your system build it with:
+<p>
+<pre>   python setup.py bdist_win           for a Windows Installer
+   python setup.py bdist_rpm           for a Linux RPM-Package
+   fakeroot dpkg-buildpackage -b       for a Linux Debian-Package
+</pre><p>
+and then install the package (or installer) the way you are used to for your
+OS.
+</div></body></html>

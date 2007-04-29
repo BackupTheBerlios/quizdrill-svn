@@ -1,0 +1,91 @@
+!type: vocabulary
+!language: French = English
+!question: $voc_test
+
+
+[Numbers]
+
+zéro = zero
+un = one
+deux = two
+trois = three
+quatre = four
+cinq = five
+six = six
+sept = seven
+huit = eight
+neuf = nine
+dix = ten
+onze = eleven
+douze = twelve
+treize = thirteen
+quatorze = fourteen
+quinze = fifteen
+seize = sixteen
+dix-sept = seventeen
+dix-huit = eighteen
+dix-neuf = nineteen
+vingt = twenty
+vingt et un = twenty-one
+vingt deux = twenty-two
+vingt trois = twenty-three
+vingt quatre = twenty-four
+vingt cinq = twenty-five
+vingt six = twenty-six
+vingt sept = twenty-seven
+vingt huit = twenty-eight
+vingt neuf = twenty-nine
+trente = thirty
+quarante = forty
+cinquante = fifty
+soixante = sixty
+soixante-dix = seventy
+quatre-vingt = eighty
+quatre-vingt-dix = ninety
+cent = one hundred
+deux cents = two hundred
+trois cents = three hundred
+quatre cents = four hundred
+cinq cents = five hundred
+six cents = six hundred
+sept cents = seven hundred
+huit cents = eight hundred
+neuf cents = nine hundred
+mille = one thousand
+deux mille = two thousand
+trois mille = three thousand
+quatre mille = four thousand
+cinq mille = five thousand
+six mille = six thousand
+sept mille = seven thousand
+huit mille = eight thousand
+neuf mille = nine thousand
+dix mille = ten thousand
+
+
+[Time: Days of the week]
+
+lundi = Monday
+mardi = Tuesday
+mercredi = Wednesday
+jeudi = Thursday
+vendredi = Friday
+samedi = Saturday
+dimanche = Sunday
+
+
+[Time: Months]
+
+janvier = January
+février = February
+mars = March
+avril = April
+mai = May
+juin = June
+juillet = July
+août = August
+septembre = September
+octobre = October
+novembre = November
+décembre = December
+
