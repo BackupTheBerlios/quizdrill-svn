@@ -514,6 +514,7 @@ class Quiz:
             func()
 
     def get_question_to_answer(self, answer):
+        # Might get removed after release of 0.2.0, as it won't be needed.
         for q in self.quiz_pool:
             if q[self.answer_to] == answer:
                 return q[self.ask_from]
@@ -542,6 +543,8 @@ class Quiz:
 
     def _gen_multi_choices(self):
         """ Returns a list of multichoice options """
+        # TODO: After 0.2.0 release we should change the multic_choice-list
+        # to contain both answer and questions.
         list = [ self.question[self.answer_to] ]
         while len(list) < self.multichoice_len:
             r = random.randrange(len(self.quiz_pool))
@@ -588,10 +591,11 @@ class Quiz:
         if self.question in rm_quizzes:
             self.new_question()
         else:
-            for q in self.multi_choices:
-                if q in rm_quizzes:
-                    self.new_question()
-                    break
+            for mc in self.multi_choices:
+                for rm in rm_quizzes:
+                    if rm[self.answer_to] == mc:
+                        self.new_question()
+                        return
 
     def _refit_multichoice_len(self):
         if len(self.quiz_pool) < self.DEFAULT_MULTICHOICE_LEN:
@@ -758,9 +762,9 @@ class Queued_Quiz(Weighted_Quiz):
     def remove_quizzes(self, rm_quizzes):
         rm_scored_quizzes = []
         for quiz in rm_quizzes:
-            try:
+            if quiz in self.new_quiz_pool:
                 self.new_quiz_pool.remove(quiz)
-            except:
+            else:
                 rm_scored_quizzes.append(quiz)
         Weighted_Quiz.remove_quizzes(self, rm_scored_quizzes)
         self._insure_min_quiz_num()
