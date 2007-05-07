@@ -32,7 +32,7 @@ import locale
 import gettext
 _ = gettext.gettext
 APP = "quizdrill"
-DIR = resource_filename(__name__, "../locale")
+DIR = resource_filename(__name__, "data/locale")
 if not os.path.exists(DIR):
     DIR = '/usr/share/locale'
 locale.bindtextdomain(APP, DIR)
@@ -50,6 +50,7 @@ class Gui:
     snooze_length = 300000   # 300,000 ms:  5min
 
     def __init__(self):
+        default_quiz = 'deu-fra.drill'
         self.timer_id = 0
         self.quiz_filer_list = []
         # widgets #
@@ -87,8 +88,13 @@ class Gui:
         #else:
         #    self._init_gconf()
         # start quiz #
-        quiz_file_path = resource_filename(__name__, 
-                "../quizzes/deu-fra.drill")
+        for quiz_file in [ resource_filename(__name__, "../quizzes/"), 
+                '/usr/share/quizdrill/', '/usr/locale/share/quizdrill/' ]:
+            if os.path.exists(quiz_file + default_quiz):
+                quiz_file_path = quiz_file + default_quiz
+                break
+        else:
+            quiz_file_path = None
         try:
             self.quiz_filer_list.append(Quiz_Filer(quiz_file_path))
         except IOError, MissingQuestionsError:

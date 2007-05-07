@@ -31,7 +31,7 @@ import locale
 import gettext
 _ = gettext.gettext
 APP = "quizdrill"
-DIR = resource_filename(__name__, "../locale")
+DIR = resource_filename(__name__, "data/locale")
 if not os.path.exists(DIR):
     DIR = '/usr/share/locale'
 locale.bindtextdomain(APP, DIR)

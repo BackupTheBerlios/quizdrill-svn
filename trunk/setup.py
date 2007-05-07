@@ -23,7 +23,7 @@ import sys
 
 from os import listdir, spawnlp, P_WAIT, makedirs
 import os.path
-from os.path import basename, normpath, isfile
+from os.path import basename, normpath, isfile, isdir
 from glob import glob
 
 from urllib import urlopen
@@ -123,7 +123,7 @@ def make_mo_gettext():
     """
     print "Generating gettext mo files:",
     po_files = 'po/*.po'
-    mo_base_dir = 'locale/%s/LC_MESSAGES/'
+    mo_base_dir = 'src/data/locale/%s/LC_MESSAGES/'
     conv_program = 'msgfmt'
 
     for lang_file in glob(po_files):
@@ -152,11 +152,20 @@ def make_setup():
     The setuptools setup packaging for eggs, Python Cheese Shop 
     registration and distutils install.
 
-    Note: Don't forget to update your documentation with "setup update_doc"
+    Note: Don't forget to update the documentation with "setup update_doc"
       before calling "setup sdist" or "setup bdist*".
     """
+    ## Experimental win32 folders
+    #if len(sys.argv) > 1 and (sys.argv[1] == bdist_win32 or \
+    #        (sys.argv[1] == 'install' and os.name == 'win')):
+    #    usr_dir = 'quizdrill'
+    #    doc_dir = 'quizdrill/doc'
+    #    mo_dir = 'quizdrill/locale'
+    usr_dir = 'share/quizdrill'
+    doc_dir = 'share/doc/quizdrill'
+    mo_dir = 'share/locale'
     setup(name='quizdrill', 
-            version='0.2.0-rc2',
+            version='0.2.0rc3',   # run "dch -i" to sync in debian/changelog
             # prevents *_scripts from working when installed by debian package
             # much higher minimum pygtk version is needed than written
             #install_requires=['pygtk > 2.0'],
@@ -175,17 +184,16 @@ def make_setup():
             url='http://quizdrill.berlios.de/',
             package_dir={'quizdrill': 'src'},
             packages=['quizdrill'],
-            package_data={'quizdrill': ['data/quizdrill.glade']},
+            package_data={'quizdrill': ['data/quizdrill.glade', 
+                'data/locale/*/LC_MESSAGES/quizdrill.mo']},
+            #include_package_data = True,
             data_files=[
-                ('quizzes', [ os.path.join('quizzes/', file)
-                    for file in listdir('quizzes/') if isfile(file)]),
-                ('quizzes/builder', [ os.path.join('quizzes/builder', file)
-                    for file in listdir('quizzes/builder/') if isfile(file)]),
-                ('doc', ['README', 'TODO', 'GPL-2', 'Changes']),
-                ('doc/html-de', [ os.path.join('doc/de/', file)
-                    for file in listdir('doc/de/') if isfile(file) ] ),
-                ('doc/html-en', [ os.path.join('doc/en/', file)
-                    for file in listdir('doc/en/') if isfile(file) ] ),
+                (usr_dir, glob('quizzes/*.drill')),
+                (os.path.join(usr_dir, 'builder'), 
+                    glob('quizzes/builder/*.builder')),
+                (doc_dir, ['README', 'TODO', 'GPL-2', 'Changes']),
+                (os.path.join(doc_dir, 'html-de'), glob('doc/html-de/*.html')),
+                (os.path.join(doc_dir, 'html-en'), glob('doc/html-en/*.html'))
                 ],
             entry_points={
                 'console_scripts': [ 'quiz_builder = quizdrill.builder:build'],
