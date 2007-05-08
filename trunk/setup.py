@@ -166,12 +166,14 @@ def make_setup():
     mo_dir = 'share/locale'
     setup(name='quizdrill', 
             version='0.2.0rc3',   # run "dch -i" to sync in debian/changelog
-            # prevents *_scripts from working when installed by debian package
-            # much higher minimum pygtk version is needed than written
-            #install_requires=['pygtk > 2.0'],
+            # PyGTK isn't available as egg so the user has to check this 
+            # dependency herself. It also prevents *_scripts from working when 
+            # installed by Debian package (as no egg available).
+            # A much higher minimum PyGTK version is needed than written.
+            #install_requires=['PyGTK >= 2.0'],
             license='GNU General Public License',
             platforms=['any'],
-            # descriptions should be kept in sync with debian/control,
+            # Descriptions should be kept in sync with debian/control,
             # the berlios project page, the wiki-homepage and 
             # (in the future) freshmeat.
             description='A learning-by-testing to excess program.',
