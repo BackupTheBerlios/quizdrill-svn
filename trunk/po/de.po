@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-29 17:40+0200\n"
+"POT-Creation-Date: 2007-05-09 16:44+0200\n"
 "PO-Revision-Date: 2007-01-24 21:17+0100\n"
 "Last-Translator: Adam Schmalhofer <schmalhof@users.berlios.de>\n"
 "Language-Team: German <quizdrill-main@lists.berlios.de>\n"
@@ -20,39 +20,39 @@ msgstr ""
 #. TRANSLATORS: This is displayed on the statusbar so try to keep it
 #. short. The answer should be shown rather then the text or the
 #. question if the bar is too short.
-#: ../src/quizdrill.py:150
+#: ../src/quizdrill.py:156
 #, python-format
 msgid "'%(answer)s' to '%(question)s' was correct."
 msgstr "„%(answer)s“ zu „%(question)s“ war richtig."
 
-#: ../src/quizdrill.py:172
+#: ../src/quizdrill.py:178
 #, python-format
 msgid "Warning: unknown quiz type \"%s\"."
 msgstr "Warnung: Unbekannter Quiztyp \"%s\"."
 
-#: ../src/quizdrill.py:208
+#: ../src/quizdrill.py:214
 msgid "test"
 msgstr "testen"
 
 #. statusbar1: show question to selected answer #
-#: ../src/quizdrill.py:327
+#: ../src/quizdrill.py:333
 #, python-format
 msgid "To '%(quest)s' '%(ans)s' would be the correct answer."
 msgstr "Zu „%(quest)s“ wäre „%(ans)s“ die richtige Antwort."
 
-#: ../src/quizdrill.py:371 ../src/quizdrill.py:452
+#: ../src/quizdrill.py:377 ../src/quizdrill.py:458
 msgid "What is this?"
 msgstr "Was ist das?"
 
-#: ../src/quizdrill.py:372
+#: ../src/quizdrill.py:378
 msgid "Question"
 msgstr "Frage"
 
-#: ../src/quizdrill.py:372
+#: ../src/quizdrill.py:378
 msgid "Answer"
 msgstr "Antwort"
 
-#: ../src/quizdrill.py:453
+#: ../src/quizdrill.py:459
 msgid "Please translate:"
 msgstr "Übersetze:"
 
@@ -93,20 +93,20 @@ msgstr "Warnung: unbekannte Kopfzeile „%s“."
 msgid "Warning: Unknown build-tag \"%s\"."
 msgstr "Warnung: unbekannte Bauanweisung „%s“."
 
-#: ../src/builder.py:385
+#: ../src/builder.py:386
 msgid "Error: Tag $builder does not have exactly one \"=\"."
 msgstr "Fehler: Bauanweisung $builder hat nicht genau ein „=“."
 
-#: ../src/builder.py:387
+#: ../src/builder.py:388
 #, python-format
 msgid "Error: Unknown builder \"%s\"."
 msgstr "Fehler: Unbekannter Quizbauer „%s“."
 
-#: ../src/builder.py:393
+#: ../src/builder.py:394
 msgid "Error: Tag $build_to does not have exactly two \"=\"."
 msgstr "Fehler: Tag $build_to hat nicht genau zwei „=“."
 
-#: ../src/builder.py:422
+#: ../src/builder.py:423
 #, python-format
 msgid "Usage: %s [.drill.builder-file] [wikipedia.xml-file]"
 msgstr "Aufruf: %s [.drill.builder-Datei] [Wikipedia.xml-Datei]"
@@ -205,7 +205,7 @@ msgstr ""
 msgid "Use _timer"
 msgstr "Stopp_uhr benutzen"
 
-#: ../src/data/quizdrill.glade.h:22 ../quizdrill.schemas.in.h:9
+#: ../src/data/quizdrill.glade.h:22 ../src/data/quizdrill.schemas.in.h:9
 msgid ""
 "Whether or not the timer should be used. If it is used there will be a break "
 "after a given number of questions."
@@ -234,15 +234,15 @@ msgstr "_Hilfe"
 msgid "translators-credits"
 msgstr "Deutsch (de): Adam Schmalhofer"
 
-#: ../quizdrill.schemas.in.h:1
+#: ../src/data/quizdrill.schemas.in.h:1
 msgid "Break length in min"
 msgstr "Pausenlänge in min"
 
-#: ../quizdrill.schemas.in.h:2
+#: ../src/data/quizdrill.schemas.in.h:2
 msgid "Exam length"
 msgstr "Prüfungslänge"
 
-#: ../quizdrill.schemas.in.h:3
+#: ../src/data/quizdrill.schemas.in.h:3
 msgid ""
 "How long to wait (in minuets) after the exam is finished before continuing "
 "the quiz."
@@ -250,7 +250,7 @@ msgstr ""
 "Wielange (in minuten) nach Prüfungsende gewartet wird, bis das Testen "
 "fortgesetzt wird."
 
-#: ../quizdrill.schemas.in.h:4
+#: ../src/data/quizdrill.schemas.in.h:4
 msgid ""
 "How long to wait (in minuets) after the exam is interrupted before "
 "continuing the quiz."
@@ -258,23 +258,23 @@ msgstr ""
 "Wielange (in minuten) nach einer Unterbrechung der Prüfung gewartet wird, "
 "bis das Testen fortgesetzt wird."
 
-#: ../quizdrill.schemas.in.h:5
+#: ../src/data/quizdrill.schemas.in.h:5
 msgid "How many questions are asked into there is a break."
 msgstr "Anzahl der gestellten Fragen bis eine Pause genommen wird."
 
-#: ../quizdrill.schemas.in.h:6
+#: ../src/data/quizdrill.schemas.in.h:6
 msgid "Snooze length in min"
 msgstr "Schlummerzeit in min"
 
-#: ../quizdrill.schemas.in.h:7
+#: ../src/data/quizdrill.schemas.in.h:7
 msgid "Startup quiz"
 msgstr "Anfangsquiz"
 
-#: ../quizdrill.schemas.in.h:8
+#: ../src/data/quizdrill.schemas.in.h:8
 msgid "Use timer"
 msgstr "Stoppuhr benutzen"
 
-#: ../quizdrill.schemas.in.h:10
+#: ../src/data/quizdrill.schemas.in.h:10
 msgid ""
 "Which quiz should be loaded on startup. This might be changed on closing "
 "quizdrill."

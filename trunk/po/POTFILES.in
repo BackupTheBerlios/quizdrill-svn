@@ -2,4 +2,4 @@ src/quizdrill.py
 src/SaDrill.py
 src/builder.py
 src/data/quizdrill.glade
-quizdrill.schemas.in
+src/data/quizdrill.schemas.in
