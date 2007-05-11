@@ -234,7 +234,7 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
         tag_list = text.split("|")
         dict = { "_head" : tag_list[0].strip()[3:] }
         for tag in tag_list[1:]:
-            L = tag.lsplit("=", 1)
+            L = tag.split("=", 1)
             if len(L) == 2:
                 dict[L[0].strip()] = self.simple_white_spaces(L[1]).strip()
             elif len(L) == 1 and not L[0].strip():
