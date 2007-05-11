@@ -88,7 +88,12 @@ class Gui:
         #else:
         #    self._init_gconf()
         # start quiz #
-        for quiz_file in [ resource_filename(__name__, "../quizzes/"), 
+        ### Find where the default quiz is ###
+        for quiz_file in [ os.path.expanduser('~/.quizdrill/' + default_quiz),
+                resource_filename(__name__, '../quizzes/'), 
+                resource_filename(__name__, 
+                    '../share/quizdrill/' + default_quiz),
+                resource_filename(__name__, '../quizdrill/' + default_quiz),
                 '/usr/share/quizdrill/', '/usr/locale/share/quizdrill/' ]:
             if os.path.exists(quiz_file + default_quiz):
                 quiz_file_path = quiz_file + default_quiz

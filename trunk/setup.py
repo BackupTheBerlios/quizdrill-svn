@@ -154,16 +154,20 @@ def make_setup():
 
     Note: Don't forget to update the documentation with "setup update_doc"
       before calling "setup sdist" or "setup bdist*".
+    Warning: Don't call multiple bdist* at once.
     """
-    ## Experimental win32 folders
-    #if len(sys.argv) > 1 and (sys.argv[1] == bdist_win32 or \
-    #        (sys.argv[1] == 'install' and os.name == 'win')):
-    #    usr_dir = 'quizdrill'
-    #    doc_dir = 'quizdrill/doc'
-    #    mo_dir = 'quizdrill/locale'
-    usr_dir = 'share/quizdrill'
-    doc_dir = 'share/doc/quizdrill'
-    mo_dir = 'share/locale'
+    ## Experimental non-posix (e.g. eggs, wininst) folder structure.
+    ## Prevents multiple bdist_* statements (e.g. setup bdist_win32 bdist_rpm).
+    if 'bdist_wininst' in sys.argv or 'bdist_egg' in sys.argv or \
+            ('install' in sys.argv and os.name != 'posix'):
+        usr_dir = 'quizdrill'
+        doc_dir = 'quizdrill/doc'
+        mo_dir = 'quizdrill/locale'
+    else:
+        usr_dir = 'share/quizdrill'
+        doc_dir = 'share/doc/quizdrill'
+        mo_dir = 'share/locale'
+
     setup(name='quizdrill', 
             version='0.2.0rc3',   # run "dch -i" to sync in debian/changelog
             # PyGTK isn't available as egg so the user has to check this 
