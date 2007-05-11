@@ -1,3 +1,9 @@
+0.2.0rc3:  2007-05-11
+* Several packaging improvements and fixes.
+    - Let Windows have a windowy directory structure.
+    - Removed "-" in version number as it is reserved for Debian versions.
+* Small fix in deu-fra.drill
+
 0.2.0-rc1: 2007-04-26 (Highlights)
 * Build quizzes automaticly from a wikipedia-dump.
 * Renamed quizzes to use the iso 639-3 language code.
