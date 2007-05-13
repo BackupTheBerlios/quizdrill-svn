@@ -20,15 +20,8 @@
 
 import os.path
 from pkg_resources import resource_filename
-import locale
 from gettext import gettext, ngettext
 _ = gettext
-APP = "quizdrill"
-DIR = resource_filename(__name__, "data/locale")
-if not os.path.exists(DIR):
-    DIR = '/usr/share/locale'
-locale.bindtextdomain(APP, DIR)
-locale.textdomain(APP)
 
 class SaDrillError(Exception):
     """
