@@ -48,7 +48,7 @@ def update_doc_de():
             [ url_base + '/Quiz_schreiben/Liste_der_Schlüsselwörter',
                 'Liste_der_Schlüsselwörter.html', 'Liste der Schlüsselwörter']
             ]
-    output_folder="doc/de/"
+    output_folder="doc/html-de/"
     additional_text='Eine aktuelle Version dieser Datei befindet sich ' \
             'auf <a href="$url">unserer Wikiseite</a>.'
     update_doc(file_dict, output_folder, additional_text)
@@ -65,11 +65,13 @@ def update_doc_en():
             [ url_base +'/Usage', 'Usage.html', 'Usage of Quizdrill'],
             [ url_base +'/Writing_Quizzes', 'Writing_Quizzes.html', 
                 'Writing Quizzes for Quizdrill'],
-            [ url_base +'/Simular_Programs', 'simular_programs.html', 
+            [ url_base +'/List_of_Quizzes', 'List_of_Quizzes.html', 
+                'List of Quizzes'],
+            [ url_base +'/Simular_Programs', 'Simular_Programs.html', 
                 'Programs Simular to Quizdrill'],
-            [ url_base + '/Testing', 'Testing.html', 'Manual Tests']
+            [ url_base + '/Hacking', 'Hacking.html', 'Hacking Quizdrill']
             ]
-    output_folder="doc/en/"
+    output_folder="doc/html-en/"
     additional_text='The current version of this file is availible at ' \
             '<a href="$url">our wiki-page</a>.'
     update_doc(file_dict, output_folder, additional_text)
