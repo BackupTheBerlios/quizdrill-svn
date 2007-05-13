@@ -181,10 +181,15 @@ def make_setup():
             # the berlios project page, the wiki-homepage and 
             # (in the future) freshmeat.
             description='A learning-by-testing to excess program.',
-            long_description="""A learning-by-testing program to learn quickly, 
-                mostly memorizing tasks like vocabulary. Quizdrill supports
-                multiple choice, simple quiz as well as flashcard testing.
-                """,
+            long_description="""
+ A learning-by-testing program to learn quickly, mostly memorizing 
+ tasks like vocabulary. Quizdrill supports multiple choice, simple
+ quiz as well as flashcard testing. Although still quite primitive
+ Quizdrill asks questions which have been answered right more often 
+ then others more often to improve learning efficiency. Quizzes can 
+ be easily created by edition simple text files or automatically built 
+ from Infobox-style templates of Wikipedia dumps (or other MediaWikis 
+ and even Semantic MediaWikis).""",
             author='Adam Schmalhofer',
             author_email='schmalhof@users.berlios.de',
             url='http://quizdrill.berlios.de/',
