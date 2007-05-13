@@ -18,7 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-from SaDrill import SaDrill, MissingQuestionsError
+from SaDrill import SaDrill, SaDrillError
 
 import pygtk
 pygtk.require('2.0')
@@ -102,7 +102,7 @@ class Gui:
             quiz_file_path = None
         try:
             self.quiz_filer_list.append(Quiz_Filer(quiz_file_path))
-        except IOError, MissingQuestionsError:
+        except (IOError, SaDrillError):
             self.quiz_filer_list.append(Quiz_Filer())
         self.switch_quiz(self.quiz_filer_list[0])
         # connect signals #
@@ -288,7 +288,7 @@ class Gui:
         if response == gtk.RESPONSE_OK:
             try:
                 self.quiz_filer_list = [Quiz_Filer(chooser.get_filename())]
-            except MissingQuestionsError, e:
+            except (IOError, SaDrillError), e:
                 message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, 
                         buttons=gtk.BUTTONS_OK, message_format=e.str)
                 message.run()

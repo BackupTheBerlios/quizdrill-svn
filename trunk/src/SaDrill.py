@@ -48,24 +48,18 @@ class WordPairError(SaDrillError):
     This Error is raised when a 'word_pair's has a wrong number of elements. 
     This is equivilent to a wrong number of '='s in a line.
     """
-    def __init__(self, file, line):
-        self.line = line
-        self.file = file
-        self.str = _('Error: Wrong number of "=" in line %(l)s of file %(f)s.')\
-                % { "l" : line, "f" : file }
+    WRONG_NUMBER_OF_WORDPAIRS = 0
+    NON_CLOSING_TAG = 1
 
-class ValueError(SaDrillError):
-    """
-    This Error is raised when a unknown value appears in a word_pair. However
-    it can also be used for unknown tags which usally just give a Warning.
-    """
-    def __init__(self, file, line, value):
+    def __init__(self, file, line, type=WRONG_NUMBER_OF_WORDPAIRS):
         self.line = line
         self.file = file
-        self.value = value
-        str = _('Error: Unknown value "%(v)s" in line %(l)s of file %(f)s.')\
-                % { 'v': value, 'l': line, 'f': file }
-        self.str = str
+        if type == self.WRONG_NUMBER_OF_WORDPAIRS:
+            self.str = _('Error: Wrong number of "=" in line %(l)s of'
+                ' file %(f)s.') % { "l" : line, "f" : file }
+        elif type == self.NON_CLOSING_TAG:
+            self.str = _('Error: Tag in line %(l)s of file %(f)s does not'
+                ' declare its end with a ":".') % { "l" : line, "f" : file }
 
 class MissingQuestionsError(SaDrillError):
     """
@@ -118,9 +112,28 @@ class SaDrill:
         f = open(drill_file)
         head_tag_dict = self.head_tag_dict
         build_tag_dict = self.build_tag_dict
+        mandatory_head_tags = self.mandatory_head_tags
+        mandatory_build_tags = self.mandatory_build_tags
         used_mandatory_head_tags=set([])
         used_mandatory_build_tags=set([])
         has_questions = False
+
+        def _parse_taged_line(type, tag_dict, mandatory_tags,
+                used_mandatory_tags):
+            try:
+                colon = line.index(":")
+            except ValueError:
+                raise WordPairError(drill_file, i+1, 
+                        WordPairError.NON_CLOSING_TAG)
+            else:
+                tag = line[1:colon]
+                word_pair = [ w.strip() for w in line[colon+1:].split("=")]
+                if tag in tag_dict:
+                    if tag in mandatory_tags and not tag in used_mandatory_tags:
+                        used_mandatory_tags.add(tag)
+                    tag_dict[tag](line, word_pair, tag, type)
+                else:
+                    tag_dict[" "](line, word_pair, tag, type)
 
         for i, line in enumerate(f.readlines()):
             line = line.strip()
@@ -129,16 +142,8 @@ class SaDrill:
                 if type == '#':
                     self.on_comment(line, None, None, type)
                 elif type == '!':
-                    colon = line.index(":")
-                    tag = line[1:colon]
-                    word_pair = [ w.strip() for w in line[colon+1:].split("=")]
-                    if tag in head_tag_dict:
-                        if tag in self.mandatory_head_tags and \
-                                not tag in used_mandatory_head_tags:
-                            used_mandatory_head_tags.add(tag)
-                        head_tag_dict[tag](line, word_pair, tag, type)
-                    else:
-                        head_tag_dict[" "](line, word_pair, tag, type)
+                    _parse_taged_line(type, head_tag_dict, 
+                            mandatory_head_tags, used_mandatory_head_tags)
                 elif type == '[':
                     line = line[1:-1]
                     word_pair = [ w.strip() for w in line.split("=", 1) ]
@@ -146,16 +151,8 @@ class SaDrill:
                         word_pair.append("")
                     self.on_section(line, word_pair, None, type)
                 elif type == '$':
-                    colon = line.index(":")
-                    tag = line[1:colon]
-                    word_pair = [ w.strip() for w in line[colon+1:].split("=")]
-                    if tag in build_tag_dict:
-                        if tag in self.mandatory_build_tags and \
-                                not tag in used_mandatory_build_tags:
-                            used_mandatory_build_tags.add(tag)
-                        build_tag_dict[tag](line, word_pair, tag, type)
-                    else:
-                        build_tag_dict[" "](line, word_pair, tag, type)
+                    _parse_taged_line(type, build_tag_dict, 
+                            mandatory_build_tags, used_mandatory_build_tags)
                 else:
                     type = ''
                     word_pair = [ w.strip() for w in line.split("=") ]
