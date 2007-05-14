@@ -67,8 +67,8 @@ def update_doc_en():
                 'Writing Quizzes for Quizdrill'],
             [ url_base +'/List_of_Quizzes', 'List_of_Quizzes.html', 
                 'List of Quizzes'],
-            [ url_base +'/Simular_Programs', 'Simular_Programs.html', 
-                'Programs Simular to Quizdrill'],
+            [ url_base +'/Similar_Programs', 'Similar_Programs.html', 
+                'Programs Similar to Quizdrill'],
             [ url_base + '/Hacking', 'Hacking.html', 'Hacking Quizdrill']
             ]
     output_folder="doc/html-en/"
