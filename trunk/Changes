@@ -1,5 +1,5 @@
 0.2.0rc4:  2007-05-??
-* New quiz deu_Oper.drill and deu_Muskelatur.drill.
+* New quiz deu_Oper.drill, deu_Muskelatur.drill and deu_Gemälde.drill.
 * Updated project description and documentation.
 * Fixed bug in builder.
 * Use ez_setup.py from setuptools to ease installation.
