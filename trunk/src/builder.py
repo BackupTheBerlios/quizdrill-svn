@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2007, Adam Schmalhofer
-# Developed by Adam Schmalhofer <schmalhof@users.berlios.de>
+# Copyright (C) 2007, Adam Schmalhofer <schmalhof@users.berlios.de>
+# Developed at http://quizdrill.berlios.de/
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import re
 import sys
 import os.path
 from pkg_resources import resource_filename
-# i18n
+# i18n #
 import locale
 import gettext
 _ = gettext.gettext
@@ -34,8 +34,8 @@ APP = "quizdrill"
 DIR = resource_filename(__name__, "data/locale")
 if not os.path.exists(DIR):
     DIR = '/usr/share/locale'
-locale.bindtextdomain(APP, DIR)
-locale.textdomain(APP)
+gettext.bindtextdomain(APP, DIR)
+gettext.textdomain(APP)
 
 
 class AbstractQuizBuilder:
@@ -100,9 +100,6 @@ class AbstractMediaWikiHandler(ContentHandler):
         self.in_title_field = False
         self.content = ""
         self.title = ""
-        # Output #
-        self.log_file = "log"
-        #self.log("=== " + time.ctime() + " ===")
 
     def parse(self, file):
         sax.parse(file, self)
@@ -149,8 +146,8 @@ class AbstractMediaWikiHandler(ContentHandler):
         """
         Needs to be implemented by the child. Processes the actual article.
         """
-        print 'Warning: "separate_article" should not be called on \
-                AbstractWikipediaHandler.'
+        print 'Warning: "separate_article" should not be called on ' \
+                'AbstractWikipediaHandler.'
 
 class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
     """
@@ -204,7 +201,8 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
         #
         text = comments_re.sub("", text)
         if nested_template_re.search(text):
-            self.log("Warning: Skipping nested templates in %s." % self.title)
+            print _('Warning: Skipping nested templates in "%s".') % \
+                    self.title
         for infobox in unnested_template_re.findall(text):
             infobox_dict = self.separate_infobox(infobox)
             infobox_dict.update(dict)
@@ -240,8 +238,9 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
             elif len(L) == 1 and not L[0].strip():
                 pass
             else:
-                warn = "Warning: Tag %s isn't a Pair in '%s'." %(L, self.title)
-                self.log(warn, infobox)
+                print _('Warning: No parameter name in Infobox row '
+                        '"%(para)s" in article "%(article)s".') % \
+                                { 'para': L, 'article': self.title }
         return dict
 
     def remove_links(self, text):
@@ -291,41 +290,31 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
         else:
             cat = ""
             if self.category_tag != "":
-                print 'Warning: "%s" missing in a template in article "%s", \
-                        using "" instead' %\
-                        ( self.category_tag, dict["_article"] )
+                print _('Warning: Parameter "%(para)s" missing in a template in ' 
+                        'article "%(article)s", using "" instead.') % \
+                            { 'para': self.category_tag, 
+                                    'article': dict['_article'] }
         if self.question_tag in dict:
             question = dict[self.question_tag]
         else:
-            print 'Warning: "%s" missing in a template in article "%s", \
-                    skipping.' % ( self.question_tag, dict["_article"] )
+            print _('Warning: Parameter "%(para)s" missing in a template in ' 
+                    'article "%(article)s", skipping.') % \
+                            { 'para': self.question_tag, 
+                                    'article': dict["_article"] }
             return
         if self.answer_tag in dict:
             answer = dict[self.answer_tag]
         else:
-            print 'Warning: "%s" missing in a template in article "%s", \
-                    skipping.' % ( self.answer_tag, dict["_article"] )
+            print _('Warning: Parameter "%(para)s" missing in a template in '
+                    'article "%(article)s", skipping.') % \
+                            { 'para': self.answer_tag, 
+                                    'article': dict["_article"] }
             return
         # actual adding to dictionary #
         if not cat in self.quiz_dict:
             self.quiz_dict[cat] = [[question, answer]]
         else:
             self.quiz_dict[cat].append([question, answer])
-
-    # Misc #
-
-    def log(self, short_msg, additional_msg=""):
-        """
-        Simple quick and dirty log method. Should be replaced be something 
-        more standard in the future (see module logging).
-        """
-        print short_msg
-        if self.log_file != None:
-            long_msg = short_msg + "\n" + additional_msg + "\n=========="
-            file = open(self.log_file, "a")
-            #print "file.write: " + long_msg
-            file.write(long_msg)
-            file.close()
 
 
 class DrillBuilder(SaDrill):
