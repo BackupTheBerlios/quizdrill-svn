@@ -1,4 +1,4 @@
-0.2.0rc4:  2007-05-??
+0.2.0:  2007-05-24
 * New quiz deu_Oper.drill, deu_Muskelatur.drill and deu_Gemälde.drill.
 * Updated project description and documentation.
 * Fixed bug in builder.
