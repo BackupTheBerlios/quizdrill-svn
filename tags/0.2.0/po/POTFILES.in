@@ -1,0 +1,5 @@
+src/quizdrill.py
+src/SaDrill.py
+src/builder.py
+src/data/quizdrill.glade
+src/data/quizdrill.schemas.in

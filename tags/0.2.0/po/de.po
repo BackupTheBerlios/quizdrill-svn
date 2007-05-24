@@ -1,0 +1,321 @@
+# German translations for PACKAGE package
+# German messages for PACKAGE.
+# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Adam Schmalhofer <Adam.Schmalhofer@web.de>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-05-21 01:53+0200\n"
+"PO-Revision-Date: 2007-01-24 21:17+0100\n"
+"Last-Translator: Adam Schmalhofer <schmalhof@users.berlios.de>\n"
+"Language-Team: German <quizdrill-main@lists.berlios.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. TRANSLATORS: This is displayed on the statusbar so try to keep it
+#. short. The answer should be shown rather then the text or the
+#. question if the bar is too short.
+#: ../src/quizdrill.py:161
+#, python-format
+msgid "'%(answer)s' to '%(question)s' was correct."
+msgstr "„%(answer)s“ zu „%(question)s“ war richtig."
+
+#: ../src/quizdrill.py:183
+#, python-format
+msgid "Warning: unknown quiz type \"%s\"."
+msgstr "Warnung: Unbekannter Quiztyp \"%s\"."
+
+#: ../src/quizdrill.py:219
+msgid "test"
+msgstr "testen"
+
+#. statusbar1: show question to selected answer #
+#: ../src/quizdrill.py:338
+#, python-format
+msgid "To '%(quest)s' '%(ans)s' would be the correct answer."
+msgstr "Zu „%(quest)s“ wäre „%(ans)s“ die richtige Antwort."
+
+#: ../src/quizdrill.py:382 ../src/quizdrill.py:463
+msgid "What is this?"
+msgstr "Was ist das?"
+
+#: ../src/quizdrill.py:383
+msgid "Question"
+msgstr "Frage"
+
+#: ../src/quizdrill.py:383
+msgid "Answer"
+msgstr "Antwort"
+
+#: ../src/quizdrill.py:464
+msgid "Please translate:"
+msgstr "Übersetze:"
+
+#: ../src/SaDrill.py:32
+#, python-format
+msgid "Error in file \"%s\"."
+msgstr "Fehler in Datei „%s“."
+
+#: ../src/SaDrill.py:42
+#, python-format
+msgid "Error: Missing mandatory tag \"%(t)s\" in %(f)s."
+msgid_plural "Error: Missing mandatory tags \"%(t)s in %(f)s\"."
+msgstr[0] "Fehler: Notweniger Schlüsselwort „%(t)s“ in %(f)s fehlt."
+msgstr[1] "Fehler: Notwenige Schlüsselwörter „%(t)s“ in %(f)s fehlen."
+
+#: ../src/SaDrill.py:58
+#, python-format
+msgid "Error: Wrong number of \"=\" in line %(l)s of file %(f)s."
+msgstr "Fehler: Falsche Anzahl an „=“ in Zeile %(l)s der Datei %(f)s."
+
+#: ../src/SaDrill.py:61
+#, python-format
+msgid ""
+"Error: Tag in line %(l)s of file %(f)s does not declare its end with a \":\"."
+msgstr ""
+"Fehler: Dem Schlüsselwort in Zeile %(l)s der Datei %(f)s fehlt die "
+"Schließanweisung „:“."
+
+#: ../src/SaDrill.py:72
+#, python-format
+msgid "Error: No questions found in file \"%s\"."
+msgstr "Fehler: Es wurde keine Frage in Datei „%s“ gefunden."
+
+#: ../src/SaDrill.py:207
+#, python-format
+msgid "Warning: Unknown head-tag \"%s\"."
+msgstr "Warnung: unbekannte Kopfzeile „%s“."
+
+#: ../src/SaDrill.py:221
+#, python-format
+msgid "Warning: Unknown build-tag \"%s\"."
+msgstr "Warnung: unbekannte Bauanweisung „%s“."
+
+#: ../src/builder.py:207
+#, python-format
+msgid "Warning: Skipping nested templates in \"%s\"."
+msgstr "Warnung: Überspringe verschachtelte Vorlagen in „%s“."
+
+#: ../src/builder.py:244
+#, python-format
+msgid ""
+"Warning: No parameter name in Infobox row \"%(para)s\" in article \"%"
+"(article)s\"."
+msgstr ""
+"Warnung: Kein Parametername in Infoboxzeile „%(para)s“ im Artikel „%(article)"
+"s“."
+
+#: ../src/builder.py:297
+#, python-format
+msgid ""
+"Warning: Parameter \"%(para)s\" missing in a template in article \"%(article)"
+"s\", using \"\" instead."
+msgstr ""
+"Warnung: Parameter „%(para)s“ fehlt in der Vorlage in Artikel „%(article)s“, "
+"verwende „“ stattdessen."
+
+#: ../src/builder.py:304 ../src/builder.py:312
+#, python-format
+msgid ""
+"Warning: Parameter \"%(para)s\" missing in a template in article \"%(article)"
+"s\", skipping."
+msgstr ""
+"Warnung: Parameter „%(para)s“ fehlt in der Vorlage in Artikel „%(article)s“, "
+"verwende „“ stattdessen."
+
+#: ../src/builder.py:394
+msgid "Error: Tag $builder does not have exactly one \"=\"."
+msgstr "Fehler: Bauanweisung $builder hat nicht genau ein „=“."
+
+#: ../src/builder.py:396
+#, python-format
+msgid "Error: Unknown builder \"%s\"."
+msgstr "Fehler: Unbekannter Quizbauer „%s“."
+
+#: ../src/builder.py:402
+msgid "Error: Tag $build_to does not have exactly two \"=\"."
+msgstr "Fehler: Tag $build_to hat nicht genau zwei „=“."
+
+#: ../src/builder.py:431
+#, python-format
+msgid "Usage: %s [.drill.builder-file] [wikipedia.xml-file]"
+msgstr "Aufruf: %s [.drill.builder-Datei] [Wikipedia.xml-Datei]"
+
+#: ../src/data/quizdrill.glade.h:1
+msgid "<b>Solution:</b>"
+msgstr "<b>Lösung:</b>"
+
+#: ../src/data/quizdrill.glade.h:2
+msgid "<b>Subquiz:</b>"
+msgstr "<b>Teilquiz:</b>"
+
+#: ../src/data/quizdrill.glade.h:3
+msgid "<b>Timer:</b>"
+msgstr "<b>Stoppuhr:</b>"
+
+#: ../src/data/quizdrill.glade.h:4
+msgid "Break length in min:"
+msgstr "Pausenlänge in min:"
+
+#: ../src/data/quizdrill.glade.h:5
+msgid "Did you remember it correctly?"
+msgstr "Haben Sie dies richtig beantwortet?"
+
+#: ../src/data/quizdrill.glade.h:6
+msgid "Evaluate"
+msgstr "Bewerten"
+
+#: ../src/data/quizdrill.glade.h:7
+msgid "Exam length:"
+msgstr "Prüfungslänge:"
+
+#: ../src/data/quizdrill.glade.h:8
+msgid "Flashcard"
+msgstr "Karteikarten"
+
+#: ../src/data/quizdrill.glade.h:9
+msgid "Multiple Choice"
+msgstr "Mehrfachauswahl"
+
+#: ../src/data/quizdrill.glade.h:10
+msgid "Quizdrill"
+msgstr "Quizdrill"
+
+#: ../src/data/quizdrill.glade.h:11
+msgid "Quizdrill Preferences"
+msgstr "Quizdill Einstellungen"
+
+#: ../src/data/quizdrill.glade.h:12
+msgid "Show solution"
+msgstr "Lösung zeigen"
+
+#: ../src/data/quizdrill.glade.h:13
+msgid "Simple Quiz"
+msgstr "Einfacher Quiz"
+
+#: ../src/data/quizdrill.glade.h:14
+msgid "Snooze length in min:"
+msgstr "Schlummerzeit in min:"
+
+#: ../src/data/quizdrill.glade.h:15
+msgid "Statistics"
+msgstr "Statistiken"
+
+#: ../src/data/quizdrill.glade.h:16
+msgid ""
+"This program is free software; you can redistribute it and/or modify it "
+"under the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for "
+"more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License along with "
+"this program; if not, write to the Free Software Foundation, Inc., 59 Temple "
+"Place - Suite 330, Boston, MA 02111-1307, USA."
+msgstr ""
+"Dieses Programm ist freie Software; Sie können es weitergeben und/oder "
+"modifizieren im Sinne der GNU General Public License wie sie von der Free "
+"Software Foundation veröffentlicht wird; entweder Version 2, oder "
+"(wahlweise) jede neuere Version.\n"
+"\n"
+"Dieses Programm wird in der Hoffnung vertrieben, dass es nützlich ist, "
+"jedoch OHNE JEDE GARANTIE; selbst ohne die implizite Garantie der "
+"TAUGLICHKEIT oder der EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie die GNU "
+"General Public License für weitere Details.\n"
+"\n"
+"Sie sollten eine Kopie der GNU General Public License mit diesem Programm "
+"erhalten haben; wenn nicht, dann schreiben Sie an Free Software Foundation, "
+"Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
+
+#: ../src/data/quizdrill.glade.h:21
+msgid "Use _timer"
+msgstr "Stopp_uhr benutzen"
+
+#: ../src/data/quizdrill.glade.h:22 ../src/data/quizdrill.schemas.in.h:9
+msgid ""
+"Whether or not the timer should be used. If it is used there will be a break "
+"after a given number of questions."
+msgstr ""
+"Ob die Stoppuhr verwendet werden soll. Wenn ja wird gibt es nach einer "
+"angegebenen Anzahl an Fragen zur Pause auffordern."
+
+#: ../src/data/quizdrill.glade.h:23
+msgid "Words"
+msgstr "Wörter"
+
+#: ../src/data/quizdrill.glade.h:24
+msgid "_Edit"
+msgstr "_Bearbeiten"
+
+#: ../src/data/quizdrill.glade.h:25
+msgid "_File"
+msgstr "_Datei"
+
+#: ../src/data/quizdrill.glade.h:26
+msgid "_Help"
+msgstr "_Hilfe"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../src/data/quizdrill.glade.h:28
+msgid "translators-credits"
+msgstr "Deutsch (de): Adam Schmalhofer"
+
+#: ../src/data/quizdrill.schemas.in.h:1
+msgid "Break length in min"
+msgstr "Pausenlänge in min"
+
+#: ../src/data/quizdrill.schemas.in.h:2
+msgid "Exam length"
+msgstr "Prüfungslänge"
+
+#: ../src/data/quizdrill.schemas.in.h:3
+msgid ""
+"How long to wait (in minuets) after the exam is finished before continuing "
+"the quiz."
+msgstr ""
+"Wielange (in minuten) nach Prüfungsende gewartet wird, bis das Testen "
+"fortgesetzt wird."
+
+#: ../src/data/quizdrill.schemas.in.h:4
+msgid ""
+"How long to wait (in minuets) after the exam is interrupted before "
+"continuing the quiz."
+msgstr ""
+"Wielange (in minuten) nach einer Unterbrechung der Prüfung gewartet wird, "
+"bis das Testen fortgesetzt wird."
+
+#: ../src/data/quizdrill.schemas.in.h:5
+msgid "How many questions are asked into there is a break."
+msgstr "Anzahl der gestellten Fragen bis eine Pause genommen wird."
+
+#: ../src/data/quizdrill.schemas.in.h:6
+msgid "Snooze length in min"
+msgstr "Schlummerzeit in min"
+
+#: ../src/data/quizdrill.schemas.in.h:7
+msgid "Startup quiz"
+msgstr "Anfangsquiz"
+
+#: ../src/data/quizdrill.schemas.in.h:8
+msgid "Use timer"
+msgstr "Stoppuhr benutzen"
+
+#: ../src/data/quizdrill.schemas.in.h:10
+msgid ""
+"Which quiz should be loaded on startup. This might be changed on closing "
+"quizdrill."
+msgstr ""
+"Welcher quiz beim starten benutzt werden soll. Dies ängert sich womöglich "
+"nach dem beenden von quizdrill."
+
+#~ msgid "Error: Unknown value \"%(v)s\" in line %(l)s of file %(f)s."
+#~ msgstr "Fehler: Unbekannter Wert „%(v)s“ in Zeile %(l)s der Datei %(f)s."

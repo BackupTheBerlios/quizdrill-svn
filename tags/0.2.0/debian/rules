@@ -1,0 +1,59 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE=1
+
+PACKAGE_NAME=quizdrill
+MODULE_NAME=quizdrill
+
+DEB_UPSTREAM_VERSION=$(shell dpkg-parsechangelog \
+	| grep ^Version: | cut -d ' ' -f 2 | cut -d '-' -f 1)
+
+PYVERS=$(shell pyversions -vr)
+
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f *-stamp
+	rm -rf dist build
+	find . -name *\.py[co] -exec rm {} \;
+	dh_clean
+
+build: build-stamp
+build-stamp: $(PYVERS:%=build-ext-%)
+	touch $@
+build-ext-%:
+	dh_testdir
+	python$* setup.py build
+	touch $@
+
+install: install-stamp
+install-stamp: build-stamp $(PYVERS:%=install-ext-%)
+install-ext-%:
+	python$* setup.py install \
+		--single-version-externally-managed \
+		--root $(CURDIR)/debian/${PACKAGE_NAME}
+	# install only one Egg dir (without python's version number)
+	mv debian/${PACKAGE_NAME}/usr/lib/python$*/site-packages/${MODULE_NAME}-${DEB_UPSTREAM_VERSION}-py$*.egg-info \
+	   debian/${PACKAGE_NAME}/usr/lib/python$*/site-packages/${MODULE_NAME}.egg-info
+
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs Changes
+	dh_installdocs --exclude=".svn"
+	dh_pycentral
+	dh_strip
+	dh_compress -X.py
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary-arch:
+
+binary: binary-indep binary-arch
+
+.PHONY: build clean binary-indep binary-arch binary install configure

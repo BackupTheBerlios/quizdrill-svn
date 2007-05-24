@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitionsl//EN"><html><head><title>Installing Quizdrill</title></head><body><div id="addtext">The current version of this file is availible at <a href="http://openfacts.berlios.de/index-en.phtml?title=Quizdrill/Install">our wiki-page</a>.</div><div id='article'><h1 class='pagetitle'>Quizdrill/Install</h1><p class='subtitle'><I>OpenFacts, the Open Source Knowledge Database</I></p><p class='subpages'>&lt; <a href="Quizdrill.html" class='internal' title="Quizdrill">Quizdrill</a>
+
+<p><h2> Dependencies </h2>
+<p>
+To run Quizdrill you need <a href='http://www.python.org' class='external' title="http://www.python.org">Python</a> (tested with 2.4), <a href='http://www.pygtk.org' class='external' title="http://www.pygtk.org">PyGTK</a> (tested with 2.8.6), <a href='http://glade.gnome.org/' class='external' title="http://glade.gnome.org/">Glade</a>, <a href='http://www.gnu.org/software/gettext/gettext.html' class='external' title="http://www.gnu.org/software/gettext/gettext.html">gettext</a> and <a href='http://peak.telecommunity.com/DevCenter/EasyInstall' class='external' title="http://peak.telecommunity.com/DevCenter/EasyInstall">EasyInstall</a>.
+<p>
+If your operating system includes a package management, chances are you can use your standard packaging system to easily download and install the needed dependencies. This include variations of BSD and Linux, as well as <a href='http://www.finkproject.org/' class='external' title="http://www.finkproject.org/">Fink</a> or DarwinPorts for Mac&nbsp;OS&nbsp;X. On <a href="http://www.wikipedia.org/wiki/Debian" class='external' title="">Debian</a> or <a href="http://www.wikipedia.org/wiki/Ubuntu_%28Linux_distribution%29" class='external' title="">Ubuntu</a> for example you can run "<code>apt-get install python python-gtk2 python-glade2 gettext python-setuptools</code>" to install all the dependencies. Note however that the package names very between different distributions.
+<p>
+<h3> Installing Dependencies under Windows </h3>
+<p>
+The easiest way is to use the <a href='http://osl.ulpgc.es/~arc/gnome/pygtk-setup.exe' class='external' title="http://osl.ulpgc.es/~arc/gnome/pygtk-setup.exe">All-in-One-PyGTK-Installer</a> which installs PyGTK, Python and GTK+-Runtime (all are needed). If you prefer the <a href='http://www.pygtk.org/downloads.html' class='external' title="http://www.pygtk.org/downloads.html">PyGTK download page</a> includes a description to install all the different libraries manually.After that install Glade: <a href='http://gladewin32.sourceforge.net/modules/wfdownloads/viewcat.php?cid=3' class='external' title="http://gladewin32.sourceforge.net/modules/wfdownloads/viewcat.php?cid=3">Download libglade-bin</a> and extract it to "<code>&lt;all-in-one-install-path&gt;\gtk\bin</code>".
+<p>
+In addition <a href='http://sourceforge.net/project/showfiles.php?group_id=23617&package_id=17255' class='external' title="http://sourceforge.net/project/showfiles.php?group id=23617&amp;package id=17255">download and install</a> gettext and finally <a href='http://peak.telecommunity.com/DevCenter/EasyInstall' class='external' title="http://peak.telecommunity.com/DevCenter/EasyInstall">EasyInstall</a> by downloading and running <a href='http://peak.telecommunity.com/dist/ez_setup.py' class='external' title="http://peak.telecommunity.com/dist/ez setup.py">ez_setup.py</a>. ez_setup.py is also delivered with Quizdrill so you can also just use that version.
+<p>
+<h2> Installing Quizdrill </h2>
+<p>
+There is no need to install Quizdrill. If you have the dependencies installed,
+just the source distribution (e.&nbsp;g. quizdrill-0.2.0.tar.gz) extract it and start  src/quizdrill.py (e.&nbsp;g. with "<code>python
+src/quizdrill.py</code>").
+<p>
+It can however be installed if you prefer that. Download the package for your Distribution (e.&nbsp;g. .deb or .rpm on Debian/Ubuntu or Redhat/Suse) if it exists. Otherwise, the easiest way is the standard distutils way "<code>python setup.py install</code>". To install it in your home directory use the option "<code>--home</code>" or for a different folder the "<code>--prefix</code>" option. For more details see the <a href='http://www.python.org/doc/current/inst/inst.html' class='external' title="http://www.python.org/doc/current/inst/inst.html">Installing Python Manual</a>. EasyInstall which you have installed as one of the dependencies can install it, too. Download the egg-file and run e.&nbsp;g. "<code>easy_install quizdrill-0.2.0.egg</code>". Easy Install can also handle updates and download Quizdrill automatically. Read <a href='http://peak.telecommunity.com/DevCenter/EasyInstall' class='external' title="http://peak.telecommunity.com/DevCenter/EasyInstall">their documentation</a> for details.
+<p>
+<h2> Building Distribution Specific Packages / Installer </h2>
+<p>
+To use the standard packaging (or installer) for your system build it with:
+<p>
+<pre>   python setup.py bdist_win           for a Windows Installer (highly discouraged)
+   python setup.py bdist_rpm           for a Linux RPM-Package
+   fakeroot dpkg-buildpackage -b       for a Linux Debian-Package
+</pre><p>
+and then install the package (or installer) the way you are used to for your
+OS.
+</div></body></html>

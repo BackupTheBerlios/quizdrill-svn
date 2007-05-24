@@ -1,0 +1,24 @@
+Source: quizdrill
+Maintainer: Adam Schmalhofer <schmalhof@users.berlios.de>
+Section: python
+Priority: optional
+Build-Depends: debhelper (>= 5.0.38), python (>= 2.3.5-7), python-central (>= 0.5.6), python-setuptools (>= 0.6b3-1)
+Standards-Version: 3.7.2
+XS-Python-Version: all
+
+Package: quizdrill
+Architecture: all
+Depends: ${python:Depends}, python-gtk2 (>= 2.6)
+XB-Python-Version: ${python:Versions}
+Provides: ${python:Provides}
+Description: learning-by-testing to excess program
+ A learning-by-testing program to learn quickly, mostly memorizing 
+ tasks like vocabulary. Quizdrill supports multiple choice, simple
+ quiz as well as flashcard testing. Although still quite immature
+ Quizdrill asks questions which have been answered right more often 
+ then others less often to improve learning efficiency. Quizzes can 
+ be easily created by edition simple text files or automatically built 
+ from Infobox-style templates of Wikipedia dumps (or other MediaWikis 
+ and even Semantic MediaWikis).
+ .
+ Homepage: http://quizdrill.berlios.de/

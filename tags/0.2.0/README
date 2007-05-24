@@ -1,0 +1,120 @@
+This file should only give a short overview. More information is available at
+our `wiki page`_ (even with a `German version`_).
+
+.. _wiki page: http://openfacts.berlios.de/index-en.phtml?title=Quizdrill
+.. _German version: http://openfacts.berlios.de/index.phtml?title=Quizdrill
+
+About
+=====
+Quizdrill is a program to test mostly memorizing tasks to excess. It was 
+inspired by langdrill_, a language drill program, which itself was inspired 
+by JavaDrill_. No code came from either, however the quizzes eng-fra.drill, 
+eng-jpn.drill, eng-jpn_romaji.drill and eng-svd.drill are taken directly from 
+langdrill (french.drill, japanese.drill, romaji.drill and swedish.drill). 
+Quizdrill offers multiple choice test as well as simple test (where you type 
+the answer). As opposed to langdrill quizdrill should ask the questions 
+depending on previous answers to make learning as efficient as possible. Note 
+however, that a lot of work still needs to be done.
+
+.. _langdrill: http://storm.prohosting.com/borco/programming/langdrill.html
+.. _JavaDrill: http://www.righto.com/java/fonts/learn.html
+
+Other testing programs that might be of interest to you include granule_,
+AKFQuiz_, Pauker_, or mnemosyne_.
+
+.. _granule: http://granule.sourceforge.net
+.. _AKFQuiz: http://akfquiz.akfoerster.de/
+.. _Pauker: http://sourceforge.net/projects/pauker/
+.. _mnemosyne: http://mnemosyne-proj.sourceforge.net/
+
+Licence
+-------
+All files (exepet the licence file GPL-2 itself) are released under the GPL: 
+You can redistribute it and/or modify it under the terms of the GNU General 
+Public License as published by the Free Software Foundation; either version 2 
+of the License, or (at your option) any later version. See GPL-2 for the 
+details.
+
+Dependencies
+------------
+* python_ (tested with 2.4)
+* pygtk_  (tested with 2.8.6)
+
+.. _python: http://www.python.org/
+.. _pygtk: http://www.pygtk.org/
+
+Install
+-------
+There is no need to install quizdrill. If you have the dependencies installed, 
+just start it directly at src/quizdrill.py (e.g. with "python
+src/quizdrill.py"). 
+
+It can however be installed if you prefer that. The easiest way is the standard
+distutils way "python setup.py install". To install it in your home directory
+use the option "--home" or for a different folder the "--prefix" option. For 
+more details see the `Installing Python Manual`_.
+
+.. _Installing Python Manual: http://www.python.org/doc/current/inst/inst.html
+
+To use the standard packaging (or installer) for your system build it with:
+
+   python setup.py bdist_win           for a Windows Installer
+   python setup.py bdist_rpm           for a Linux RPM-Package
+   fakeroot dpkg-buildpackage -b       for a Linux Debian-Package
+
+and then install the package (or installer) the way you are used to for your
+OS.
+
+Usage
+-----
+Quizdrill is designed to really drill you while you are working on the 
+computer. After you answered some questions, it will minimize (iconify) and 
+wait until your break is over (15min). You can however minimize it at any time 
+and continue later. It will however unminimize to remind you (after 5min).
+
+The different quizzes can be found in the quizzes folder. Just load one of
+theme and test it.
+
+Help needed
+===========
+Quizdrill is a new Project and could use a lot of help. The easiest way and 
+very appreciated is to send in your quizzes or extend the ones included. 
+Feature requests, bug reports and patches are very welcomed at the 
+`project page at berlios`_. Questions and feedback can be sent to the 
+`mailing list`_.
+
+.. _project page at berlios: http://developer.berlios.de/projects/quizdrill
+.. _mailing list: quizdrill-main@lists.berlios.de
+
+Adding new Quizzes
+==================
+The syntax of quizzes is very simple. A short look at one of them in the 
+quizzes folder and you should know everything you need.
+
+Lines starting with a "!" are meta-data giving information of the quiz itself. 
+Lines containing only white-spaces or start with a "#" are ignored. Lines 
+starting with a "[" start a new section and should end with a "]" (excluding 
+white-spaces). It is strongly recommended that section-title is given in both 
+languages, each separated by a "=". The actual vocabulary/quiz are a simple 
+pair per line, separated by a "=".
+
+Converting quiz files from langdrill
+------------------------------------
+langdrill drill files are by design very similar to quizdrill's. The only 
+difference are the header lines. To convert a langdrill drill file, replace the 
+[Application]-section with
+
+   !type: vocabulary
+   !language: <value of "directSenseName">=<value of "reverseSenseName">
+
+and that is it. Note however, that quizdrill has a style-guideline for the 
+quizfiles, which you might want to follow. However this can be done quickly and 
+is not mandatory to be included to the quizdrill quizzes. So just send then to 
+us rather than waiting into you are in the mood to fix it yourself ;-).
+
+Project Goal
+============
+To offer an easy and efficient way for "learning-by-testing", this includes  
+creating programs to do the testing (tracking the results and selecting the 
+next question), the different tests from many different topics (vocabulary, 
+spelling, geography, math, ...) and documentation.
