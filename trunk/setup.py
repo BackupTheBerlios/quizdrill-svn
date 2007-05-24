@@ -174,7 +174,7 @@ def make_setup():
         mo_dir = 'share/locale'
 
     setup(name='quizdrill', 
-            version='0.2.0rc3',   # run "dch -i" to sync in debian/changelog
+            version='0.2.0',   # run "dch -i" to sync in debian/changelog
             # PyGTK isn't available as egg so the user has to check this 
             # dependency herself. It also prevents *_scripts from working when 
             # installed by Debian package (as no egg available).

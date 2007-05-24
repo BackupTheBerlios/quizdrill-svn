@@ -1,3 +1,9 @@
+quizdrill (0.2.0) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Schmalhofer <schmalhof@users.berlios.de>  Thu, 24 May 2007 22:19:47 +0200
+
 quizdrill (0.2.0rc3-1) unstable; urgency=low
 
   * Changed version scheme so version numbers don't conflict with debian's -1
