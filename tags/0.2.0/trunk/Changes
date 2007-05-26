@@ -1,0 +1,26 @@
+0.2.0:  2007-05-24
+* New quiz deu_Oper.drill, deu_Muskelatur.drill and deu_Gemälde.drill.
+* Updated project description and documentation.
+* Fixed bug in builder.
+* Use ez_setup.py from setuptools to ease installation.
+
+0.2.0rc3:  2007-05-11
+* Several packaging improvements and fixes.
+    - Let Windows have a windowy directory structure.
+    - Removed "-" in version number as it is reserved for Debian versions.
+* Small fix in deu-fra.drill
+
+0.2.0-rc1: 2007-04-26 (Highlights)
+* Build quizzes automatically from a Wikipedia-dump.
+* Renamed quizzes to use the iso 639-3 language code.
+* Extended de-fr.diff (thanks to oliver).
+* Status bar shows last answer.
+* Added Flashcard mode (!type: flashcard).
+* Added: Ask only selected quizzes.
+* Snooze on minimize.
+
+0.1.1: 2007-03-15
+* small bug fixes.
+
+0.1.0: 2007-02-02
+* Initial Release.

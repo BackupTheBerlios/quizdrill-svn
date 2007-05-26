@@ -1,0 +1,138 @@
+!type: vocabulary
+!language: Deutsch = Svenska
+!question: $voc_test
+
+
+[Zahlen]
+
+null = noll
+eins = ett
+zwei = två
+drei = tre
+vier = fyra
+fünf = fem
+sechs = sex
+sieben = sju
+acht = åtta
+neun = nio
+zehn = tio
+elf = elva
+zwölf = tolv
+dreizehn = tretton
+vierzehn = fjorton
+fünfzehn = femton
+sechzehn = sexton
+siebzehn = sjutton
+achtzehn = arton
+neunzehn = nitton
+zwanzig = tjugo
+einundzwanzig = tjugoett
+zweiundzwanzig = tjugotvå
+dreiundzwanzig = tjugotre
+vierundzwanzig = tjugofyra
+fünfundzwanzig = tjugofem
+sechsundzwanzig = tjugosex
+siebenundzwanzig = tjugosju
+achtundzwanzig = tjugoåtta
+neunundzwanzig = tjugonio
+dreißig = trettio
+vierzig = fyrtio
+fünfzig = femtio
+sechzig = sextio
+siebzig = sjuttio
+achtzig = åttio
+neunzig = nittio
+einhundert = hundra
+zweihundert = tvåhundra
+dreihundert = trehundra
+vierhundert = fyrahundra
+fünfhundert = femhundra
+sechshundert = sexhundra
+siebenhundert = sjuhundra
+achthundert = åttahundra
+neunhundert = niohundra
+eintausend = tusen
+zweitausend = tvåtusen
+dreitausend = tretusen
+viertausend = fyratusen
+fünftausend = femtusen
+sechstausend = sextusen
+siebentausend = sjutusen
+achttausend = åttatusen
+neuntausend = niotusen
+zehntausend = tiotusen
+
+
+[Zeit]
+
+Montag = måndag
+Dienstag = tisdag
+Mittwoch = onsdag
+Donnerstag = torsdag
+Freitag = fredag
+Samstag = lördag
+Sonntag = söndag
+
+Januar = januari
+Februar = februari
+März = mars
+April = april
+Mai = maj
+Juni = juni
+Juli = juli
+August = augusti
+September = september
+Oktober = oktober
+November = november
+Dezember = december
+
+
+[Natur]
+
+ein Baum = ett träd
+ein See = en sjö
+ein Vogel = en fågel
+ein Stein = en sten
+eine Blume = en blomma
+ein Tier = ett djur
+ein Meer = ett hav
+ein Strauch = en buske
+eine Katze = en katt
+ein Berg = ett berg
+ein Schmetterling = en fjäril
+ein Drache = en drake
+ein Fisch = en fisk
+
+
+[Alter]
+
+ein Alter = en ålder
+ein Jahr = ett år
+alt = gammal
+jung = ung
+Wie alt bist du? = Hur gammal är du?
+Ich bin zweiundvierzig Jahre (alt). = Jag är fyrtiotvå år (gammal).
+
+
+[Länder]
+
+Australien = Australien
+Brasilien = Brasilien
+Italien = Italien
+Spanien = Spanien
+Rumänien = Rumänien
+Dänemark = Danmark
+Schweden = Sverige
+Norwegen = Norge
+China = Kina
+Kanada = Kanada
+Frankreich = Frankrike
+Japan = Japan
+Grönland = Grönland
+Island = Island
+Deutschland = Tyskland
+Russland = Ryssland
+Griechenland = Greekland
+England = England
+USA = USA
+Amerika = Amerika

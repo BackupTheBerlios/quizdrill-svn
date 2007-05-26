@@ -1,0 +1,360 @@
+!type: vocabulary
+!language: Deutsch = Français
+!question: $voc_test
+
+
+[Zahlen = Nombres]
+
+die Zahl = le nombre
+
+null = zéro
+eins = un
+zwei = deux
+drei = trois
+vier = quatre
+fünf = cinq
+sechs = six
+sieben = sept
+acht = huit
+neun = neuf
+zehn = dix
+elf = onze
+zwölf = douze
+dreizehn = treize
+vierzehn = quatorze
+fünfzehn = quinze
+sechzehn = seize
+siebzehn = dix-sept
+achtzehn = dix-huit
+neunzehn = dix-neuf
+zwanzig = vingt
+einundzwanzig = vingt-et-un
+zweiundzwanzig = vingt-deux
+dreiundzwanzig = vingt-trois
+siebenundzwanzig = vingt-sept
+dreißig = trente
+vierzig = quarante
+fünfzig = cinquante
+sechzig = soixante
+siebzig = soixante-dix
+achsig = quatre-vingt
+neunzig = quatre-vingt-dix
+einhundert = cent
+zweihundert = deux cents
+dreihundert = trois cents
+vierhundert = quatre cents
+fünfhundert = cinq cents
+sechshundert = six cents
+siebenhundert = sept cents
+tausend = mille
+zweitausend = deux mille
+zehntausend = dix mille
+ungefähr dreißig = trentaine
+
+
+[Zeit = Temps]
+
+Januar = janvier
+Februar = février
+März = mars
+April = avril
+Mai = mai
+Juni = juin
+July = juillet
+August = août
+September = septembre
+October = octobre
+November = novembre
+Dezember = décembre
+
+der Tag (Zeitspanne) = la journée
+das Jahr (Zeitspanne) = l'année (f)
+der Morgen (Zeitspanne) = la matinée
+der Abend (Zeitspanne) = la soirée
+der Morgen = le matin
+am Mittag = à midi
+der Nachmittag = l'après-midi
+der Abend = le soir
+die Uhr = l'heure (f)
+
+Montag = lundi
+Dienstag = mardi
+Mittwoch = mercredi
+Donnerstag = jeudi
+Freitag = vendredi
+Samstag = samedi
+Sonntag = dimanche
+
+im Jahre 1991 = en 1991
+
+
+[Restaurant = Restaurant]
+
+der Eiskaffee = le café glacé
+der koffeinfreier Kaffee = le café décaféiné
+der Alkohol = l'alcool (m)
+das warme Getränk = la boisson chaude
+das Getränk mit Alkohol = la boisson alcoolisée
+das Bier = la bière
+das Mineralwasser = l'eau minérale (f)
+der Wein = le vin
+der Orangensaft = le jus d'orange
+die Milch = le lait
+der Tee = le thé
+das Glas = la verre
+die Flasche = la bouteille
+der Radler = le panaché
+das stille Wasser = l'eau plate (f)
+der Rum = le rhum
+
+die Mahlzeit = le repas
+der Nachtisch = le dessert
+die Vorspeise = l'entrée (f)
+die Hauptspeise = le plat
+
+der Salat = la salade
+das Brot = le pain
+die Zwibelsuppe = la soupe à l'oignon
+
+die Ente = le canard
+die Gans = l'oie (f)
+das Rind = la viande
+das geröstete Hähnchen = le poulet rôti
+der Fisch = le poisson
+der Lachs = le saumon
+
+die Käse = le fromage
+die Kartoffel = la pomme de terre
+die Zwiebel = l'oignon (m)
+die Tomate = la tomate
+die Bohne = le haricot
+das Öl = l'huile (f)
+der Couscous = le couscous
+der Quiche = la quiche
+der Pizza = la pizza
+die Pastete = la terrine
+
+das Obst = le fruit
+die Melone = le melon
+die Süßigkeit = la sucrerie
+der Kaugummi = le chewing-gum
+der Keks = le biscuit
+der Kuchen = le gâteau
+der Mandelkuchen = la tarte aux amandes
+die gefüllte Schokolade = le chocolat fourrés
+
+der Kellner = le garçon
+die Kellnerin = la serveuse
+
+das Wechselgeld = la monnaie
+die Karte = la carte
+das Trinkgeld = le pourboire
+die Münzen (w) = les pièces (f)
+der Streichholz = l'allumette (f)
+die Zigarette = la cigarette
+
+
+[Frage = Question]
+
+wie = comment
+warum = pourquoi
+wo / wohin = où
+woher = d'où
+wann = quand
+wie viel,e = combien
+zu welcher Zeit = à quel heure
+was = qu'est-ce que
+
+
+[Richtung = Direction]
+
+der Norden = le nord
+der Osten = l'est (m)
+der Süden = le sud
+der Westen = l'ouest (m)
+
+
+[Farben = Couleurs]
+
+rot = rouge
+blau = bleu,e
+gelb = jaune
+grün = vert,e
+grau = gris,e
+rosa = rose
+schwarz = noir,e
+weiß = blanc,he
+
+
+[Verben = Verbes]
+
+glauben = croire
+aufstehen = se lever
+verbrauchen = consommer
+sich hinsetzen = s'asseoir
+es tut mir leid = je suis désolé,e
+finden = trouver
+leben = vivre
+sterben = motir
+lesen = lire
+kaufen = acheter
+rufen = appeler
+bezahlen = payer
+anbieten / schenken = offrir
+verlassen = quitter
+essen = manger
+haben = avoir
+gehen = aller
+antworten = répondre
+reisen = voyager
+machen = faire
+geben = donner
+sein = être
+beginnen = commencer
+denken = penser
+öffnen = ouvrir
+verstehen = comprendre
+fragen = demander
+sagen = dire
+nehmen = prendre
+weggehen = partir
+kommen = venir
+setzen / stellen / legen = mettre
+schicken = envoyer
+eintreten = entrer
+wollen = vouloir
+wissen = savoir
+können = pouvoir
+schreiben = écrire
+müssen / sollen = devoir
+fallen = tomber
+erzählen = raconter
+glauben = croire
+befürchten = craindre
+fahren = conduire
+folgen = suivre
+abtrennen = séparer
+benutzen / verwenden = utiliser
+reden = parler
+küssen = embrasser
+probieren = goûter
+spucken = cracher
+übergeben = vomir
+ausleihen = emprunter
+verleihen = prêter
+sich erholen = se reposer
+warten = attendre
+zeigen = montrer
+treffen = rencontrer
+erzählen = raconter
+sich waschen = se laver
+
+
+[Körper = Corps]
+
+die Augen (n) = les yeux (m)
+das Auge = l'oeil (m)
+die Nase = le nez
+der Mund = la bouche
+die Haare = les cheveux (f)
+die Haut = la peau
+
+
+[Nationalitäten = Nationalités]
+
+die Nationalität = la nationalité
+der Fremde = l'étranger (m)
+die Fremde = l'étrangère (f)
+die Sprache = la langue
+
+deutsch = allemand,e
+französisch = français,e
+englisch = anglais,e
+britisch = britannique
+spanisch = espagnol,e
+italienisch = italien,ne
+österreichisch = autrichien,ne
+schweizerisch = suisse
+helvetisch = helvétique
+dänisch = danois,e
+norwegisch = norvégien,ne
+schwedisch = suédois,e
+#finnisch = finnois,e
+finnisch = finlandais,e
+russisch = russe
+polnisch = polonais,e
+rumänisch = roumain,e
+europäisch = européen,ne
+
+chinesisch = chinois,e
+#mandarin = mandarin
+japanisch = japonais,e
+
+amerikanisch = américain,e
+anglo-amerikanisch = anglo-américain,e
+us-amerikanisch = états-unien,ne
+kanadisch = canadien,ne
+mexikanisch = mexicain,e
+chilenisch = chilien,ne
+peruanisch = péruvien,ne
+brasilianisch = brésilien,ne
+argentinisch = argentin,e
+uruguayanisch = uruguayen,ne
+
+
+die USA = les États-Unis d'Amérique (f)
+
+
+[Weitere = Autre]
+
+der Tod = la mort
+der Tote = le mort
+die Tote = la morte
+die Dose = la boîte
+die Wanderung = la promenade
+am Strand = au bard de la mer
+der Strand = le plage
+das Lagerfeuer = le feu de comp
+der Wunsch = le souhait
+der Wolf = le loup
+der Regenschirm = la parapluie
+der Inhalt = le contenu
+der Stift = le stylo
+die Flasche = la bouteille
+das Blatt = la feuille
+das Buch = le livre
+das Mäppchen = la trousse
+das Radiergummi = la gomme
+das Taschentuch = la mouchoir
+die Brille = les lunettes (f)
+der Ring = l'anneau (m)
+das Kleidungsstück = le vêtement
+der Lärm = le bruit
+die Scheune = la grange
+das Werkzeug = l'outil (m)
+die Woche = la semaine
+das Geschenk = le cadeau
+das Schiff = le bateau
+der Hut = le chapeau
+die Hörbücher (s) = les pièces radiophoniques (f)
+der Handschuh = le gant
+der Einkaufszentrum = la grande surface
+die Überlandlinie = le cars
+
+genug = assez
+zwischen = entre
+zusammen = ensemble
+allgemein = général
+regelmäßig = régulièrement
+jede = chaque
+besonders = tellement
+nächste,r = prochain,e
+letzte = dernière
+letzter = dernier
+vor (zeitlich) = avant
+vor (Zeitdauer) = il y a
+vor (ortsbezogen) = devant
+deshalb = c'est pourquoi
+gratis = gratuit,e
+besser = meilleur,e
+erholsam = reposant,e
