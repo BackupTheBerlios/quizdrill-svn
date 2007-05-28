@@ -40,7 +40,7 @@ locale.textdomain(APP)
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 
-class Gui:
+class Gui(object):
     GLADE_FILE = resource_filename(__name__, "data/quizdrill.glade")
     SHOW_TABS = { "vocabulary" : [ True, True, True], 
             "questionnaire" : [ True, True, True ],
@@ -374,7 +374,7 @@ class Quiz_Filer(SaDrill):
                 "type" : self.on_tag_type,
                 "media" : self.on_tag_media,
                 "generator" : self.on_tag_generator }
-        SaDrill.__init__(self, head_tag_dict=tag_dict, 
+        super(Quiz_Filer, self).__init__(head_tag_dict=tag_dict, 
                 mandatory_has_questions=True)
         self.SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
         self.type = "vocabulary"
@@ -480,7 +480,7 @@ class Quiz_Filer(SaDrill):
         pass
 
 
-class Quiz:
+class Quiz(object):
     """
     A simple random-selecting vocabulary test, with simple quiz and 
     multiple choice
@@ -630,13 +630,13 @@ class Weighted_Quiz(Quiz):
             question_score={}, ask_from=0, exam_length=15):
         self.question_score = question_score
         self.score_sum = 0.
-        Quiz.__init__(self, quiz_pool, ask_from, exam_length)
+        super(Weighted_Quiz, self).__init__(quiz_pool, ask_from, exam_length)
         self.score_sum = self._gen_score_sum()
 
     def _select_question(self):
         """ selcet next question """
         while True:
-            Quiz._select_question(self)
+            super(Weighted_Quiz, self)._select_question()
             bound = random.random() * 1.01     # to avoid infinit loops
             if self.question_score[self.question[self.ask_from]] <= bound:
                 return
@@ -647,7 +647,7 @@ class Weighted_Quiz(Quiz):
 
         Note: This changes the score of a given question (on correct answers).
         """
-        if Quiz.check(self, solution):
+        if super(Weighted_Quiz, self).check(solution):
             self._update_score(self.question[self.ask_from], 
                     self.tries == 0)
             return True
@@ -690,15 +690,15 @@ class Weighted_Quiz(Quiz):
         return score_sum
 
     def set_question_direction(self, direction):
-        Quiz.set_question_direction(self, direction)
+        super(Weighted_Quiz, self).set_question_direction(direction)
         self.score_sum = self._gen_score_sum()
 
     def add_quizzes(self, new_quizzes):
-        Quiz.add_quizzes(self, new_quizzes)
+        super(Weighted_Quiz, self).add_quizzes(new_quizzes)
         self.score_sum += self._gen_score_sum(new_quizzes)
 
     def remove_quizzes(self, rm_quizzes):
-        Quiz.remove_quizzes(self, rm_quizzes)
+        super(Weighted_Quiz, self).remove_quizzes(rm_quizzes)
         self.score_sum -= self._gen_score_sum(rm_quizzes)
 
 class Queued_Quiz(Weighted_Quiz):
@@ -715,7 +715,8 @@ class Queued_Quiz(Weighted_Quiz):
         self.min_num_bad_scores = min_num_bad_scores
         self.min_question_num = min_question_num
         self.batch_length = batch_length
-        Weighted_Quiz.__init__(self, [], question_score, ask_from, exam_length)
+        super(Queued_Quiz, self).__init__([], question_score, ask_from, 
+                exam_length)
         self.add_quizzes(question_pool)
 
     def _update_score(self, question, correct_answered):
@@ -725,7 +726,7 @@ class Queued_Quiz(Weighted_Quiz):
         """
         if self.question_score[question] < self.bad_score:
             self.num_bad_scores -= 1
-        Weighted_Quiz._update_score(self, question, correct_answered)
+        super(Queued_Quiz, self)._update_score(question, correct_answered)
         if self.question_score[question] < self.bad_score:
             self.num_bad_scores += 1
 
@@ -733,7 +734,7 @@ class Queued_Quiz(Weighted_Quiz):
         "select next question"
         if self.num_bad_scores < self.min_num_bad_scores:
             self._increase_quiz_pool()
-        Weighted_Quiz._select_question(self)
+        super(Queued_Quiz, self)._select_question()
 
     def _increase_quiz_pool(self, num=None):
         "Add quizzes from the new_quiz_pool to the quiz_pool"
@@ -743,7 +744,7 @@ class Queued_Quiz(Weighted_Quiz):
         for i in range(min(num, len(self.new_quiz_pool))):
             new_quizzes.append(self.new_quiz_pool.pop(0))
         self.num_bad_scores += num
-        Weighted_Quiz.add_quizzes(self, new_quizzes)
+        super(Queued_Quiz, self).add_quizzes(new_quizzes)
 
     def add_quizzes(self, new_quizzes):
         """
@@ -760,7 +761,7 @@ class Queued_Quiz(Weighted_Quiz):
             else:
                 un_scored_quizzes.append(quiz)
         self.new_quiz_pool.extend(un_scored_quizzes)
-        Weighted_Quiz.add_quizzes(self, scored_quizzes)
+        super(Queued_Quiz, self).add_quizzes(scored_quizzes)
         self._insure_min_quiz_num()
 
     def _insure_min_quiz_num(self):
@@ -777,7 +778,7 @@ class Queued_Quiz(Weighted_Quiz):
                 self.new_quiz_pool.remove(quiz)
             else:
                 rm_scored_quizzes.append(quiz)
-        Weighted_Quiz.remove_quizzes(self, rm_scored_quizzes)
+        super(Queued_Quiz, self).remove_quizzes(rm_scored_quizzes)
         self._insure_min_quiz_num()
 
 

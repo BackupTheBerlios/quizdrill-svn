@@ -71,7 +71,7 @@ class MissingQuestionsError(SaDrillError):
         self.file = file
         self.str = _('Error: No questions found in file "%s".') % file
 
-class SaDrill:
+class SaDrill(object):
     """
     Simple API for .drill or a .build of it.
     Accessing Quizdrill files inspired by SAX (Simple API for XML).
