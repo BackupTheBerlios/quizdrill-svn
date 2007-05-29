@@ -169,8 +169,8 @@ class AbstractMediaWikiHandler(ContentHandler):
         Needs to be implemented by the child. Processes the actual article and
         returns True if new data is found.
         """
-        print 'Warning: "separate_article" should not be called on ' \
-                'AbstractWikipediaHandler.'
+        raise AttributionError('Method "separate_article" should overwritten '
+                'by a child of AbstractWikipediaHandler.')
         return False
 
 
