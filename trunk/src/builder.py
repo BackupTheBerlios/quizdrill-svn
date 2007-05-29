@@ -59,8 +59,12 @@ class AbstractQuizBuilder(object):
         Append the quiz-data to the .drill-file.
         """
         str = ""
-        for cat in self.quiz_dict.keys():
+        categories = [ self.category_filter(cat) 
+                for cat in self.quiz_dict.keys() ]
+        categories.sort()
+        for cat in categories:
             str += "\n\n\n[" + self.category_filter(cat) + "]\n"
+            self.quiz_dict[cat].sort()
             for question in self.quiz_dict[cat]:
                 str += "\n" + self.question_filter(question[0]) + " = " + \
                         self.answer_filter(question[1])
