@@ -51,6 +51,10 @@ class AbstractQuizBuilder(object):
         self.category_filter = filter_dict[category_filter]
         self.question_filter = filter_dict[question_filter]
         self.answer_filter = filter_dict[answer_filter]
+        #
+        self.round_brackets_re = re.compile(r"\(.*?\)")
+        self.waved_brackets_re = re.compile(r"\{.*?\}")
+        self.quare_brackets_re = re.compile(r"\[.*?\]")
 
     # Writing Quiz_data #
 
@@ -83,9 +87,9 @@ class AbstractQuizBuilder(object):
         when not) and often not what the user wants to be tested on (e.g. 
         city name in a different language, which might not be (easily) typable.
         """
-        text = re.compile(r"\(.*?\)").sub("", text)
-        text = re.compile(r"\{.*?\}").sub("", text)
-        text = re.compile(r"\[.*?\]").sub("", text)
+        text = self.round_brackets_re.sub("", text)
+        text = self.waved_brackets_re.sub("", text)
+        text = self.quare_brackets_re.sub("", text)
         return text
 
 class AbstractMediaWikiHandler(ContentHandler):
@@ -193,43 +197,57 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
         self.re_flags = re.DOTALL | re.IGNORECASE
         self.template_tag = re.compile(r" ").sub(r"[\s_]", template_tag)
         # Quiz Generating #
-        self.wiki_cat_namespace = wiki_cat_namespace
         self.category_tag = category_tag
         self.question_tag = question_tag
         self.answer_tag = answer_tag
         self.one_of_categories = one_of_categories
+        ## Regular Expressions ##
+        ### separate_article() ###
+        # "\[\[" + cat + ":" + "("+ "[^|\]]*" +")" + "\|?" + ".*?" + "\]\]"
+        self._cat_re_list = [ re.compile("\[\[" + cat + ":([^|\]]*)\|?.*?\]\]", 
+            self.re_flags) for cat in wiki_cat_namespace ]
+        self._comments_re = re.compile(r"<!--.*?-->", self.re_flags)
+        #### infobox ####
+        template_start = r"\{\{\S*:?" + self.template_tag
+        template_body = r"[^{]*"
+        template_end = r"\}\}"
+        nested_template_body = r"[^}]*"
+        self._unnested_template_re = re.compile(template_start + 
+                template_body + template_end, self.re_flags)
+        self._nested_template_re = re.compile(template_start + 
+                nested_template_body + template_start, self.re_flags)
+        ### remove_links() ###
+        self._ref_section_re = re.compile(r"<ref>[^|<>]*?</ref>", self.re_flags)
+        self._include_section_re = re.compile(r"<include>[^|<>]*?</include>", 
+                self.re_flags)
+        self._xml_code_re = re.compile(r"<[^|]*?>", self.re_flags)
+        # "\[\[" + "(" + t + "\|)" + "{2,}" + t "\]\]"       with t = "[^|\]]*"
+        self._images_re = re.compile(r"\[\[([^|\]]*\|){2,}[^|\]]*\]\]", 
+                self.re_flags)
+        # "\[\[" + t"*?" + "\|?" + "(" + t"*" + ")" + "\]\]"  with t="[^|\]]"
+        self._wiki_links_re = re.compile(r"\[\[[^|\]]*?\|?([^|\]]*)\]\]", 
+                self.re_flags)
+        self._web_links_re = re.compile(r"\[[^ |\]]+ ?([^|\]]*?)\]")
+        self._kursive_bold_re = re.compile(r"'''?(.*?)'?''")
+        ### separate_infobox() ###
+        self._infobox_end_re = re.compile(r"\|*[\s_]*\}\}")
+        self._wiki_white_spaces_re = re.compile(r"([\s_\n]|&nbsp;)+")
 
     def separate_article(self, text):
         """
         Extract data out of a given article. Currently templates and categories
         are supported.
         """
-        # infobox #
-        template_start = r"\{\{\S*:?" + self.template_tag
-        template_body = r"[^{]*"
-        template_end = r"\}\}"
-        nested_template_body = r"[^}]*"
-        # Regular Expressions: Category #
         dict = { "_article" : self.title.strip(), "_cat" : [] }
         found_data = False
-        for cat in self.wiki_cat_namespace:
-            # "\[\[" + cat + ":" + "("+ "[^|\]]*" +")" + "\|?" + ".*?" + "\]\]"
-            cat_re = re.compile("\[\[" + cat + ":([^|\]]*)\|?.*?\]\]",
-                    self.re_flags)
+        for cat_re in self._cat_re_list:
             dict["_cat"].extend([ cat for cat in cat_re.findall(text)])
         self.select_one_of_categories(dict)
-        # Regular Expressions: Infobox #
-        unnested_template_re = re.compile(template_start + 
-                template_body + template_end, self.re_flags)
-        nested_template_re = re.compile(template_start + 
-                nested_template_body + template_start, self.re_flags)
-        comments_re = re.compile(r"<!--.*?-->", self.re_flags)
-        #
-        text = comments_re.sub("", text)
-        if nested_template_re.search(text):
+        text = self._comments_re.sub("", text)
+        if self._nested_template_re.search(text):
             print _('Warning: Skipping nested templates in "%s".') % \
                     self.title
-        for infobox in unnested_template_re.findall(text):
+        for infobox in self._unnested_template_re.findall(text):
             found_data = True
             infobox_dict = self.separate_infobox(infobox)
             infobox_dict.update(dict)
@@ -255,14 +273,15 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
         Extract data out of a template (e.g. a infobox or personendaten).
         """
         text = self.remove_links(infobox)
-        text = re.compile(r"\|*[\s_]*\}\}").sub("", text)
-        text = re.compile("\n").sub("", text)
+        text = self._infobox_end_re.sub("", text)
+        text = text.replace('\n', '')
         tag_list = text.split("|")
         dict = { "_head" : tag_list[0].strip()[3:] }
         for tag in tag_list[1:]:
             L = tag.split("=", 1)
             if len(L) == 2:
-                dict[L[0].strip()] = self.simple_white_spaces(L[1]).strip()
+                dict[L[0].strip()] = self._wiki_white_spaces_re.sub(' ', 
+                        (L[1]).strip())
             elif len(L) == 1 and not L[0].strip():
                 pass
             else:
@@ -278,33 +297,19 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
         Wikilinks, Sources (ref-sections) and XML tags (assigning attributes 
         have "=") as well as '' '' (kursiv) and ''' ''' (bold).
         """
-        # remove ref-sections #
-        text = re.compile(r"<ref>[^|<>]*?</ref>", self.re_flags).sub("", text)
-        # remove include-sections #
-        text = re.compile(r"<include>[^|<>]*?</include>", 
-                self.re_flags).sub("", text)
-        # remove xml-code #
-        text = re.compile(r"<[^|]*?>", self.re_flags).sub("", text)
+        # remove sections #
+        text = self._ref_section_re.sub("", text)
+        text = self._include_section_re.sub("", text)
+        text = self._xml_code_re.sub("", text)
         # remove Images etc (any "Link" with more then one "|" #
-        # "\[\[" + "(" + t + "\|)" + "{2,}" + t "\]\]"       with t = "[^|\]]*"
-        text = re.compile(r"\[\[([^|\]]*\|){2,}[^|\]]*\]\]", 
-                self.re_flags).sub("", text)
+        text = self._images_re.sub("", text)
         # replace Links with Linktext #
-        # "\[\[" + t"*?" + "\|?" + "(" + t"*" + ")" + "\]\]"  with t="[^|\]]"
-        text = re.compile(r"\[\[[^|\]]*?\|?([^|\]]*)\]\]", 
-                self.re_flags).sub(r"\1", text)
-        # remove web-links #
-        text = re.compile(r"\[[^ |\]]+ ?([^|\]]*?)\]").sub(r"\1", text)
+        text = self._wiki_links_re.sub(r"\1", text)
+        # replace web-links with label #
+        text = self._web_links_re.sub(r"\1", text)
         # remove '' '' (kursiv) and ''' ''' (bold) #
-        text = re.compile(r"'''(.*?)'''").sub(r"\1", text)
-        text = re.compile(r"''(.*?)''").sub(r"\1", text)
+        text = self._kursive_bold_re.sub(r"\1", text)
         return text
-
-    def simple_white_spaces(self, text):
-        """
-        Convert wiki-white-spaces into " ".
-        """
-        return re.compile(r"([\s_\n]|&nbsp;)+").sub(" ", text)
 
     # Writing Quiz Data #
     
