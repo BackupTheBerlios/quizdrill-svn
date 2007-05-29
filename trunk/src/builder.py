@@ -38,7 +38,7 @@ gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 
 
-class AbstractQuizBuilder:
+class AbstractQuizBuilder(object):
     """
     Implements the appending of the Quiz-data to the .drill-file.
     """
