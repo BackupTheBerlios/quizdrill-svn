@@ -31,6 +31,7 @@ class SaDrillError(Exception):
         self.file = file
         self.str = _('Error in file "%s".') % file
 
+
 class MissingTagsError(SaDrillError):
     """
     This Error is raised when tags that have been listed as mandatory where not
@@ -42,6 +43,7 @@ class MissingTagsError(SaDrillError):
         self.str = ngettext('Error: Missing mandatory tag "%(t)s" in %(f)s.', 
                 'Error: Missing mandatory tags "%(t)s in %(f)s".', 
                 len(tags))% { "t" : tags, "f" : file }
+
 
 class WordPairError(SaDrillError):
     """
@@ -61,6 +63,7 @@ class WordPairError(SaDrillError):
             self.str = _('Error: Tag in line %(l)s of file %(f)s does not'
                 ' declare its end with a ":".') % { "l" : line, "f" : file }
 
+
 class MissingQuestionsError(SaDrillError):
     """
     This Error is raised when no questions or answers are found in a quiz
@@ -70,6 +73,7 @@ class MissingQuestionsError(SaDrillError):
     def __init__(self, file):
         self.file = file
         self.str = _('Error: No questions found in file "%s".') % file
+
 
 class SaDrill(object):
     """
@@ -100,9 +104,9 @@ class SaDrill(object):
                 }
         self.head_tag_dict.update(head_tag_dict)
         self.build_tag_dict.update(build_tag_dict)
-        self.mandatory_head_tags=set(mandatory_head_tags)
-        self.mandatory_build_tags=set(mandatory_build_tags)
-        self.mandatory_has_questions=mandatory_has_questions
+        self.mandatory_head_tags = set(mandatory_head_tags)
+        self.mandatory_build_tags = set(mandatory_build_tags)
+        self.mandatory_has_questions = mandatory_has_questions
 
     def parse(self, drill_file):
         """
@@ -219,3 +223,4 @@ class SaDrill(object):
         method so something is actually done.
         """
         print _('Warning: Unknown build-tag "%s".') % tag
+
