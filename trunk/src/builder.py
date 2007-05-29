@@ -106,8 +106,13 @@ class AbstractMediaWikiHandler(ContentHandler):
         self.title = ""
 
     def parse(self, file):
-        sax.parse(file, self)
-        self.write_quiz_data()
+        try:
+            sax.parse(file, self)
+        except:
+            self.write_quiz_data()
+            raise
+        else:
+            self.write_quiz_data()   # finally-clause isn't py2.4 compatible
 
     # Sax XML-methods #
 
