@@ -109,6 +109,7 @@ class AbstractMediaWikiHandler(ContentHandler):
         try:
             sax.parse(file, self)
         except:
+            self.endDocument()
             self.write_quiz_data()
             raise
         else:
@@ -136,7 +137,12 @@ class AbstractMediaWikiHandler(ContentHandler):
         if name == self.DATA_FIELD:
             self.in_data_field = False
             if self.content:
-                self.separate_article(self.content)
+                self.num_processed_articles += 1
+                if self.separate_article(self.content):
+                    self.num_found_infoboxes += 1
+                print _('Found this infoboxe-type in %s of %s articles.') % \
+                        (self.num_found_infoboxes, 
+                                self.num_processed_articles) + '\r',
         if name == self.TITLE_FIELD:
             self.in_title_field = False
 
@@ -150,13 +156,23 @@ class AbstractMediaWikiHandler(ContentHandler):
         if self.in_title_field:
             self.title += unicode.encode(content, self.encoding)
 
+    def startDocument(self):
+        self.num_processed_articles = 0
+        self.num_found_infoboxes = 0
+
+    def endDocument(self):
+        print ""       # To keep the final 'statusbar'.
+
     # Processing Article #
     def separate_article(self, content):
         """
-        Needs to be implemented by the child. Processes the actual article.
+        Needs to be implemented by the child. Processes the actual article and
+        returns True if new data is found.
         """
         print 'Warning: "separate_article" should not be called on ' \
                 'AbstractWikipediaHandler.'
+        return False
+
 
 class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
     """
@@ -195,6 +211,7 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
         nested_template_body = r"[^}]*"
         # Regular Expressions: Category #
         dict = { "_article" : self.title.strip(), "_cat" : [] }
+        found_data = False
         for cat in self.wiki_cat_namespace:
             # "\[\[" + cat + ":" + "("+ "[^|\]]*" +")" + "\|?" + ".*?" + "\]\]"
             cat_re = re.compile("\[\[" + cat + ":([^|\]]*)\|?.*?\]\]",
@@ -213,9 +230,11 @@ class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
             print _('Warning: Skipping nested templates in "%s".') % \
                     self.title
         for infobox in unnested_template_re.findall(text):
+            found_data = True
             infobox_dict = self.separate_infobox(infobox)
             infobox_dict.update(dict)
             self.append_template_to_quiz_data(infobox_dict)
+        return found_data
 
     def select_one_of_categories(self, article_dict):
         """
