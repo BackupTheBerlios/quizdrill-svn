@@ -144,9 +144,10 @@ class AbstractMediaWikiHandler(ContentHandler):
                 self.num_processed_articles += 1
                 if self.separate_article(self.content):
                     self.num_found_infoboxes += 1
-                print _('Found this infoboxe-type in %s of %s articles.') % \
-                        (self.num_found_infoboxes, 
-                                self.num_processed_articles) + '\r',
+                print _('Found this infobox-type in %(num_boxes)s of '
+                        '%(num_articles)s articles.') % \
+                        {'num_boxes': self.num_found_infoboxes, 
+                        'num_articles': self.num_processed_articles} + '\r',
         if name == self.TITLE_FIELD:
             self.in_title_field = False
 

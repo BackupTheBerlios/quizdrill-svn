@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-21 01:53+0200\n"
+"POT-Creation-Date: 2007-05-30 21:26+0200\n"
 "PO-Revision-Date: 2007-01-24 21:17+0100\n"
 "Last-Translator: Adam Schmalhofer <schmalhof@users.berlios.de>\n"
 "Language-Team: German <quizdrill-main@lists.berlios.de>\n"
@@ -61,19 +61,19 @@ msgstr "Übersetze:"
 msgid "Error in file \"%s\"."
 msgstr "Fehler in Datei „%s“."
 
-#: ../src/SaDrill.py:42
+#: ../src/SaDrill.py:43
 #, python-format
 msgid "Error: Missing mandatory tag \"%(t)s\" in %(f)s."
 msgid_plural "Error: Missing mandatory tags \"%(t)s in %(f)s\"."
 msgstr[0] "Fehler: Notweniger Schlüsselwort „%(t)s“ in %(f)s fehlt."
 msgstr[1] "Fehler: Notwenige Schlüsselwörter „%(t)s“ in %(f)s fehlen."
 
-#: ../src/SaDrill.py:58
+#: ../src/SaDrill.py:60
 #, python-format
 msgid "Error: Wrong number of \"=\" in line %(l)s of file %(f)s."
 msgstr "Fehler: Falsche Anzahl an „=“ in Zeile %(l)s der Datei %(f)s."
 
-#: ../src/SaDrill.py:61
+#: ../src/SaDrill.py:63
 #, python-format
 msgid ""
 "Error: Tag in line %(l)s of file %(f)s does not declare its end with a \":\"."
@@ -81,27 +81,34 @@ msgstr ""
 "Fehler: Dem Schlüsselwort in Zeile %(l)s der Datei %(f)s fehlt die "
 "Schließanweisung „:“."
 
-#: ../src/SaDrill.py:72
+#: ../src/SaDrill.py:75
 #, python-format
 msgid "Error: No questions found in file \"%s\"."
 msgstr "Fehler: Es wurde keine Frage in Datei „%s“ gefunden."
 
-#: ../src/SaDrill.py:207
+#: ../src/SaDrill.py:213
 #, python-format
 msgid "Warning: Unknown head-tag \"%s\"."
 msgstr "Warnung: unbekannte Kopfzeile „%s“."
 
-#: ../src/SaDrill.py:221
+#: ../src/SaDrill.py:227
 #, python-format
 msgid "Warning: Unknown build-tag \"%s\"."
 msgstr "Warnung: unbekannte Bauanweisung „%s“."
 
-#: ../src/builder.py:207
+#: ../src/builder.py:149
+#, python-format
+msgid "Found this infobox-type in %(num_boxes)s of %(num_articles)s articles."
+msgstr ""
+"Dieser Infoboxtyp wurde in %(num_boxes)s von %(num_articles)s Artikeln "
+"gefunden."
+
+#: ../src/builder.py:251
 #, python-format
 msgid "Warning: Skipping nested templates in \"%s\"."
 msgstr "Warnung: Überspringe verschachtelte Vorlagen in „%s“."
 
-#: ../src/builder.py:244
+#: ../src/builder.py:291
 #, python-format
 msgid ""
 "Warning: No parameter name in Infobox row \"%(para)s\" in article \"%"
@@ -110,7 +117,7 @@ msgstr ""
 "Warnung: Kein Parametername in Infoboxzeile „%(para)s“ im Artikel „%(article)"
 "s“."
 
-#: ../src/builder.py:297
+#: ../src/builder.py:329
 #, python-format
 msgid ""
 "Warning: Parameter \"%(para)s\" missing in a template in article \"%(article)"
@@ -119,7 +126,7 @@ msgstr ""
 "Warnung: Parameter „%(para)s“ fehlt in der Vorlage in Artikel „%(article)s“, "
 "verwende „“ stattdessen."
 
-#: ../src/builder.py:304 ../src/builder.py:312
+#: ../src/builder.py:336 ../src/builder.py:344
 #, python-format
 msgid ""
 "Warning: Parameter \"%(para)s\" missing in a template in article \"%(article)"
@@ -128,20 +135,20 @@ msgstr ""
 "Warnung: Parameter „%(para)s“ fehlt in der Vorlage in Artikel „%(article)s“, "
 "verwende „“ stattdessen."
 
-#: ../src/builder.py:394
+#: ../src/builder.py:411
 msgid "Error: Tag $builder does not have exactly one \"=\"."
 msgstr "Fehler: Bauanweisung $builder hat nicht genau ein „=“."
 
-#: ../src/builder.py:396
+#: ../src/builder.py:413
 #, python-format
 msgid "Error: Unknown builder \"%s\"."
 msgstr "Fehler: Unbekannter Quizbauer „%s“."
 
-#: ../src/builder.py:402
+#: ../src/builder.py:419
 msgid "Error: Tag $build_to does not have exactly two \"=\"."
 msgstr "Fehler: Tag $build_to hat nicht genau zwei „=“."
 
-#: ../src/builder.py:431
+#: ../src/builder.py:448
 #, python-format
 msgid "Usage: %s [.drill.builder-file] [wikipedia.xml-file]"
 msgstr "Aufruf: %s [.drill.builder-Datei] [Wikipedia.xml-Datei]"
