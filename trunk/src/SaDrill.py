@@ -100,7 +100,9 @@ class SaDrill(object):
                 " " : self.on_unknown_build_tag,
                 "build_to" : self.on_default_build_tag, 
                 "builder" : self.on_default_build_tag, 
-                "filter" : self.on_default_build_tag
+                "filter" : self.on_default_build_tag,
+                "filter_sub" : self.on_default_build_tag,
+                "filter_sequance" : self.on_default_build_tag
                 }
         self.head_tag_dict.update(head_tag_dict)
         self.build_tag_dict.update(build_tag_dict)
