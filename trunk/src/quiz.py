@@ -196,10 +196,28 @@ class Quiz(object):
             func()
 
     def get_question_to_answer(self, answer):
-        # Might get removed after release of 0.2.0, as it won't be needed.
+        """
+        Finds a question to the given answer from the pool of all 
+        question/answers. If possible use 
+        get_question_to_answer_from_multichoices() instead as it is a lot
+        faster.
+        """
         for q in self.quiz_pool:
             if q[self.answer_to] == answer:
                 return q[self.ask_from]
+        else:
+            return None
+
+    def get_question_to_answer_from_multichoices(self, answer):
+        """
+        Finds a question to the given answer from the current question/answers
+        in the multi_choices-pool. 
+        """
+        for q in self.multi_choices:
+            if q[self.answer_to] == answer:
+                return q[self.ask_from]
+        else:
+            return None
 
     def new_question(self):
         """
@@ -225,16 +243,14 @@ class Quiz(object):
 
     def _gen_multi_choices(self):
         """ Returns a list of multichoice options """
-        # TODO: After 0.2.0 release we should change the multic_choice-list
-        # to contain both answer and questions.
-        list = [ self.question[self.answer_to] ]
-        while len(list) < self.multichoice_len:
+        choices = [ self.question ]
+        while len(choices) < self.multichoice_len:
             r = random.randrange(len(self.quiz_pool))
-            word = self.quiz_pool[r][self.answer_to]
-            if not word in list:
-                list.append(word)
-        random.shuffle(list)
-        return list
+            quest_pair = random.choice(self.quiz_pool)
+            if not quest_pair in choices:
+                choices.append(quest_pair)
+        random.shuffle(choices)
+        return choices
 
     def check(self, solution):
         """
@@ -275,7 +291,7 @@ class Quiz(object):
         else:
             for mc in self.multi_choices:
                 for rm in rm_quizzes:
-                    if rm[self.answer_to] == mc:
+                    if rm == mc:
                         self.new_question()
                         return
 
@@ -305,7 +321,7 @@ class Weighted_Quiz(Quiz):
         self.score_sum = self._gen_score_sum()
 
     def _select_question(self):
-        """ selcet next question """
+        """ select next question """
         while True:
             super(Weighted_Quiz, self)._select_question()
             bound = random.random() * 1.01     # to avoid infinit loops

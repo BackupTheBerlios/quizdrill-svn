@@ -143,7 +143,7 @@ class Gui(object):
         # set multiquiz answers #
         for button, text in zip(self.multi_question_buttons, 
                 self.quiz.multi_choices):
-            button.set_label(text)
+            button.set_label(text[self.quiz.answer_to])
             button.set_sensitive(True)
         # set flash card to front side #
         self.flash_notebook.set_current_page(0)
@@ -337,7 +337,8 @@ class Gui(object):
             # statusbar1: show question to selected answer #
             text = _("To '%(quest)s' '%(ans)s' would be the correct answer.") \
                     % { "ans" : answer, 
-                    "quest" : self.quiz.get_question_to_answer(answer) }
+                    "quest" : self.\
+                    quiz.get_question_to_answer_from_multichoices(answer) }
             self.statusbar1.pop(self.statusbar_contextid["last_answer"])
             self.statusbar1.push(self.statusbar_contextid["last_answer"], text)
 
