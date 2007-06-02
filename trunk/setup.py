@@ -186,10 +186,14 @@ def make_setup():
         usr_dir = 'quizdrill'
         doc_dir = 'quizdrill/doc'
         mo_dir = 'quizdrill/locale'
+        desktop_dir = 'quizdrill/applications'   # only used on freedesktops
+        schemas_dir = 'quizdrill/gconf/schemas'   # don't know where on windows
     else:
         usr_dir = 'share/quizdrill'
         doc_dir = 'share/doc/quizdrill'
         mo_dir = 'share/locale'
+        desktop_dir = 'share/applications'
+        schemas_dir = 'share/gconf/schemas'
 
     setup(name='quizdrill', 
             version='0.2.0',   # run "dch -i" to sync in debian/changelog
@@ -223,6 +227,8 @@ and even Semantic MediaWikis).""",
             #include_package_data = True,
             data_files=[
                 (usr_dir, glob('quizzes/*.drill')),
+                (desktop_dir, 'src/data/quizdrill.desktop'),
+                (schemas_dir, 'src/data/quizdrill.schemas'),
                 (os.path.join(usr_dir, 'builder'), 
                     glob('quizzes/builder/*.builder')),
                 (doc_dir, ['README', 'TODO', 'GPL-2', 'Changes']),
