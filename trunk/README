@@ -1,5 +1,6 @@
 This file should only give a short overview. More information is available at
-our `wiki page`_ (even with a `German version`_).
+doc/html-en/index.html which is a copy of our `wiki page`_ (and in German at
+doc/html-de/index.html a copy of our `German version`_).
 
 .. _wiki page: http://openfacts.berlios.de/index-en.phtml?title=Quizdrill
 .. _German version: http://openfacts.berlios.de/index.phtml?title=Quizdrill
@@ -35,35 +36,10 @@ Public License as published by the Free Software Foundation; either version 2
 of the License, or (at your option) any later version. See GPL-2 for the 
 details.
 
-Dependencies
-------------
-* python_ (tested with 2.4)
-* pygtk_  (tested with 2.8.6)
-
-.. _python: http://www.python.org/
-.. _pygtk: http://www.pygtk.org/
-
-Install
--------
-There is no need to install quizdrill. If you have the dependencies installed, 
-just start it directly at src/quizdrill.py (e.g. with "python
-src/quizdrill.py"). 
-
-It can however be installed if you prefer that. The easiest way is the standard
-distutils way "python setup.py install". To install it in your home directory
-use the option "--home" or for a different folder the "--prefix" option. For 
-more details see the `Installing Python Manual`_.
-
-.. _Installing Python Manual: http://www.python.org/doc/current/inst/inst.html
-
-To use the standard packaging (or installer) for your system build it with:
-
-   python setup.py bdist_win           for a Windows Installer
-   python setup.py bdist_rpm           for a Linux RPM-Package
-   fakeroot dpkg-buildpackage -b       for a Linux Debian-Package
-
-and then install the package (or installer) the way you are used to for your
-OS.
+Dependencies and Install
+------------------------
+See doc/html-en/install.html or 
+http://openfacts.berlios.de/index-en.phtml?title=Quizdrill/Install
 
 Usage
 -----
@@ -97,20 +73,6 @@ starting with a "[" start a new section and should end with a "]" (excluding
 white-spaces). It is strongly recommended that section-title is given in both 
 languages, each separated by a "=". The actual vocabulary/quiz are a simple 
 pair per line, separated by a "=".
-
-Converting quiz files from langdrill
-------------------------------------
-langdrill drill files are by design very similar to quizdrill's. The only 
-difference are the header lines. To convert a langdrill drill file, replace the 
-[Application]-section with
-
-   !type: vocabulary
-   !language: <value of "directSenseName">=<value of "reverseSenseName">
-
-and that is it. Note however, that quizdrill has a style-guideline for the 
-quizfiles, which you might want to follow. However this can be done quickly and 
-is not mandatory to be included to the quizdrill quizzes. So just send then to 
-us rather than waiting into you are in the mood to fix it yourself ;-).
 
 Project Goal
 ============
