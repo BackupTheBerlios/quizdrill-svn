@@ -114,6 +114,8 @@ class AbstractMediaWikiHandler(ContentHandler):
             sax.parse(file, self)
         except:
             self.endDocument()
+            self.append_file.write('# Warning: Building of this Quiz got '
+                    'interrupted.\n')
             self.write_quiz_data()
             raise
         else:
