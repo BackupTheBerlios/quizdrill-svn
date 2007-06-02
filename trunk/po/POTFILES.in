@@ -1,4 +1,5 @@
-src/quizdrill.py
+src/gtk-ui.py
+src/quiz.py
 src/SaDrill.py
 src/builder.py
 src/data/quizdrill.glade
