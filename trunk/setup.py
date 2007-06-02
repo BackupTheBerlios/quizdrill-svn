@@ -213,7 +213,7 @@ def make_setup():
                 ],
             entry_points={
                 'console_scripts': [ 'quiz_builder = quizdrill.builder:build'],
-                'gui_scripts': [ 'quizdrill = quizdrill.quizdrill:main' ]
+                'gui_scripts': [ 'quizdrill = quizdrill.gtk-ui:main' ]
                 },
             classifiers=[
                 'Development Status :: 4 - Beta',
