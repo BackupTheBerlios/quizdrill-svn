@@ -150,6 +150,24 @@ def make_mo_gettext():
                 mo_file)
     print "\b."
 
+def make_translated_gettext_files():
+    """
+    Calls 'intltool-merge' from GNOMEs gettext helper-scripts to build 
+    translated versions of several .in files.
+
+    Note: As this function usese the $PATH variable (with spawnlp) it doesn't
+      work under Windows.
+    """
+    intltool = 'intltool-merge'
+    data_files_names = [['d', 'quizdrill.desktop'], ['s', 'quizdrill.schemas']]
+    data_dir = 'src/data'
+    po_dir = 'po'
+    
+    for option, file_name in data_files_names:
+        file = os.path.join(data_dir, file_name)
+        spawnlp(P_WAIT, intltool, intltool, '-u', '-' + option, po_dir, 
+                file + '.in', file)
+
 ### Setup ###
 
 def make_setup():
@@ -187,14 +205,14 @@ def make_setup():
             # (in the future) freshmeat.
             description='A learning-by-testing to excess program.',
             long_description="""
- A learning-by-testing program to learn quickly, mostly memorizing 
- tasks like vocabulary. Quizdrill supports multiple choice, simple
- quiz as well as flashcard testing. Although still quite primitive
- Quizdrill asks questions which have been answered right more often 
- then others more often to improve learning efficiency. Quizzes can 
- be easily created by edition simple text files or automatically built 
- from Infobox-style templates of Wikipedia dumps (or other MediaWikis 
- and even Semantic MediaWikis).""",
+A learning-by-testing program to learn quickly, mostly memorizing 
+tasks like vocabulary. Quizdrill supports multiple choice, simple
+quiz as well as flashcard testing. Although still quite primitive
+Quizdrill asks questions which have been answered right more often 
+then others more often to improve learning efficiency. Quizzes can 
+be easily created by edition simple text files or automatically built 
+from Infobox-style templates of Wikipedia dumps (or other MediaWikis 
+and even Semantic MediaWikis).""",
             author='Adam Schmalhofer',
             author_email='schmalhof@users.berlios.de',
             url='http://quizdrill.berlios.de/',
@@ -233,6 +251,7 @@ def make_setup():
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'gettext-mo':
         make_mo_gettext()
+        make_translated_gettext_files()
     elif len(sys.argv) > 1 and sys.argv[1] == 'update_doc':
         update_doc_de()
         update_doc_en()
