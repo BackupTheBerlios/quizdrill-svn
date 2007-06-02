@@ -24,9 +24,9 @@ use_setuptools()
 from setuptools import setup
 import sys
 
-from os import listdir, spawnlp, P_WAIT, makedirs
+from os import listdir, spawnlp, P_WAIT, makedirs, chdir
 import os.path
-from os.path import basename, normpath, isfile, isdir
+from os.path import basename, normpath, isfile, isdir, dirname
 from glob import glob
 
 from urllib import urlopen
@@ -256,9 +256,11 @@ and even Semantic MediaWikis).""",
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'gettext-mo':
+        chdir(dirname(__file__))    # as not packaged __file__ is fine
         make_mo_gettext()
         make_translated_gettext_files()
     elif len(sys.argv) > 1 and sys.argv[1] == 'update_doc':
+        chdir(dirname(__file__))    # as not packaged __file__ is file
         update_doc_de()
         update_doc_en()
     else:
