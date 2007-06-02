@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Quizdrill
+GenericName=Vocabulary Trainer
+Comment=Learning-by-testing
+Comment[de]=Durch Testen lernen
+Exec=quizdrill
+Icon=
+StartupNotify=true
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Categories=Application;GNOME;GTK;Game
+Version=0.2.0
+MimeType=

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-30 21:26+0200\n"
+"POT-Creation-Date: 2007-06-02 22:41+0200\n"
 "PO-Revision-Date: 2007-01-24 21:17+0100\n"
 "Last-Translator: Adam Schmalhofer <schmalhof@users.berlios.de>\n"
 "Language-Team: German <quizdrill-main@lists.berlios.de>\n"
@@ -20,39 +20,39 @@ msgstr ""
 #. TRANSLATORS: This is displayed on the statusbar so try to keep it
 #. short. The answer should be shown rather then the text or the
 #. question if the bar is too short.
-#: ../src/quizdrill.py:161
+#: ../src/gtk-ui.py:161
 #, python-format
 msgid "'%(answer)s' to '%(question)s' was correct."
 msgstr "„%(answer)s“ zu „%(question)s“ war richtig."
 
-#: ../src/quizdrill.py:183
+#: ../src/gtk-ui.py:183
 #, python-format
 msgid "Warning: unknown quiz type \"%s\"."
 msgstr "Warnung: Unbekannter Quiztyp \"%s\"."
 
-#: ../src/quizdrill.py:219
+#: ../src/gtk-ui.py:219
 msgid "test"
 msgstr "testen"
 
 #. statusbar1: show question to selected answer #
-#: ../src/quizdrill.py:338
+#: ../src/gtk-ui.py:338
 #, python-format
 msgid "To '%(quest)s' '%(ans)s' would be the correct answer."
 msgstr "Zu „%(quest)s“ wäre „%(ans)s“ die richtige Antwort."
 
-#: ../src/quizdrill.py:382 ../src/quizdrill.py:463
+#: ../src/quiz.py:53 ../src/quiz.py:134
 msgid "What is this?"
 msgstr "Was ist das?"
 
-#: ../src/quizdrill.py:383
+#: ../src/quiz.py:54
 msgid "Question"
 msgstr "Frage"
 
-#: ../src/quizdrill.py:383
+#: ../src/quiz.py:54
 msgid "Answer"
 msgstr "Antwort"
 
-#: ../src/quizdrill.py:464
+#: ../src/quiz.py:135
 msgid "Please translate:"
 msgstr "Übersetze:"
 
@@ -252,8 +252,8 @@ msgid ""
 "Whether or not the timer should be used. If it is used there will be a break "
 "after a given number of questions."
 msgstr ""
-"Ob die Stoppuhr verwendet werden soll. Wenn ja wird gibt es nach einer "
-"angegebenen Anzahl an Fragen zur Pause auffordern."
+"Ob die Stoppuhr verwendet werden soll. Wenn ja wird nach einer angegebenen "
+"Anzahl an Fragen zur Pause auffordern."
 
 #: ../src/data/quizdrill.glade.h:23
 msgid "Words"
@@ -324,5 +324,6 @@ msgstr ""
 "Welcher quiz beim starten benutzt werden soll. Dies ängert sich womöglich "
 "nach dem beenden von quizdrill."
 
-#~ msgid "Error: Unknown value \"%(v)s\" in line %(l)s of file %(f)s."
-#~ msgstr "Fehler: Unbekannter Wert „%(v)s“ in Zeile %(l)s der Datei %(f)s."
+#: ../src/data/quizdrill.desktop.in.h:1
+msgid "Learning-by-testing"
+msgstr "Durch Testen lernen"
