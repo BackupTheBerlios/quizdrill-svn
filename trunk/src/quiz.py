@@ -18,138 +18,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-from SaDrill import SaDrill, SaDrillError
-
-import pygtk
-pygtk.require('2.0')
-import gobject, gtk
 import random
-import os, os.path
-from pkg_resources import resource_filename
-import cPickle as pickle
-# i18n #
 import gettext
 _ = gettext.gettext
-
-class Quiz_Filer(SaDrill):
-    """
-    Contains the parts of a quiz, that are not tested. A kind of "meta-data" as
-    well as loading and saving.
-
-    Note that the quiz-words are saved in a treestore.
-    """
-
-    def __init__(self, quiz_file_path=None):
-        tag_dict = { "language" : self.on_tag_language, 
-                "question" : self.on_tag_question, 
-                "type" : self.on_tag_type,
-                "media" : self.on_tag_media,
-                "generator" : self.on_tag_generator }
-        super(Quiz_Filer, self).__init__(head_tag_dict=tag_dict, 
-                mandatory_has_questions=True)
-        self.SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
-        self.type = "vocabulary"
-        self.all_subquizzes = []
-        self.question_topic = [ _("What is this?"), _("What is this?") ]
-        self.data_name = [ _("Question"), _("Answer") ]
-        self.treestore = gtk.TreeStore(gobject.TYPE_STRING, 
-                gobject.TYPE_STRING, gobject.TYPE_BOOLEAN )
-        if quiz_file_path != None:
-            self.quiz_file_path = quiz_file_path
-            quizlist = self.read_quiz_list(self.quiz_file_path)
-            score = self.read_score_file()
-        else:
-            self.quiz_file_path = resource_filename(__name__, 
-                    "../quizzes/no-file.drill")
-            quizlist = [["", ""]]
-            score = {"": 0}
-        self.quiz = Weighted_Quiz(quizlist, score)
-        self.quiz.next()
-
-    # read and write files
-
-    def read_score_file(self, type="", score_file=None):
-        " Reads a score-file for a given quiz_file "
-        if score_file == None:
-            score_file = self._get_score_file(self.quiz_file_path, type)
-        try:
-            f = open(score_file)
-        except IOError:
-            return {}
-        return pickle.load(f)
-
-    def write_score_file(self, type=""):
-        " Reads a score-file for a given quiz_file "
-        if isinstance(self.quiz, Weighted_Quiz):
-            score_file = self._get_score_file(self.quiz_file_path, type)
-            if not os.path.exists(os.path.dirname(score_file)):
-                os.makedirs(os.path.dirname(score_file))
-            f = open(score_file, "w")
-            pickle.dump(self.quiz.question_score, f)
-            f.close()
-
-    def _get_score_file(self, quiz_file, type):
-        return self.SCORE_PATH + os.path.basename(quiz_file) + \
-                '_' + type + ".score"
-
-    def read_quiz_list(self, file):
-        """
-        Reads a .drill-file
-        """
-        # Read file and add to quizlist and treestore
-        self.temp_quizlist = []
-        self.temp_section = None
-        self.parse(file)
-        quizlist = self.temp_quizlist
-        del self.temp_quizlist
-        del self.temp_section
-        return quizlist
-
-    # SaDrill-API methods #
-
-    def on_section(self, as_text, word_pair, tag=None, type='['):
-        if len(word_pair) < 2:
-            word_pair.append("")
-        column = []; column.extend(word_pair)
-        column.append(True)
-        self.temp_section = self.treestore.append(None, column)
-
-    def on_question(self, as_text, word_pair, tag=None, type=''):
-        #assert len(word_pair) == 2, 'Fileformaterror in "%s": \
-        #        Not exactly one "=" in line %s' % ( file, i+1 )
-        self.temp_quizlist.append(word_pair)
-        column = []; column.extend(word_pair)
-        column.append(True)
-        self.treestore.append(self.temp_section, column)
-
-    # Process "heading-tags" on reading quiz-files [see read_quiz_list(file)] #
-
-    def on_tag_language(self, as_text, word_pair, tag='language', type='!'):
-        self.data_name = word_pair
-        self.all_subquizzes = [ word_pair[0] + " → " + word_pair[1],
-                word_pair[1] + " → " + word_pair[0] ]
-
-    def on_tag_question(self, as_text, word_pair=["$what"], 
-            tag='question', type='!'):
-        common = { "$what" : _("What is this?"), 
-                "$voc_test" : _("Please translate:") }
-        if word_pair[0] in common:
-            word_pair = [ common[word_pair[0]], common[word_pair[0]] ]
-        elif len(word_pair) == 1:
-            word_pair.append(word_pair[0])
-        self.question_topic = word_pair
-
-    def on_tag_type(self, as_text, word_pair=None, tag='type', type='!'):
-        self.type = word_pair[0]
-
-    def on_tag_media(self, as_text, word_pair, tag='media', type='!'):
-        # TODO (Only needed with gstreamer support)
-        pass
-
-    def on_tag_generator(self, as_text, word_pair, tag='generator', type='!'):
-        # TODO
-        pass
-
 
 class Quiz(object):
     """
@@ -352,8 +223,8 @@ class Weighted_Quiz(Quiz):
 
     def _update_score(self, word, correct_answered):
         """
-        updates the score (and score_sum) of word, depending on whether
-        it was answered correctly
+        Updates the score (and score_sum) of word, depending on whether
+        it was answered correctly.
         """
         self.score_sum -= self.question_score[word]
         self.question_score[word] = (self.question_score[word] * 3

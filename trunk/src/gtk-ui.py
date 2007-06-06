@@ -19,7 +19,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 from SaDrill import SaDrillError
-from quiz import Quiz_Filer, Weighted_Quiz
+from quiz import Weighted_Quiz
+from Quiz_Filer import Quiz_Filer, Quiz_Loader
 
 import pygtk
 pygtk.require('2.0')
@@ -101,7 +102,8 @@ class Gui(object):
         else:
             quiz_file_path = None
         try:
-            self.quiz_filer_list.append(Quiz_Filer(quiz_file_path))
+            self.quiz_filer_list.append(
+                    Quiz_Loader(quiz_file_path).read_quiz_file())
         except (IOError, SaDrillError):
             self.quiz_filer_list.append(Quiz_Filer())
         self.switch_quiz(self.quiz_filer_list[0])
@@ -179,13 +181,13 @@ class Gui(object):
         self.quiz = quiz_filer.quiz
         self.update_gui()
         # show and hide notebookpanels #
-        if not quiz_filer.type in self.SHOW_TABS:
-            print _('Warning: unknown quiz type "%s".') % quiz_filer.type
-            type = "all"
+        if not quiz_filer.quiz_type in self.SHOW_TABS:
+            print _('Warning: unknown quiz type "%s".') % quiz_filer.quiz_type
+            quiz_type = "all"
         else:
-            type = self.quiz_filer.type
+            quiz_type = self.quiz_filer.quiz_type
         for tab, visi in zip(self.main_notbook_tabs.itervalues(),
-                self.SHOW_TABS[type]):
+                self.SHOW_TABS[quiz_type]):
             for widget in tab:   # tab is tab-label + tab-content
                 if visi:
                     widget.show()
@@ -225,9 +227,6 @@ class Gui(object):
         # connect listeners #
         quiz_filer.quiz.connect('question_changed', self.update_gui)
         quiz_filer.quiz.connect('break_time', self.start_relax_time)
-
-    def get_quiz_from_treeview(self, row):
-        return [ row[0], row[1] ]
 
     # Timer #
 
@@ -313,17 +312,7 @@ class Gui(object):
 
     def on_treeview_toogled(self, cell, path ):
         """ toggle selected CellRendererToggle Row """
-        toggled_quizzes = []
-        treestore = self.quiz_filer.treestore
-        treestore[path][2] = not treestore[path][2]
-        for child in treestore[path].iterchildren():
-            if child[2] != treestore[path][2]:
-                child[2] = treestore[path][2]
-                toggled_quizzes.append(self.get_quiz_from_treeview(child))
-        if treestore[path][2]:
-            self.quiz.add_quizzes(toggled_quizzes)
-        else:
-            self.quiz.remove_quizzes(toggled_quizzes)
+        self.quiz_filer.toggle_questions(path)
 
     ## questionaskting-tabs (simple/multi/flash) ##
 
@@ -336,9 +325,9 @@ class Gui(object):
             widget.set_sensitive(False)
             # statusbar1: show question to selected answer #
             text = _("To '%(quest)s' '%(ans)s' would be the correct answer.") \
-                    % { "ans" : answer, 
-                    "quest" : self.\
-                    quiz.get_question_to_answer_from_multichoices(answer) }
+                    % { "ans" : answer, "quest" : \
+                    self.quiz.get_question_to_answer_from_multichoices(answer)
+                    }
             self.statusbar1.pop(self.statusbar_contextid["last_answer"])
             self.statusbar1.push(self.statusbar_contextid["last_answer"], text)
 
