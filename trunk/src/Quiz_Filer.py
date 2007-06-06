@@ -44,6 +44,10 @@ class Quiz_Data_Builder(object):
         self.quiz_list = [["", ""]]
 
     def append_section(self, title):
+        if len(title) < 2:
+            title.append("")
+        elif isinstance(title, str):
+            title = [title, ""]
         column = []; column.extend(title)
         column.append(True)
         self.last_added_section = self.treestore.append(None, column)
@@ -51,7 +55,7 @@ class Quiz_Data_Builder(object):
     def append_question(self, question, is_selected=True):
         self.quiz_list.append(question)
         column = []; column.extend(question)
-        column.append(True)
+        column.append(is_selected)
         self.treestore.append(self.last_added_section, column)
 
 
@@ -198,8 +202,6 @@ class Quiz_Loader(SaDrill):
     # SaDrill-API methods #
 
     def on_section(self, as_text, word_pair, tag=None, type='['):
-        if len(word_pair) < 2:
-            word_pair.append("")
         self.quiz_data_builder.append_section(word_pair)
 
     def on_question(self, as_text, word_pair, tag=None, type=''):
