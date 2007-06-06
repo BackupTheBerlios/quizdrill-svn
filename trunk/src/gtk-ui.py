@@ -350,6 +350,26 @@ class Gui(object):
         self.quiz.next()
 
 
+class Gui_Statistics(object):
+    GLADE_FILE = resource_filename(__name__, "data/quizdrill.glade")
+
+    def __init__(self, quiz_filer):
+        xml = gtk.glade.XML(self.GLADE_FILE, "statistics_window", APP)
+        gw = xml.get_widget
+        window = gw("statistics_window")
+        vbox = gw("statistics_vbox")
+        treeview = gw("statistics_treeview")
+        treestore = gtk.TreeStore(str, str)
+        for i, title in enumerate(quiz_filer.data_name):
+            tvcolumn = gtk.TreeViewColumn(title,
+                    gtk.CellRendererText(), text=i)
+            treeview.append_column(tvcolumn)
+        print quiz_filer.quiz.get_worst_scores(5)
+        for score, quiz in quiz_filer.quiz.get_worst_scores(5):
+            treestore.append(None, quiz)
+        treeview.set_model(treestore)
+
+
 def main():
     gui = Gui()
     gtk.main()

@@ -66,12 +66,22 @@ class Quiz(object):
         for func in self.listoners[key]:
             func()
 
+    def get_answer_to_question(self, question):
+        """
+        Finds an answer to the given question from the pool of all 
+        quizzes.
+        """
+        for q in self.quiz_pool:
+            if q[self.ask_from] == question:
+                return q[self.answer_to]
+        else:
+            return None
+
     def get_question_to_answer(self, answer):
         """
         Finds a question to the given answer from the pool of all 
-        question/answers. If possible use 
-        get_question_to_answer_from_multichoices() instead as it is a lot
-        faster.
+        quizzes. If possible use get_question_to_answer_from_multichoices() 
+        instead as it is a lot faster.
         """
         for q in self.quiz_pool:
             if q[self.answer_to] == answer:
@@ -81,8 +91,8 @@ class Quiz(object):
 
     def get_question_to_answer_from_multichoices(self, answer):
         """
-        Finds a question to the given answer from the current question/answers
-        in the multi_choices-pool. 
+        Finds a question to the given answer from the current quizzes in the 
+        multi_choices-pool. 
         """
         for q in self.multi_choices:
             if q[self.answer_to] == answer:
@@ -231,24 +241,30 @@ class Weighted_Quiz(Quiz):
                 + correct_answered ) / 4
         self.score_sum += self.question_score[word]
 
-    def _gen_score_sum(self, quizzes=None):
+    def _gen_score_sum(self, quizzes=None, cleanup=False):
         """ 
         Creates the sum of all sores in quiz_pool in the current question 
-        direction and fills all unknown scores with 0
+        direction and fills all unknown scores with 0. If cleanup=True it
+        also removes scores without a corresponding question.
         """
         score_sum = 0.
         if quizzes == None:
             quizzes = self.quiz_pool
+        question_score_copy = self.question_score.copy()
         for question in quizzes:
-            if question[self.ask_from] in self.question_score:
-                score_sum += self.question_score[question[self.ask_from]]
+            if question[self.ask_from] in question_score_copy:
+                score_sum += question_score_copy[question[self.ask_from]]
+                question_score_copy.pop(question[self.ask_from])
             else:
-                least_score = 0.
                 self.question_score[question[self.ask_from]] = 0.
+        if cleanup:
+            for score_without_question in question_score_copy:
+                self.question_score.pop(score_without_question)
         return score_sum
 
-    def set_question_direction(self, direction):
+    def set_question_direction(self, direction, score_dict=None):
         super(Weighted_Quiz, self).set_question_direction(direction)
+        self.question_score = score_dict
         self.score_sum = self._gen_score_sum()
 
     def add_quizzes(self, new_quizzes):
@@ -258,6 +274,29 @@ class Weighted_Quiz(Quiz):
     def remove_quizzes(self, rm_quizzes):
         super(Weighted_Quiz, self).remove_quizzes(rm_quizzes)
         self.score_sum -= self._gen_score_sum(rm_quizzes)
+
+    def get_worst_scores(self, n):
+        """
+        Returns the n quizzes with the worst score including the score:
+            [ [ worst_score, [worst_question, worst_answer] ], ... ].
+        """
+        low_scored = []
+        for quiz in self.quiz_pool[:n]:
+            low_scored.append( 
+                    [ self.question_score[quiz[self.ask_from]], quiz ] )
+        low_scored.sort()
+        best_low_score = low_scored[-1][0]
+
+        for question, score in self.quiz_pool[n:]:
+            if score < best_low_score:
+                for index, badly_scored in enumerate(low_scored):
+                    if score > badly_scored[0]:
+                        low_scored.insert(index, [ score, question ])
+                        low_scored = low_scored[:n]
+                        best_low_score = low_scored[-1][0]
+                        break
+        return low_scored
+
 
 class Queued_Quiz(Weighted_Quiz):
     """ 
