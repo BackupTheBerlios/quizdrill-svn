@@ -32,8 +32,8 @@ _ = gettext.gettext
 
 class Quiz_Data_Builder(object):
     """
-    Manages the pool of questions and sections of a quiz and the (de-)selecting
-    of them.
+    Creates the treestore and the list of quizzes. This is then used to create
+    a quiz_data-object.
     """
     def __init__(self):
         self.treestore = TreeStore(str, str, bool)
@@ -44,6 +44,10 @@ class Quiz_Data_Builder(object):
         self.quiz_list = [["", ""]]
 
     def append_section(self, title):
+        """
+        Adds a new section to the treestore. The given "title" must be a either
+        a list with maximum 2 title for the question and answer or a str.
+        """
         if len(title) < 2:
             title.append("")
         elif isinstance(title, str):
@@ -53,6 +57,10 @@ class Quiz_Data_Builder(object):
         self.last_added_section = self.treestore.append(None, column)
 
     def append_question(self, question, is_selected=True):
+        """
+        Add a new question/answer-pair to the current section 
+        (last_added_section).
+        """
         self.quiz_list.append(question)
         column = []; column.extend(question)
         column.append(is_selected)
@@ -60,6 +68,10 @@ class Quiz_Data_Builder(object):
 
 
 class Quiz_Data(object):
+    """
+    Manages the pool of questions and sections of a quiz and the (de-)selecting
+    of them.
+    """
     def __init__(self, quiz_data_builder, score_filer):
         self.treestore = quiz_data_builder.treestore
         self.quiz_list = quiz_data_builder.quiz_list
@@ -69,6 +81,8 @@ class Quiz_Data(object):
 
     def toggle_questions(self, treestore_path, toggle_to=None):
         """
+        Given a row from the treestore it switches if it is being asked or not.
+        If toggle_to is passed it is switched to the value of toggle_to.
         """
         treestore = self.treestore
         if toggle_to == None:
@@ -85,9 +99,18 @@ class Quiz_Data(object):
             self.quiz.remove_quizzes(toggled_quizzes)
 
     def _get_quiz_from_treestore(self, row):
+        """
+        Given a row from the treestore it returns the Question Answer pair in
+        it.
+        """
         return [ row[0], row[1] ]
 
     def write_score_file(self, score_file=None):
+        """
+        Saves the score_file to disk (if the quiz is "Weighted" otherwise it
+        just passes). Optionally a file name can be given to save it somewhere
+        else.
+        """
         if isinstance(self.quiz, Weighted_Quiz):
             self.score_filer.write_score_file(score_file)
 
@@ -124,6 +147,13 @@ class Quiz_Filer(Quiz_Data, Quiz_Header):
                 Score_Filer(quiz_header.file_path))
 
     def set_question_direction(self, question, answer):
+        """
+        Sets which column of the quiz contains the questions and which the 
+        answers.
+
+        Note: If either of the question or answer columns was not used before
+          the .drill-file will be read again. (TODO)
+        """
         if question == self.quiz.ask_from and answer == self.quiz.answer_to:
             return
         elif question == self.quiz.answer_to and answer == self.quiz.ask_from:
@@ -147,7 +177,10 @@ class Score_Filer(object):
         self.question_score = self.read_score_file()
 
     def read_score_file(self, score_file=None):
-        " Reads a score-file for a given quiz_file "
+        """ 
+        Reads a score-file for a given quiz_file. If it can't be read an
+        empty score_file is returned.
+        """
         if score_file == None:
             score_file = self.score_file
         try:
@@ -169,6 +202,10 @@ class Score_Filer(object):
         f.close()
 
     def _get_default_score_file(self, quiz_file_path):
+        """
+        Based on the given path of a quiz it determens the default score_file
+        also based on the score_type and SCORE_PATH.
+        """
         return self.SCORE_PATH + os.path.basename(quiz_file_path) + \
                 '_' + self.score_type + ".score"
 
@@ -196,6 +233,9 @@ class Quiz_Loader(SaDrill):
         self.quiz_data_builder = Quiz_Data_Builder()
 
     def read_quiz_file(self, question_column=0, answer_column=1):
+        """
+        Reads the quiz_file and return a Quiz_Filer-object.
+        """
         self.parse(self.quiz_file_path)
         return Quiz_Filer(self.quiz_header, self.quiz_data_builder)
 
