@@ -143,6 +143,9 @@ class Gui(object):
         self.progressbar1.set_fraction(
                 float(self.quiz.answered) / self.quiz.session_length)
         # set multiquiz answers #
+        for button in self.multi_question_buttons:
+            button.set_label('-')
+            button.set_sensitive(False)
         for button, text in zip(self.multi_question_buttons, 
                 self.quiz.multi_choices):
             button.set_label(text[self.quiz.answer_to])
