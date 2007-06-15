@@ -72,12 +72,13 @@ class Quiz_Data(object):
     Manages the pool of questions and sections of a quiz and the (de-)selecting
     of them.
     """
-    def __init__(self, quiz_data_builder, score_filer):
-        self.treestore = quiz_data_builder.treestore
-        self.quiz_list = quiz_data_builder.quiz_list
-        self.score_filer = score_filer
-        self.quiz = Weighted_Quiz(self.quiz_list, score_filer.question_score)
-        self.quiz.next()
+    def __init__(self, quiz_data_builder=None):
+        if quiz_data_builder == None:
+            self.treestore = TreeStore(str, str, bool)
+            self.quiz_list = [['', '']]
+        else:
+            self.treestore = quiz_data_builder.treestore
+            self.quiz_list = quiz_data_builder.quiz_list
 
     def toggle_questions(self, treestore_path, toggle_to=None):
         """
@@ -93,10 +94,7 @@ class Quiz_Data(object):
             if child[2] != toggle_to:
                 child[2] = toggle_to
                 toggled_quizzes.append(self._get_quiz_from_treestore(child))
-        if toggle_to:
-            self.quiz.add_quizzes(toggled_quizzes)
-        else:
-            self.quiz.remove_quizzes(toggled_quizzes)
+        return toggle_to, toggled_quizzes
 
     def _get_quiz_from_treestore(self, row):
         """
@@ -104,15 +102,6 @@ class Quiz_Data(object):
         it.
         """
         return [ row[0], row[1] ]
-
-    def write_score_file(self, score_file=None):
-        """
-        Saves the score_file to disk (if the quiz is "Weighted" otherwise it
-        just passes). Optionally a file name can be given to save it somewhere
-        else.
-        """
-        if isinstance(self.quiz, Weighted_Quiz):
-            self.score_filer.write_score_file(score_file)
 
 
 class Quiz_Header(object):
@@ -139,12 +128,25 @@ class Quiz_Filer(Quiz_Data, Quiz_Header):
     Note that the quiz-words are saved in a treestore.
     """
 
-    def __init__(self, quiz_header, quiz_data_builder):
-        Quiz_Header.__init__(self, quiz_header.file_path, quiz_header.quiz_type,
-                quiz_header.question_topic, quiz_header.data_name, 
-                quiz_header.all_subquizzes)
-        Quiz_Data.__init__(self, quiz_data_builder, 
-                Score_Filer(quiz_header.file_path))
+    def __init__(self, quiz_header=None, quiz_data_builder=None, 
+            score_filer=None):
+        if quiz_header == None:
+            Quiz_Header.__init__(self, 'no_file.drill')
+        else:
+            Quiz_Header.__init__(self, quiz_header.file_path, 
+                    quiz_header.quiz_type, quiz_header.question_topic, 
+                    quiz_header.data_name, quiz_header.all_subquizzes)
+        if quiz_data_builder == None:
+            Quiz_Data.__init__(self)
+        else:
+            Quiz_Data.__init__(self, quiz_data_builder)
+        if score_filer == None:
+            self.score_filer = Score_Filer(self.file_path)
+        else:
+            self.score_filer = score_filer
+        self.quiz = Weighted_Quiz(self.quiz_list, 
+                self.score_filer.question_score)
+        self.quiz.next()
 
     def set_question_direction(self, question, answer):
         """
@@ -161,6 +163,28 @@ class Quiz_Filer(Quiz_Data, Quiz_Header):
         else:
             # TODO: Needed once quizzes can have more question/answer pairs
             print "Error: Not implemented yet!"
+
+    def write_score_file(self, score_file=None):
+        """
+        Saves the score_file to disk (if the quiz is "Weighted" otherwise it
+        just passes). Optionally a file name can be given to save it somewhere
+        else.
+        """
+        if isinstance(self.quiz, Weighted_Quiz):
+            self.score_filer.write_score_file(score_file)
+
+    def toggle_questions(self, treestore_path, toggle_to=None):
+        """
+        Given a row from the treestore it switches if it is being asked or not.
+        If toggle_to is passed it is switched to the value of toggle_to.
+        """
+        toggle_to, toggled_quizzes = super(Quiz_Filer, self).toggle_questions(
+                treestore_path, toggle_to)
+        if toggle_to:
+            self.quiz.add_quizzes(toggled_quizzes)
+        else:
+            self.quiz.remove_quizzes(toggled_quizzes)
+        return toggle_to, toggled_quizzes
 
 
 class Score_Filer(object):
