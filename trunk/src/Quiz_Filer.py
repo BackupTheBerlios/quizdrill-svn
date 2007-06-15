@@ -191,7 +191,7 @@ class Score_Filer(object):
             score = None
         if score == None:
             score = Weighted_Quiz.EMPTY_SCORE
-        elif not score.has_key(''):
+        elif not score.has_key(''):     # for backwards compatibility
             score[''] = 0.
         return score
 
