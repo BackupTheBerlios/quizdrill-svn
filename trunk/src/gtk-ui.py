@@ -281,12 +281,13 @@ class Gui(object):
                 gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
         chooser.set_current_folder(
                 os.path.abspath(os.path.dirname(
-                    self.quiz_filer.quiz_file_path)))
+                    self.quiz_filer.file_path)))
         response = chooser.run()
         chooser.hide()
         if response == gtk.RESPONSE_OK:
             try:
-                self.quiz_filer_list = [Quiz_Filer(chooser.get_filename())]
+                self.quiz_filer_list = [
+                        Quiz_Loader(chooser.get_filename()).read_quiz_file() ]
             except (IOError, SaDrillError), e:
                 message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, 
                         buttons=gtk.BUTTONS_OK, message_format=e.str)

@@ -272,7 +272,8 @@ class Weighted_Quiz(Quiz):
 
     def set_question_direction(self, direction, score_dict=None):
         super(Weighted_Quiz, self).set_question_direction(direction)
-        self.question_score = score_dict
+        if score_dict != None:
+            self.question_score = score_dict
         self.score_sum = self._gen_score_sum()
 
     def add_quizzes(self, new_quizzes):
