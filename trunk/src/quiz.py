@@ -163,8 +163,11 @@ class Quiz(object):
             self.notify('direction_changed')
 
     def add_quizzes(self, new_quizzes):
+        pool_was_small = len(self.quiz_pool) < self.DEFAULT_MULTICHOICE_LEN
         self.quiz_pool.extend(new_quizzes)
         self._refit_multichoice_len()
+        if pool_was_small:
+            self.new_question()
 
     def remove_quizzes(self, rm_quizzes):
         for quiz in rm_quizzes:
