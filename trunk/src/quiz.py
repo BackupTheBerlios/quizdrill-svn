@@ -120,7 +120,10 @@ class Quiz(object):
 
     def _select_question(self):
         """ select next question """
-        self.question = random.choice(self.quiz_pool)
+        if self.quiz_pool:
+            self.question = random.choice(self.quiz_pool)
+        else:
+            self.question = [ "", "" ]
 
     def _gen_multi_choices(self):
         """ Returns a list of multichoice options """
@@ -194,9 +197,14 @@ class Weighted_Quiz(Quiz):
     non-vocabulary answers may be identical.
     """
 
+    EMPTY_SCORE = {'': 0.}
+
     def __init__(self, quiz_pool, 
-            question_score={}, ask_from=0, exam_length=15):
-        self.question_score = question_score
+            question_score=None, ask_from=0, exam_length=15):
+        if question_score == None:
+            self.question_score = self.EMPTY_SCORE
+        else:
+            self.question_score = question_score
         self.score_sum = 0.
         super(Weighted_Quiz, self).__init__(quiz_pool, ask_from, exam_length)
         self.score_sum = self._gen_score_sum()
@@ -303,7 +311,7 @@ class Queued_Quiz(Weighted_Quiz):
     Previously not asked questions are added one-after-each-other once only a 
     few questions still are below a certain score.
     """
-    def __init__(self, question_pool, question_score={}, ask_from=0, 
+    def __init__(self, question_pool, question_score=None, ask_from=0, 
             exam_length=15, bad_score=.4, min_num_bad_scores=3, 
             min_question_num=20, batch_length=5):
         self.new_quiz_pool = []

@@ -188,7 +188,11 @@ class Score_Filer(object):
             score = pickle.load(f)
             f.close()
         except:
-            score = {}
+            score = None
+        if score == None:
+            score = Weighted_Quiz.EMPTY_SCORE
+        elif not score.has_key(''):
+            score[''] = 0.
         return score
 
     def write_score_file(self, score_file=None):
