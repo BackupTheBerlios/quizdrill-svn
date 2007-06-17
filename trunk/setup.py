@@ -237,7 +237,7 @@ and even Semantic MediaWikis).""",
                 ],
             entry_points={
                 'console_scripts': [ 'quiz_builder = quizdrill.builder:build'],
-                'gui_scripts': [ 'quizdrill = quizdrill.gtk-ui:main' ]
+                'gui_scripts': [ 'quizdrill = quizdrill.gtkui:main' ]
                 },
             classifiers=[
                 'Development Status :: 4 - Beta',
