@@ -1,4 +1,4 @@
-!type: questionary
+!type: questionnaire
 !language: Titel = Künstler
 !question: Welcher Künstler malte:
 
