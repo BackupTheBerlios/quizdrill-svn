@@ -114,6 +114,9 @@ class SaDrill(object):
         """
         Parse a .drill or .build file.
         """
+        self.collected_head_tags = {}
+        self.collected_build_tags = {}
+
         self.current_drill_file = drill_file
         f = open(drill_file)
         head_tag_dict = self.head_tag_dict
@@ -212,6 +215,16 @@ class SaDrill(object):
         """
         print _('Warning: Unknown head-tag "%s".') % tag
 
+    def on_head_tag_collect_in_dict(self, as_text, word_pair, tag, type='!'):
+        """
+        Adds the word_pair to a list in the collected_head_tags under the key
+        tag. So they can be processed all at once/later.
+        """
+        if self.collected_head_tags.has_key(tag):
+            self.collected_head_tags[tag].append(word_pair)
+        else:
+            self.collected_head_tags[tag] = [ word_pair ]
+
     def on_default_build_tag(self, as_text, word_pair, tag, type='$'):
         """
         Processes a builder line of an .drill or .build file. Overload this
@@ -226,3 +239,12 @@ class SaDrill(object):
         """
         print _('Warning: Unknown build-tag "%s".') % tag
 
+    def on_build_tag_collect_in_dict(self, as_text, word_pair, tag, type='$'):
+        """
+        Adds the word_pair to a list in the collected_build_tags under the key
+        tag. So they can be processed all at once/later.
+        """
+        if self.collected_build_tags.has_key(tag):
+            self.collected_build_tags[tag].append(word_pair)
+        else:
+            self.collected_build_tags[tag] = [ word_pair ]

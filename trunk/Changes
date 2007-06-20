@@ -1,5 +1,6 @@
 0.3.0: 2007-06-18
 * Code refactoring and cleanups.
+* New plugin-system.
 * quiz_builder now has a progress bar. Closes #3358.
 * quiz_builder sorts categories and questions before output. Closes #3416.
 * quiz_builder writes partial quiz if interrupted.

@@ -20,12 +20,10 @@
 
 from SaDrill import SaDrill
 
-from xml import sax
-from xml.sax.handler import ContentHandler
 import re
 import sys
 import os.path
-from pkg_resources import resource_filename
+from pkg_resources import resource_filename, iter_entry_points
 # i18n #
 import locale
 import gettext
@@ -38,7 +36,7 @@ gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 
 
-class AbstractQuizBuilder(object):
+class Abstract_Quiz_Writer(object):
     """
     Implements the appending of the Quiz-data to the .drill-file.
     """
@@ -92,360 +90,132 @@ class AbstractQuizBuilder(object):
         text = self.quare_brackets_re.sub("", text)
         return text
 
-class AbstractMediaWikiHandler(ContentHandler):
-    """
-    Processes a MediaWiki pages-articles.xml Database Backup dump[1] and 
-    passes the article and title to separate_article implemented by a child.
 
-    [1]: http://meta.wikimedia.org/wiki/Data_dumps
+class Abstract_Drill_Handler(object):
     """
-    def __init__(self, encoding="utf-8"):
-        # Sax #
-        self.encoding = "utf-8"
-        self.DATA_FIELD = "text"
-        self.TITLE_FIELD = "title"
-        self.in_data_field = False
-        self.in_title_field = False
-        self.content = ""
-        self.title = ""
+    Plugins for new sources for builder.py should subclass this.
+    """
+    def __init__(self, file_out, collected_head_tags, collected_build_tags, 
+            tag_dict={}):
+        self.file_out = file_out
+        self.append_file = open(file_out, "a")
+        self.collected_head_tags = collected_head_tags
+        self.collected_build_tags = collected_build_tags
+        self.tag_dict = { 'build_to': self.on_tag_build_to, 
+                'filter': self.on_tag_filter, 'encoding': self.on_tag_encoding
+                }
+        self.tag_dict.update(tag_dict)
+        # Default values #
+        self.category_filter = self.question_filter = self.answer_filter = None
+        self.encoding="utf-8"
+        #
+        self.process_build_tags()
 
-    def parse(self, file):
+    def parse(self, data_source):
+        """
+        Process the data_source to genearte a .dill-file.
+        """
         try:
-            sax.parse(file, self)
+            self.read_data_source(data_source)
         except:
-            self.endDocument()
-            self.append_file.write('# Warning: Building of this Quiz got '
+            self.append_file.write('# Warning: Building of this Quiz got ' 
                     'interrupted.\n')
             self.write_quiz_data()
             raise
         else:
-            self.write_quiz_data()   # finally-clause isn't py2.4 compatible
+            self.write_quiz_data()     # finally-clause isn't py2.4 compatible
 
-    # Sax XML-methods #
-
-    def startElement(self, name, attr):
-        """
-        Remember if we are in an xml-element of interest (title_field or
-        data_field).
-        """
-        if name == self.DATA_FIELD:
-           self.in_data_field = True
-           self.content = ""
-        if name == self.TITLE_FIELD:
-            self.in_title_field = True
-            self.title = ""
-
-    def endElement(self, name):
-        """
-        Tracks whether we leave our xml-element of interest (title_field or 
-        data_field) and processes the article if we leave data_field.
-        """
-        if name == self.DATA_FIELD:
-            self.in_data_field = False
-            if self.content:
-                self.num_processed_articles += 1
-                if self.separate_article(self.content):
-                    self.num_found_infoboxes += 1
-                print _('Found this infobox-type in %(num_boxes)s of '
-                        '%(num_articles)s articles.') % \
-                        {'num_boxes': self.num_found_infoboxes, 
-                        'num_articles': self.num_processed_articles} + '\r',
-        if name == self.TITLE_FIELD:
-            self.in_title_field = False
-
-    def characters(self, content):
-        """
-        Records the content if we are in an xml-element of interest
-        (title_field or data_field).
-        """
-        if self.in_data_field:
-            self.content += unicode.encode(content, self.encoding)
-        if self.in_title_field:
-            self.title += unicode.encode(content, self.encoding)
-
-    def startDocument(self):
-        self.num_processed_articles = 0
-        self.num_found_infoboxes = 0
-
-    def endDocument(self):
-        print ""       # To keep the final 'statusbar'.
-
-    # Processing Article #
-    def separate_article(self, content):
-        """
-        Needs to be implemented by the child. Processes the actual article and
-        returns True if new data is found.
-        """
-        raise AttributionError('Method "separate_article" should overwritten '
-                'by a child of AbstractWikipediaHandler.')
-        return False
-
-
-class WikipediaArticleHandler(AbstractMediaWikiHandler, AbstractQuizBuilder):
-    """
-    Processes a MediaWiki database_dump (see class AbstractMediaWikiHandler),
-    extracts data from the categories and named-templates (e.g. infoboxes
-    and personendaten) and generates a .drill-file from it.
-    """
-    def __init__(self, append_file, template_tag, 
-            category_tag, question_tag, answer_tag,
-            category_filter=None, question_filter=None, answer_filter=None,
-            one_of_categories=[], encoding="utf-8",
-            wiki_cat_namespace=["category"]):
-        AbstractMediaWikiHandler.__init__(self, encoding)
-        AbstractQuizBuilder.__init__(self, 
-                category_filter, question_filter, answer_filter)
-        self.append_file = open(append_file, "a")
-        # Regular Expressions #
-        self.re_flags = re.DOTALL | re.IGNORECASE
-        self.template_tag = re.compile(r" ").sub(r"[\s_]", template_tag)
-        # Quiz Generating #
-        self.category_tag = category_tag
-        self.question_tag = question_tag
-        self.answer_tag = answer_tag
-        self.one_of_categories = one_of_categories
-        ## Regular Expressions ##
-        ### separate_article() ###
-        # "\[\[" + cat + ":" + "("+ "[^|\]]*" +")" + "\|?" + ".*?" + "\]\]"
-        self._cat_re_list = [ re.compile("\[\[" + cat + ":([^|\]]*)\|?.*?\]\]", 
-            self.re_flags) for cat in wiki_cat_namespace ]
-        self._comments_re = re.compile(r"<!--.*?-->", self.re_flags)
-        #### infobox ####
-        template_start = r"\{\{\S*:?" + self.template_tag
-        template_body = r"[^{]*"
-        template_end = r"\}\}"
-        nested_template_body = r"[^}]*"
-        self._unnested_template_re = re.compile(template_start + 
-                template_body + template_end, self.re_flags)
-        self._nested_template_re = re.compile(template_start + 
-                nested_template_body + template_start, self.re_flags)
-        ### remove_links() ###
-        self._ref_section_re = re.compile(r"<ref>[^|<>]*?</ref>", self.re_flags)
-        self._include_section_re = re.compile(r"<include>[^|<>]*?</include>", 
-                self.re_flags)
-        self._xml_code_re = re.compile(r"<[^|]*?>", self.re_flags)
-        # "\[\[" + "(" + t + "\|)" + "{2,}" + t "\]\]"       with t = "[^|\]]*"
-        self._images_re = re.compile(r"\[\[([^|\]]*\|){2,}[^|\]]*\]\]", 
-                self.re_flags)
-        # "\[\[" + t"*?" + "\|?" + "(" + t"*" + ")" + "\]\]"  with t="[^|\]]"
-        self._wiki_links_re = re.compile(r"\[\[[^|\]]*?\|?([^|\]]*)\]\]", 
-                self.re_flags)
-        self._web_links_re = re.compile(r"\[[^ |\]]+ ?([^|\]]*?)\]")
-        self._kursive_bold_re = re.compile(r"'''?(.*?)'?''")
-        ### separate_infobox() ###
-        self._infobox_end_re = re.compile(r"\|*[\s_]*\}\}")
-        self._wiki_white_spaces_re = re.compile(r"([\s_\n]|&nbsp;)+")
-
-    def separate_article(self, text):
-        """
-        Extract data out of a given article. Currently templates and categories
-        are supported.
-        """
-        dict = { "_article" : self.title.strip(), "_cat" : [] }
-        found_data = False
-        for cat_re in self._cat_re_list:
-            dict["_cat"].extend([ cat for cat in cat_re.findall(text)])
-        self.select_one_of_categories(dict)
-        text = self._comments_re.sub("", text)
-        if self._nested_template_re.search(text):
-            print _('Warning: Skipping nested templates in "%s".') % \
-                    self.title
-        for infobox in self._unnested_template_re.findall(text):
-            found_data = True
-            infobox_dict = self.separate_infobox(infobox)
-            infobox_dict.update(dict)
-            self.append_template_to_quiz_data(infobox_dict)
-        return found_data
-
-    def select_one_of_categories(self, article_dict):
-        """
-        Generate the 'select_one_categories' values from the dictionary of
-        the current wikipedia-page beeing processed.
-        """
-        categories = article_dict["_cat"]
-        for cat_list in self.one_of_categories:
-            for cat in cat_list[1:]:
-                if cat in categories:
-                    article_dict[cat_list[0]] = cat
-                    break
+    def process_build_tags(self):
+        for tag, word_pair in self.collected_build_tags.iteritems():
+            if tag in self.tag_dict:
+                self.tag_dict[tag](word_pair)
             else:
-                article_dict[cat_list[0]] = "_None_of" + cat_list[0]
+                print _('Warning: $%s was not processed') % tag
 
-    def separate_infobox(self, infobox):
-        """
-        Extract data out of a template (e.g. a infobox or personendaten).
-        """
-        text = self.remove_links(infobox)
-        text = self._infobox_end_re.sub("", text)
-        text = text.replace('\n', '')
-        tag_list = text.split("|")
-        dict = { "_head" : tag_list[0].strip()[3:] }
-        for tag in tag_list[1:]:
-            L = tag.split("=", 1)
-            if len(L) == 2:
-                dict[L[0].strip()] = self._wiki_white_spaces_re.sub(' ', 
-                        (L[1]).strip())
-            elif len(L) == 1 and not L[0].strip():
-                pass
-            else:
-                print _('Warning: No parameter name in Infobox row '
-                        '"%(para)s" in article "%(article)s".') % \
-                                { 'para': L, 'article': self.title }
-        return dict
-
-    def remove_links(self, text):
-        """
-        Removes wikistructures, which often cause problems beacause they 
-        contain "|" or "=": Weblinks (URLs sometimes have a "="), Images,
-        Wikilinks, Sources (ref-sections) and XML tags (assigning attributes 
-        have "=") as well as '' '' (kursiv) and ''' ''' (bold).
-        """
-        # remove sections #
-        text = self._ref_section_re.sub("", text)
-        text = self._include_section_re.sub("", text)
-        text = self._xml_code_re.sub("", text)
-        # remove Images etc (any "Link" with more then one "|" #
-        text = self._images_re.sub("", text)
-        # replace Links with Linktext #
-        text = self._wiki_links_re.sub(r"\1", text)
-        # replace web-links with label #
-        text = self._web_links_re.sub(r"\1", text)
-        # remove '' '' (kursiv) and ''' ''' (bold) #
-        text = self._kursive_bold_re.sub(r"\1", text)
-        return text
-
-    # Writing Quiz Data #
-    
-    def append_template_to_quiz_data(self, dict):
-        """
-        Generate the quiz_data from a mediawiki-template (as a dictionary) and 
-        append it to self.quiz_dict.
-        """
-        if self.category_tag in dict:
-            cat = dict[self.category_tag]
-        else:
-            cat = ""
-            if self.category_tag != "":
-                print _('Warning: Parameter "%(para)s" missing in a template in ' 
-                        'article "%(article)s", using "" instead.') % \
-                            { 'para': self.category_tag, 
-                                    'article': dict['_article'] }
-        if self.question_tag in dict:
-            question = dict[self.question_tag]
-        else:
-            print _('Warning: Parameter "%(para)s" missing in a template in ' 
-                    'article "%(article)s", skipping.') % \
-                            { 'para': self.question_tag, 
-                                    'article': dict["_article"] }
-            return
-        if self.answer_tag in dict:
-            answer = dict[self.answer_tag]
-        else:
-            print _('Warning: Parameter "%(para)s" missing in a template in '
-                    'article "%(article)s", skipping.') % \
-                            { 'para': self.answer_tag, 
-                                    'article': dict["_article"] }
-            return
-        # actual adding to dictionary #
-        if not cat in self.quiz_dict:
-            self.quiz_dict[cat] = [[question, answer]]
-        else:
-            self.quiz_dict[cat].append([question, answer])
-
-
-class DrillBuilder(SaDrill):
-    """
-    Processes a .drill.builder-file and outputs a .drill-file.
-
-    Note: Still too specific to WikipediaArtikel builder-tags.
-    """
-    def __init__(self):
-        tag_dict = { "build_to" : self.on_tag_build_to, 
-                "builder" : self.on_tag_builder, 
-                "filter" : self.on_tag_filter,
-                "one_of_categories" : self.on_tag_one_of_categories, 
-                "wiki_cat_namespace" : self.on_tag_wiki_cat_namespace 
-                }
-        mandatory_tags = [ "build_to", "builder" ]
-        SaDrill.__init__(self, {}, tag_dict, {}, mandatory_tags)
-        self.encoding = "utf-8"
-        self.one_of_categories = []
-
-    def convert_drill_file(self, file, database):
-        """
-        Build a .drill-file from a .builder discription-file and a wikipedia-
-        xml-dumpfile.
-        """
-        file_out = file.replace(".builder", "") + ".original"
-        self._fout = open(file_out, "w")
-        self._init_default_values()
-        self.parse(file)
-
-        self._fout.close()
-        builder = self.builder_class(file_out, self.template_tag, 
-                self.category_tag, self.question_tag, self.answer_tag,
-                self.category_filter, self.question_filter, self.answer_filter,
-                self.one_of_categories, self.encoding, self.wiki_cat_namespace)
-        builder.parse(database)
-
-    def _init_default_values(self):
-        """
-        Set default values for tags that don't have to be listed in a 
-        .builder-file.
-        """
-        self.category_tag=["category"]
-        self.category_filter = self.question_filter = self.answer_filter = None
-        self.one_of_categories=[]
-        self.encoding="utf-8"
-        self.wiki_cat_namespace=["category"]
-
-    def on_default_head_tag(self, as_text, word_pair=None, tag=None, type='#'):
-        """
-        Writes header-lines unfiltered to the new .drill-file.
-        """
-        self._fout.write(as_text + "\n")
-
-    def on_tag_builder(self, as_text, word_pair, tag='builder', type='$'):
-        builder_dict = {"WikipediaArticle" : WikipediaArticleHandler }
-        assert len(word_pair) == 2, \
-                _('Error: Tag $builder does not have exactly one "=".')
-        assert word_pair[0] in builder_dict, \
-                _('Error: Unknown builder "%s".') % tag
-        self.builder_class = builder_dict[word_pair[0]]
-        self.template_tag = word_pair[1]
-
-    def on_tag_build_to(self, as_text, word_pair, tag='build_to', type='$'):
+    def on_tag_build_to(self, word_pair_list):
+        assert len(word_pair_list) == 1, \
+                _('Warning: Only one tag $build_to allowed.')
+        word_pair = word_pair_list[0]
         assert len(word_pair) == 3, \
                 _('Error: Tag $build_to does not have exactly two "=".')
         self.category_tag = word_pair[0]
         self.question_tag = word_pair[1]
         self.answer_tag = word_pair[2]
 
-    def on_tag_filter(self, as_text, word_pair, tag='filter', type='$'):
-        while len(word_pair) > 3:
+    def on_tag_filter(self, word_pair_list):
+        assert len(word_pair_list) == 1, \
+                _('Warning: Only one tag $filter allowed.')
+        word_pair = word_pair_list[0]
+        while len(word_pair) > 3: 
             word_pair.append(None)
         self.category_filter = word_pair[0]
         self.question_filter = word_pair[1]
         self.answer_filter = word_pair[2]
 
-    def on_tag_wiki_cat_namespace(self, as_text, word_pair, 
-            tag='wiki_cat_namespace', type='$'):
-        self.wiki_cat_namespace = word_pair
+    def on_tag_encoding(self, word_pair_list):
+        assert len(word_pair_list) == 1, \
+                _('Warning: Only one tag $encoding allowed.')
+        word_pair = word_pair_list[0]
+        self.encoding = word_pair[0]
 
-    def on_tag_one_of_categories(self, as_text, word_pair, 
-            tag='one_of_categories', type='$'):
-        self.one_of_categories.append(word_pair)
+class Drill_Builder(SaDrill):
+    """
+    Processes a .drill.builder-file and passes on to a plugin given by the 
+    $builder-tag in the file which then outputs a .drill(.origninal)-file.
+    """
+    def __init__(self):
+        tag_dict = { "builder" : self.on_tag_builder }
+        self.on_default_build_tag = self.on_build_tag_collect_in_dict 
+        self.on_unknown_build_tag = self.on_build_tag_collect_in_dict 
+        mandatory_tags = [ "build_to", "builder" ]
+        super(Drill_Builder, self).__init__({}, tag_dict, {}, mandatory_tags)
+
+    def convert_drill_file(self, file, data_source):
+        """
+        Build a .drill-file from a .builder discription-file and a data-source
+        (e.g. a wikipedia-dump).
+        """
+        file_out = file.replace(".builder", "") + ".original"
+        self._fout = open(file_out, "w")
+        self.parse(file)
+
+        self._fout.close()
+        builder = self.builder_class(file_out, self.collected_head_tags, 
+                self.collected_build_tags)
+        builder.parse(data_source)
+
+    def on_tag_builder(self, as_text, word_pair, tag='builder', type='$'):
+        """
+        Finds out which quiz_builder_source_plugins should be used.
+        """
+        for entrypoint in iter_entry_points(
+                "quiz_builder_source_plugins"):
+            if entrypoint.name == word_pair[0]:
+                self.builder_class = entrypoint.load()
+                break
+        else:
+            print _('Error: Unknown builder "%s".') % word_pair[0]
+            sys.exit(1)
+        self.on_build_tag_collect_in_dict(as_text, word_pair, tag, type)
+
+    def on_default_head_tag(self, as_text, word_pair=None, tag=None, type='#'):
+        """
+        Writes header-lines unfiltered to the new .drill-file and then passes 
+        on to on_head_tag_collect_in_dict.
+        """
+        self._fout.write(as_text + "\n")
+        self.on_head_tag_collect_in_dict(as_text, word_pair, tag, type)
 
 
 def build():
     """
     A console script for our endusers. 
     """
-    builder = DrillBuilder()
+    builder = Drill_Builder()
     if len(sys.argv) == 3:
         builder.convert_drill_file(sys.argv[1], sys.argv[2])
     else: 
-        print _('Usage: %s [.drill.builder-file] [wikipedia.xml-file]') \
+        print _('Usage: %s [.drill.builder-file] [data_source-file]') \
                 % sys.argv[0]
 
 if __name__ == "__main__":

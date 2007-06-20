@@ -8,7 +8,7 @@ XS-Python-Version: all
 
 Package: quizdrill
 Architecture: all
-Depends: ${python:Depends}, python-gtk2 (>= 2.6)
+Depends: ${python:Depends}, python-gtk2 (>= 2.6), python-setuptools
 XB-Python-Version: ${python:Versions}
 Provides: ${python:Provides}
 Description: learning-by-testing to excess program

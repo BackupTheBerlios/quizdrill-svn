@@ -196,12 +196,13 @@ def make_setup():
         schemas_dir = 'share/gconf/schemas'
 
     setup(name='quizdrill', 
-            version='0.3.0',   # run "dch -i" to sync in debian/changelog
+            version='0.3.0',   # run "dch -i" to increment in debian/changelog
             # PyGTK isn't available as egg so the user has to check this 
             # dependency herself. It also prevents *_scripts from working when 
             # installed by Debian package (as no egg available).
             # A much higher minimum PyGTK version is needed than written.
             #install_requires=['PyGTK >= 2.0'],
+            install_requires=[ 'setuptools' ]
             license='GNU General Public License',
             platforms=['any'],
             # Descriptions should be kept in sync with debian/control,
@@ -237,7 +238,9 @@ and even Semantic MediaWikis).""",
                 ],
             entry_points={
                 'console_scripts': [ 'quiz_builder = quizdrill.builder:build'],
-                'gui_scripts': [ 'quizdrill = quizdrill.gtkui:main' ]
+                'gui_scripts': [ 'quizdrill = quizdrill.gtkui:main' ],
+                'quiz_builder_source_plugins': [ 'WikipediaArticle = '
+                    'quizdrill.wiki_builder:Wikipedia_Article_Handler' ]
                 },
             classifiers=[
                 'Development Status :: 4 - Beta',
