@@ -1,3 +1,9 @@
+0.3.0: 2007-06-18
+* Code refactoring and cleanups.
+* quiz_builder now has a progress bar. Closes #3358.
+* quiz_builder sorts categories and questions before output. Closes #3416.
+* quiz_builder writes partial quiz if interrupted.
+
 0.2.0:  2007-05-24
 * New quiz deu_Oper.drill, deu_Muskelatur.drill and deu_Gemälde.drill.
 * Updated project description and documentation.
