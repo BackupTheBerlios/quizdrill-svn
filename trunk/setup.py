@@ -202,7 +202,7 @@ def make_setup():
             # installed by Debian package (as no egg available).
             # A much higher minimum PyGTK version is needed than written.
             #install_requires=['PyGTK >= 2.0'],
-            install_requires=[ 'setuptools' ]
+            install_requires=[ 'setuptools' ],
             license='GNU General Public License',
             platforms=['any'],
             # Descriptions should be kept in sync with debian/control,
