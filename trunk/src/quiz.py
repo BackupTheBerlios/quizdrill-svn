@@ -217,7 +217,8 @@ class Weighted_Quiz(Quiz):
         while True:
             super(Weighted_Quiz, self)._select_question()
             bound = random.random() * 1.01     # to avoid infinit loops
-            if self.question_score[self.question[self.ask_from]] <= bound:
+            if not self.question[self.ask_from] in self.question_score or \
+                    self.question_score[self.question[self.ask_from]] <= bound:
                 return
 
     def check(self, solution):
