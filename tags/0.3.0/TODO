@@ -1,0 +1,73 @@
+Future Plans
+============
+
+Program
+-------
+* Testing
+    * new question types
+        * image-tests (e.g. geography)
+        * sound-tests (e.g. dictating to test spelling)
+        * image/sound-mapping (e.g. little kid word learning)
+    * additional learning support
+        * (better) selection of next quiz for the learning strategy (at the
+          moment we just check if right or wrong).
+            * start with the SuperMemo v2[1] algorithm
+              PROBLEM: how to score the answer (0-5), without making the
+                user do this manually, which slows the testing down 
+                considerably. Using the time needed to answer does not help as
+                the user will get interrupted by other work, phone, ...
+              IDEA: 0: wrong in multiple choice (mc); 1: right in mc
+                2: right in simple quiz (sq) after peaking in mc
+                3: wrong in sq with more than 1 try (or more than two hints); 
+                4: wrong in sq with 1 try (or one hint)
+                5: right at first try (3-5 don't seem to be that good).
+              IDEA: Additionally use Levenshtein distance[2] or difflib to 
+                determine typo or completely wrong (and could even show the 
+                wrong letters in red).
+            * when user gets new words first show him the list of the new words
+              then train her with multiple choice then switch to simple quiz 
+              (or flashcard if the user can't type very well) (possibly with 
+              hints at first).
+        * support learning strategies: e.g. Mnemonic[3] 
+        * word said after correct answer on vocabulary tests
+    * Test multiple quizzes
+        * UI: one list with all quizzes, mod with add/open/close menu-items
+            * but what should be done with bidirectional tests?
+                * needs activation explicitly and then asks
+        * switch them between relax-times (not snoozing) as switching topics
+          is unnecessarily difficult (for humans).
+    * Add hint system for simple quiz (and possibly flashcard).
+        * show number of letters with underscores ("_").
+        * add additional letters if more hints are requested.
+    * More build/generating sources
+        * verbiste[4]
+        * wiktionary[5]
+* improve UI
+    * support system-tray (notify when breaks over)
+    * accessibility support
+    * switch treeview colons, when test direction changes
+    * easy edit of quizfile (open-in-editor or edit directly + save)
+    * logo/icon
+* gconf-support
+    * last/recent quiz
+    * config-options
+        * which ones ? => design Preferences-window
+* fix Bugs ;-)
+* translate in more languages
+
+Documentation
+-------------
+* always need more ...
+
+Quiz
+----
+* more, more, more, ... ;-) especially more built tests from wikipedia.
+
+
+Notes
+=====
+[1] http://www.supermemo.com/english/ol/sm2.htm
+[2] http://en.wikipedia.org/wiki/Levenshtein_distance
+[3] http://en.wikipedia.org/wiki/Mnemonic
+[4] http://www3.sympatico.ca/sarrazip/dev/verbiste.html
+[5] http://www.wiktionary.org/

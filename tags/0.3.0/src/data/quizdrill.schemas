@@ -1,0 +1,98 @@
+<gconfschemafile>
+    <schemalist>
+        <schema>
+            <key>/schemas/apps/quizdrill/timer/use_timer</key>
+            <applyto>/apps/quizdrill/timer/use_timer</applyto>
+            <owner>quizdrill</owner>
+            <type>bool</type>
+            <default>1</default>
+            <locale name="C">
+                <short>Use timer</short>
+                <long>
+                    Whether or not the timer should be used. If it is used
+                    there will be a break after a given number of questions.
+                </long>
+            </locale>
+
+            <locale name="de">
+                <short>Stoppuhr benutzen</short>
+                <long>Ob die Stoppuhr verwendet werden soll. Wenn ja wird nach einer angegebenen Anzahl an Fragen zur Pause auffordern.</long>
+            </locale>
+        </schema>
+        <schema>
+            <key>/schemas/apps/quizdrill/timer/exam_length</key>
+            <applyto>/apps/quizdrill/timer/exam_length</applyto>
+            <owner>quizdrill</owner>
+            <type>int</type>
+            <default>15</default>
+            <locale name="C">
+                <short>Exam length</short>
+                <long>
+                    How many questions are asked into there is a break.
+                </long>
+            </locale>
+
+            <locale name="de">
+                <short>Prüfungslänge</short>
+                <long>Anzahl der gestellten Fragen bis eine Pause genommen wird.</long>
+            </locale>
+        </schema>
+        <schema>
+            <key>/schemas/apps/quizdrill/timer/break_length</key>
+            <applyto>/apps/quizdrill/timer/break_length</applyto>
+            <owner>quizdrill</owner>
+            <type>int</type>
+            <default>10</default>
+            <locale name="C">
+                <short>Break length in min</short>
+                <long>
+                    How long to wait (in minuets) after the exam is finished 
+                    before continuing the quiz.
+                </long>
+            </locale>
+
+            <locale name="de">
+                <short>Pausenlänge in min</short>
+                <long>Wielange (in minuten) nach Prüfungsende gewartet wird, bis das Testen fortgesetzt wird.</long>
+            </locale>
+        </schema>
+        <schema>
+            <key>/schemas/apps/quizdrill/timer/snooze_length</key>
+            <applyto>/apps/quizdrill/timer/snooze_length</applyto>
+            <owner>quizdrill</owner>
+            <type>int</type>
+            <default>5</default>
+            <locale name="C">
+                <short>Snooze length in min</short>
+                <long>
+                    How long to wait (in minuets) after the exam is interrupted 
+                    before continuing the quiz.
+                </long>
+            </locale>
+
+            <locale name="de">
+                <short>Schlummerzeit in min</short>
+                <long>Wielange (in minuten) nach einer Unterbrechung der Prüfung gewartet wird, bis das Testen fortgesetzt wird.</long>
+            </locale>
+        </schema>
+        <schema>
+            <key>/schemas/apps/quizdrill/default_quiz</key>
+            <applyto>/apps/quizdrill/default_quiz</applyto>
+            <owner>quizdrill</owner>
+            <type>string</type>
+            <default>/usr/share/quizdrill/quizzes/en-fr.drill</default>
+            <locale name="C">
+                <short>Startup quiz</short>
+                <long>
+                    Which quiz should be loaded on startup. This might be 
+                    changed on closing quizdrill.
+                </long>
+            </locale>
+
+            <locale name="de">
+                <short>Anfangsquiz</short>
+                <long>Welcher quiz beim starten benutzt werden soll. Dies ängert sich womöglich nach dem beenden von quizdrill.</long>
+            </locale>
+        </schema>
+    </schemalist>
+</gconfschemafile>
