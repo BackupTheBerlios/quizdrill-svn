@@ -172,15 +172,11 @@ class Quiz(object):
     def remove_quizzes(self, rm_quizzes):
         for quiz in rm_quizzes:
             self.quiz_pool.remove(quiz)
-        self._refit_multichoice_len()
-        if self.question in rm_quizzes:
-            self.new_question()
-        else:
-            for mc in self.multi_choices:
-                for rm in rm_quizzes:
-                    if rm == mc:
-                        self.new_question()
-                        return
+        for mc in self.multi_choices:
+            if mc in rm_quizzes:
+                self._refit_multichoice_len()
+                self.new_question()
+                return
 
     def _refit_multichoice_len(self):
         if len(self.quiz_pool) < self.DEFAULT_MULTICHOICE_LEN:
