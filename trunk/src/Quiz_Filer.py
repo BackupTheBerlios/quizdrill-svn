@@ -40,9 +40,6 @@ class Quiz_Data_Builder(object):
         self.quiz_list = []
         self.last_added_section = None
 
-    def dummy_data(self):
-        self.quiz_list = [["", ""]]
-
     def append_section(self, title):
         """
         Adds a new section to the treestore. The given "title" must be a either
