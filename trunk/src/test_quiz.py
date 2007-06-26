@@ -27,7 +27,7 @@ class Test_Quiz(unittest.TestCase):
     Unittest for the class Quiz.
     """
     CLASS_TO_TEST = Quiz
-    QUIZ_POOL = [ [ i, i*10 ] for i in range(10) ]
+    QUIZ_POOL = [ [ str(i), str(i*10) ] for i in range(10) ]
 
     def setUp(self):
         self.quiz = self.CLASS_TO_TEST(self.QUIZ_POOL[:])
@@ -86,7 +86,8 @@ class Test_Quiz(unittest.TestCase):
 
     def test_remove_quizzes_not_from_multiple_choices(self):
         """
-        Removing questions NOT in the list of multiple choices.
+        Removing questions NOT in the list of multiple choices shouldn't 
+        change multiple choice list.
         """
         self.mock_listener.expects(never()).question_changed()
         self.quiz = Quiz(self.QUIZ_POOL[:])
@@ -217,9 +218,10 @@ class Test_Weighted_Quiz_with_scores(Test_Weighted_Quiz):
         20..29: Has score; isn't selected.
         30..39: Has no score; isn't selected.
     """
-    NOT_SELECTED_SCORED_QUIZZES = [ [i, i*10] for i in range(20, 30) ]
-    NOT_SELECTED_NOT_SCORED_QUIZZES = [ [i, i*10] for i in range(30, 40) ]
-    QUIZ_POOL = [ [ i, i*10 ] for i in range(20) ]
+    NOT_SELECTED_SCORED_QUIZZES = [ [str(i), str(i*10)] for i in range(20, 30) ]
+    NOT_SELECTED_NOT_SCORED_QUIZZES = [ [str(i), str(i*10)] 
+            for i in range(30, 40) ]
+    QUIZ_POOL = [ [ str(i), str(i*10) ] for i in range(20) ]
 
     def setUp(self):
         self.SCORE = {}
