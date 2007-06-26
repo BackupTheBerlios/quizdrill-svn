@@ -113,7 +113,14 @@ class Test_Quiz(unittest.TestCase):
         assert self.quiz.question in multi_choices, \
                 "Question %s not in multiple choice options %s." % \
                 (self.quiz.question, multi_choices)
-        assert 1, "Test: No double answers in multi_choices not written yet."
+
+    def test__gen_multi_choices_has_no_answers_double(self):
+        """Test that no answers are double in multi_choices."""
+        multi_choices = self.quiz._gen_multi_choices()
+        for i, choice in enumerate(multi_choices):
+            assert not choice in multi_choices[i+1:], \
+                    '"%s" is double in multi_choices ("%s").' % \
+                    (choice, multi_choices)
 
     def test__refit_multichoice_len(self):
         """
