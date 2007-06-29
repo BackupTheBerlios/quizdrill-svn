@@ -1,4 +1,4 @@
-src/gtk-ui.py
+src/gtkui.py
 src/quiz.py
 src/SaDrill.py
 src/builder.py
