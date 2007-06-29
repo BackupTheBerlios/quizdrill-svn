@@ -18,4 +18,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+import unittest
+import test_quiz
+
+
 __all__=['gtk-ui', 'quiz', 'Quiz_Filer', 'SaDrill', 'builder', 'wiki_builder']
+
+def testsuite():
+    suite = unittest.TestSuite()
+    for test_module in [ test_quiz ]:
+        suite.addTest(test_module.testsuite())
+    return suite
+
+if __name__ == '__main__':
+    unittest.TextTestRunner().run(testsuite())

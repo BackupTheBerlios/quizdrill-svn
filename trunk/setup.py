@@ -203,6 +203,14 @@ def make_setup():
             # A much higher minimum PyGTK version is needed than written.
             #install_requires=['PyGTK >= 2.0'],
             install_requires=[ 'setuptools' ],
+            tests_require=[ 'pmock' ],
+            entry_points={
+                'console_scripts': [ 'quiz_builder = quizdrill.builder:build'],
+                'gui_scripts': [ 'quizdrill = quizdrill.gtkui:main' ],
+                'quiz_builder_source_plugins': [ 'WikipediaArticle = '
+                    'quizdrill.wiki_builder:Wikipedia_Article_Handler' ]
+                },
+            test_suite = "src.testsuite",
             license='GNU General Public License',
             platforms=['any'],
             # Descriptions should be kept in sync with debian/control,
@@ -236,12 +244,6 @@ and even Semantic MediaWikis).""",
                 (os.path.join(doc_dir, 'html-de'), glob('doc/html-de/*.html')),
                 (os.path.join(doc_dir, 'html-en'), glob('doc/html-en/*.html'))
                 ],
-            entry_points={
-                'console_scripts': [ 'quiz_builder = quizdrill.builder:build'],
-                'gui_scripts': [ 'quizdrill = quizdrill.gtkui:main' ],
-                'quiz_builder_source_plugins': [ 'WikipediaArticle = '
-                    'quizdrill.wiki_builder:Wikipedia_Article_Handler' ]
-                },
             classifiers=[
                 'Development Status :: 4 - Beta',
                 'Environment :: X11 Applications :: Gnome',
@@ -259,11 +261,11 @@ and even Semantic MediaWikis).""",
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'gettext-mo':
-        chdir(dirname(__file__))    # as not packaged __file__ is fine
+        chdir(dirname(__file__))    # as not packaged __file__ should be fine
         make_mo_gettext()
         make_translated_gettext_files()
     elif len(sys.argv) > 1 and sys.argv[1] == 'update_doc':
-        chdir(dirname(__file__))    # as not packaged __file__ is file
+        chdir(dirname(__file__))    # as not packaged __file__ should be file
         update_doc_de()
         update_doc_en()
     else:

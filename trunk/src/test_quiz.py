@@ -257,8 +257,9 @@ class Test_Queued_Quiz(Test_Weighted_Quiz_with_scores):
 
 def testsuite():
     suite = unittest.TestSuite()
-    suite.addTests([ Test_Quiz, Test_Weighted_Quiz, 
-        Test_Weighted_Quiz_with_scores, Test_Queued_Quiz ])
+    for test in [ Test_Quiz, Test_Weighted_Quiz, 
+            Test_Weighted_Quiz_with_scores, Test_Queued_Quiz ]:
+        suite.addTest(unittest.makeSuite(test))
     return suite
 
 
