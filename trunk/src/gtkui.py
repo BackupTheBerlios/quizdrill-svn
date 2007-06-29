@@ -342,6 +342,10 @@ class Gui(object):
         else:
             self.statusbar1.pop(self.statusbar_contextid["last_answer"])
     
+    def on_simple_question_hint_button_clicked(self, widget, data=None):
+        self.simple_answer_entry.set_text(
+                self.quiz.hint(self.simple_answer_entry.get_text().strip()))
+
     def on_flash_question_button_clicked(self, widget, date=None):
         self.flash_answer_label.set_text(
                 self.quiz.question[self.quiz.answer_to])

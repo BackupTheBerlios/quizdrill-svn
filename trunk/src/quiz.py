@@ -19,6 +19,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 import random
+import re
+from difflib import SequenceMatcher
 import gettext
 _ = gettext.gettext
 
@@ -163,6 +165,9 @@ class Quiz(object):
             self.notify('direction_changed')
 
     def add_quizzes(self, new_quizzes):
+        """
+        Add a list of new quizzes.
+        """
         pool_was_small = len(self.quiz_pool) < self.DEFAULT_MULTICHOICE_LEN
         self.quiz_pool.extend(new_quizzes)
         self._refit_multichoice_len()
@@ -183,6 +188,45 @@ class Quiz(object):
             self.multichoice_len = len(self.quiz_pool)
         else:
             self.multichoice_len = self.DEFAULT_MULTICHOICE_LEN
+
+    def hint(self, previous_hint=None):
+        """
+        Gives a hint to the current question. If previous_hint is given it will
+        use difflib to take over the "correct" parts, fill the rest with 
+        underscores and fill in two additional letters. Otherwise all letters
+        will be replaces with underscores.
+        """
+        self.tries += 1
+        correct_answer = self.question[self.answer_to]
+        if previous_hint == None or previous_hint == '':
+            return re.sub('\w', '_', correct_answer)
+        else:
+            hint_string = ''
+            s = SequenceMatcher('', previous_hint, correct_answer)
+            for opcode in s.get_opcodes():
+                if opcode[0] == 'insert' or opcode[0] == 'replace':
+                    hint_string += re.sub('\w', '_', 
+                            correct_answer[opcode[3]:opcode[4]])
+                elif opcode[0] == 'equal':
+                    hint_string += previous_hint[opcode[1]:opcode[2]]
+            num_of_underscores = hint_string.count('_')
+            if hint_string == previous_hint:
+                if num_of_underscores <= 2:
+                    return correct_answer
+                else:
+                    index_of_underscores = []
+                    for i, char in enumerate(hint_string):
+                        if char == '_':
+                            index_of_underscores.append(i)
+                    L = random.sample(index_of_underscores, 2)
+                    L.sort()
+                    i, j = L
+                    return hint_string[:i] + correct_answer[i] + \
+                            hint_string[i+1:j] + correct_answer[j] + \
+                            hint_string[j+1:]
+            else:
+                return hint_string
+
 
 class Weighted_Quiz(Quiz):
     """

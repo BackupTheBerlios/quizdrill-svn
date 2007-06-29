@@ -1,3 +1,6 @@
+* New hint button.
+* Fixes bug which prevented quiz from loading if no score file existed.
+
 0.3.0: 2007-06-18
 * Code refactoring and cleanups.
 * New plugin-system.
