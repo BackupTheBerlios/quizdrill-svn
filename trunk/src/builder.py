@@ -95,6 +95,8 @@ class Abstract_Drill_Handler(object):
     """
     Plugins for new sources for builder.py should subclass this.
     """
+    ONLY_ONE_TAG_ALLOWED_TEXT = _('Warning: Only one tag $%s allowed.')
+
     def __init__(self, file_out, collected_head_tags, collected_build_tags, 
             tag_dict={}):
         self.file_out = file_out
@@ -130,11 +132,11 @@ class Abstract_Drill_Handler(object):
             if tag in self.tag_dict:
                 self.tag_dict[tag](word_pair)
             else:
-                print _('Warning: $%s was not processed') % tag
+                print _('Warning: $%s was not processed.') % tag
 
     def on_tag_build_to(self, word_pair_list):
         assert len(word_pair_list) == 1, \
-                _('Warning: Only one tag $build_to allowed.')
+                ONLY_ONE_TAG_ALLOWED_TEXT % 'build_to allowed'
         word_pair = word_pair_list[0]
         assert len(word_pair) == 3, \
                 _('Error: Tag $build_to does not have exactly two "=".')
@@ -144,7 +146,7 @@ class Abstract_Drill_Handler(object):
 
     def on_tag_filter(self, word_pair_list):
         assert len(word_pair_list) == 1, \
-                _('Warning: Only one tag $filter allowed.')
+                ONLY_ONE_TAG_ALLOWED_TEXT % 'filter'
         word_pair = word_pair_list[0]
         while len(word_pair) > 3: 
             word_pair.append(None)
@@ -154,7 +156,7 @@ class Abstract_Drill_Handler(object):
 
     def on_tag_encoding(self, word_pair_list):
         assert len(word_pair_list) == 1, \
-                _('Warning: Only one tag $encoding allowed.')
+                ONLY_ONE_TAG_ALLOWED_TEXT % 'encoding'
         word_pair = word_pair_list[0]
         self.encoding = word_pair[0]
 
