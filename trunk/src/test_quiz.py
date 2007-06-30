@@ -134,6 +134,14 @@ class Test_Quiz(unittest.TestCase):
                 'Final hint ("%s") is not the solution ("%s").' % \
                 (next_hint, solution)
 
+    def test_hint_with_double_lettres(self):
+        """
+        Run previous test (test_hint_adds_two_lettres_each_time) with '0000'
+        as double letters make comparison of solution and hint non-trivial.
+        """
+        self.quiz.question = ['0000', '0000']
+        self.test_hint_adds_two_lettres_each_time()
+
     def test_invalid_previous_hint(self):
         """
         Test that a string which wasn't a hint still gives a valid hint.

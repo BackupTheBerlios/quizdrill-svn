@@ -196,35 +196,43 @@ class Quiz(object):
         underscores and fill in two additional letters. Otherwise all letters
         will be replaces with underscores.
         """
+        def differ_only_in_underscores(first_text, second_text):
+            if len(first_text) != len(second_text):
+                return False
+            else:
+                for first_char, second_char in zip(first_text, second_text):
+                    if first_char != second_char and first_char != '_':
+                        return False
+                return True
+            
         self.tries += 1
         correct_answer = self.question[self.answer_to]
         if previous_hint == None or previous_hint == '':
             return re.sub('\w', '_', correct_answer)
         else:
-            hint_string = ''
-            s = SequenceMatcher('', previous_hint, correct_answer)
-            for opcode in s.get_opcodes():
-                if opcode[0] == 'insert' or opcode[0] == 'replace':
-                    hint_string += re.sub('\w', '_', 
-                            correct_answer[opcode[3]:opcode[4]])
-                elif opcode[0] == 'equal':
-                    hint_string += previous_hint[opcode[1]:opcode[2]]
-            num_of_underscores = hint_string.count('_')
-            if hint_string == previous_hint:
-                if num_of_underscores <= 2:
+            if differ_only_in_underscores(previous_hint, correct_answer):
+                if previous_hint.count('_') <= 2:
                     return correct_answer
                 else:
                     index_of_underscores = []
-                    for i, char in enumerate(hint_string):
+                    for i, char in enumerate(previous_hint):
                         if char == '_':
                             index_of_underscores.append(i)
                     L = random.sample(index_of_underscores, 2)
                     L.sort()
                     i, j = L
-                    return hint_string[:i] + correct_answer[i] + \
-                            hint_string[i+1:j] + correct_answer[j] + \
-                            hint_string[j+1:]
+                    return previous_hint[:i] + correct_answer[i] + \
+                            previous_hint[i+1:j] + correct_answer[j] + \
+                            previous_hint[j+1:]
             else:
+                hint_string = ''
+                s = SequenceMatcher('', previous_hint, correct_answer)
+                for opcode in s.get_opcodes():
+                    if opcode[0] == 'insert' or opcode[0] == 'replace':
+                        hint_string += re.sub('\w', '_', 
+                                correct_answer[opcode[3]:opcode[4]])
+                    elif opcode[0] == 'equal':
+                        hint_string += correct_answer[opcode[3]:opcode[4]]
                 return hint_string
 
 
