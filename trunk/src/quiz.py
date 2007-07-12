@@ -24,31 +24,15 @@ from difflib import SequenceMatcher
 import gettext
 _ = gettext.gettext
 
-class Quiz(object):
-    """
-    A simple random-selecting vocabulary test, with simple quiz and 
-    multiple choice
-    """
-    DEFAULT_MULTICHOICE_LEN = 7
-
-    def __init__(self, quiz_pool, ask_from=0, exam_length=15):
-        self.listoners = {"break_time" : [], "question_changed" : [],
-                "direction_changed" : [] }
-        self.quiz_pool = []
-        self.answered = 0
-        self.correct_answered = 0
-        self.exam_length = exam_length
-        self.session_length = exam_length
-        self.ask_from = ask_from
-        self.answer_to = 1 - ask_from
-        self.add_quizzes(quiz_pool)
+class Notifier(object):
+    def __init__(self, keys):
+        self.listoners = {}
+        for new_key in keys:
+            self.listoners[new_key] = []
 
     def connect(self, key, func):
         """ 
         Register a method func to be called when an event (key) happens.
-        Possible keys are:
-            'break_time'
-            'question_changed'
         """
         self.listoners[key].append(func)
 
@@ -67,6 +51,30 @@ class Quiz(object):
         """
         for func in self.listoners[key]:
             func()
+
+
+class Quiz(object):
+    """
+    A simple random-selecting vocabulary test, with simple quiz and 
+    multiple choice
+    """
+    DEFAULT_MULTICHOICE_LEN = 7
+
+    def __init__(self, quiz_pool, ask_from=0, exam_length=15):
+        self.notifier = Notifier(["break_time", "question_changed", 
+            "direction_changed"])
+        self.notify = self.notifier.notify
+        self.connect = self.notifier.connect
+        self.disconnect = self.notifier.disconnect
+        #
+        self.quiz_pool = []
+        self.answered = 0
+        self.correct_answered = 0
+        self.exam_length = exam_length
+        self.session_length = exam_length
+        self.ask_from = ask_from
+        self.answer_to = 1 - ask_from
+        self.add_quizzes(quiz_pool)
 
     def get_answer_to_question(self, question):
         """
