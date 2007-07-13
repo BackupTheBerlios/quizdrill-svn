@@ -25,6 +25,10 @@ import gettext
 _ = gettext.gettext
 
 class Notifier(object):
+    """
+    Small class to inform registered objects to different keys by calling the 
+    given method. Should be replaced by something more standard in the future.
+    """
     def __init__(self, keys):
         self.listoners = {}
         for new_key in keys:
