@@ -182,13 +182,12 @@ class Gui(object):
             quiz_filer = random.select(self.quiz_filer_list)
         self.quiz_filer = quiz_filer
         self.quiz = quiz_filer.quiz
-        self.update_gui()
         # show and hide notebookpanels #
-        if not quiz_filer.quiz_type in self.SHOW_TABS:
+        if quiz_filer.quiz_type in self.SHOW_TABS:
+            quiz_type = self.quiz_filer.quiz_type
+        else:
             print _('Warning: unknown quiz type "%s".') % quiz_filer.quiz_type
             quiz_type = "all"
-        else:
-            quiz_type = self.quiz_filer.quiz_type
         for tab, visi in zip(self.main_notbook_tabs.itervalues(),
                 self.SHOW_TABS[quiz_type]):
             for widget in tab:   # tab is tab-label + tab-content
@@ -230,6 +229,7 @@ class Gui(object):
         # connect listeners #
         quiz_filer.quiz.connect('question_changed', self.update_gui)
         quiz_filer.quiz.connect('break_time', self.start_relax_time)
+        self.update_gui()
 
     # Timer #
 
@@ -359,6 +359,9 @@ class Gui(object):
 
 
 class Gui_Statistics(object):
+    """
+    The statistics window.
+    """
     GLADE_FILE = resource_filename(__name__, "data/quizdrill.glade")
 
     def __init__(self, quiz_filer):
