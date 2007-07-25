@@ -19,7 +19,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 from SaDrill import SaDrillError
-from quiz import Weighted_Quiz
+from quiz import Weighted_Quiz, Notifier
 from Quiz_Filer import Quiz_Filer, Quiz_Loader
 
 import pygtk
@@ -28,6 +28,12 @@ import gobject, gtk, gtk.glade
 import random
 import os, os.path
 from pkg_resources import resource_filename
+try:
+    import gconf
+    HAS_GCONF = True
+except:
+    HAS_GCONF = False
+
 # i18n #
 import locale
 import gettext
@@ -47,17 +53,19 @@ class Gui(object):
             "questionnaire" : [ True, True, True ],
             "flashcard" : [ False, False, True ],
             "all" : [ True, True, True ] }
-    break_length = 900000    # 900,000 ms: 15min
-    snooze_length = 300000   # 300,000 ms:  5min
 
     def __init__(self):
-        default_quiz = 'deu-fra.drill'
         self.timer_id = 0
         self.quiz_filer_list = []
+        # gconf #
+        self.gconf_watcher = Gconf_Prefs()
+        quiz_file_path = self.gconf_watcher.gconf_client.get_string(
+                self.gconf_watcher.DEFAULT_QUIZ_KEY)
         # widgets #
         xml = gtk.glade.XML(self.GLADE_FILE, "main_window", APP)
         gw = xml.get_widget
         self.main_window = gw("main_window")
+        self.edit_menuitem = gw("edit_menuitem")
         self.main_notbook_tabs = {
                 "multi"  : [ gw("multi_tab_label"), gw("multi_tab_vbox") ], 
                 "simple" : [ gw("simple_tab_label"), gw("simple_tab_vbox") ], 
@@ -83,54 +91,9 @@ class Gui(object):
         sb = self.statusbar1 = gw("statusbar1")
         self.statusbar_contextid = { "last_answer" : 
                 sb.get_context_id( "The answer to the last asked question." ) }
-        # gconf #
-        #try:
-        #    import gconf
-        #else:
-        #    self._init_gconf()
-        # start quiz #
-        ### Find where the default quiz is ###
-        for quiz_file in [ os.path.expanduser('~/.quizdrill/' + default_quiz),
-                resource_filename(__name__, '../quizzes/'), 
-                resource_filename(__name__, 
-                    '../share/quizdrill/' + default_quiz),
-                resource_filename(__name__, '../quizdrill/' + default_quiz),
-                '/usr/share/quizdrill/', '/usr/locale/share/quizdrill/' ]:
-            if os.path.exists(quiz_file + default_quiz):
-                quiz_file_path = quiz_file + default_quiz
-                break
-        else:
-            quiz_file_path = None
-        try:
-            self.quiz_filer_list.append(
-                    Quiz_Loader(quiz_file_path).read_quiz_file())
-        except (IOError, SaDrillError):
-            self.quiz_filer_list.append(Quiz_Filer())
-        self.switch_quiz(self.quiz_filer_list[0])
         # connect signals #
         xml.signal_autoconnect(self)
-
-    def _init_gconf(self):
-        """ 
-        Set configoptions from gconf.
-        
-        Note: Very experimenal; Needs additional errorhandling
-        """
-        USE_TIMER_KEY = '/apps/quizdrill/timer/use_timer'
-        BREAK_LENGTH_KEY = '/apps/quizdrill/timer/break_length'
-        SNOOZE_LENGTH_KEY = '/apps/quizdrill/timer/snooze_length'
-        DEFAULT_QUIZ_KEY = '/apps/quizdrill/default_quiz'
-        #
-        client = self.gconf_client = gconf.client_get_default()
-        #schema = 
-        self.use_timer = client.get_bool(USE_TIMER_KEY)
-        self.exam_length = client.get_int(EXAM_LENGTH_KEY)
-        self.break_length = client.get_int(BREAK_LENGTH_KEY)
-        self.snooze_length = client.get_int(SNOOZE_LENGTH_KEY)
-        quiz_file_path = client.get_string(DEFAULT_QUIZ_KEY)
-        # start quiz #
-        self.quiz_filer_list.append(Quiz_Filer(quiz_file_path))
-        self.switch_quiz(self.quiz_filer_list[0])
+        self.load_quiz(quiz_file_path)
 
     def update_gui(self):
         """
@@ -239,13 +202,21 @@ class Gui(object):
 
         Note: There is a race condition. However this should be harmless
         """
+        def ms2min(ms):
+            """
+            Convert milliseconds to minutes.
+            """
+            return ms * 60000
+
+        if not self.gconf_watcher.use_timer:
+            return
         if break_length == None:
-            break_length = self.break_length
+            break_length = self.gconf_watcher.break_length
         if self.timer_id:
             gobject.source_remove(self.timer_id)
         if minimize:
             self.main_window.iconify()
-        self.timer_id = gobject.timeout_add(break_length, 
+        self.timer_id = gobject.timeout_add(ms2min(break_length), 
                 self.on_end_relax_time)
 
     def on_end_relax_time(self):
@@ -259,13 +230,14 @@ class Gui(object):
     def on_quit(self, widget):
         for filer in self.quiz_filer_list:
             filer.write_score_file()
+        self.gconf_watcher.save_quiz_path(self.quiz_filer.file_path)
         gtk.main_quit()
 
     def on_main_window_window_state_event(self, widget, event):
         """ Snooze when minimized """
         if 'iconified' in event.new_window_state.value_nicks and \
                 not self.timer_id:
-            self.start_relax_time(self.snooze_length, False)
+            self.start_relax_time(self.gconf_watcher.snooze_length, False)
         elif not 'iconified' in event.new_window_state.value_nicks \
                 and self.timer_id:
             gobject.source_remove(self.timer_id)
@@ -275,30 +247,38 @@ class Gui(object):
         gtk.glade.XML(self.GLADE_FILE, "aboutdialog1", APP)
 
     def on_preferences1_activate(self, widget):
-        gtk.glade.XML(self.GLADE_FILE, "pref_window", APP)
+        Gui_Preferences()
 
     def on_open1_activate(self, widget):
         "Creates an Open-File-Dialog, which selects a new Quiz"
         chooser = gtk.FileChooserDialog("Open Quiz", None, 
                 gtk.FILE_CHOOSER_ACTION_OPEN, (gtk.STOCK_CANCEL, 
                 gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
-        chooser.set_current_folder(
-                os.path.abspath(os.path.dirname(
-                    self.quiz_filer.file_path)))
+        try:
+            last_quiz_dir_path = os.path.abspath(os.path.dirname(
+                self.quiz_filer.file_path))
+        except AttributeError:
+            pass
+        else:
+            chooser.set_current_folder(last_quiz_dir_path)
         response = chooser.run()
         chooser.hide()
         if response == gtk.RESPONSE_OK:
             try:
-                self.quiz_filer_list = [
-                        Quiz_Loader(chooser.get_filename()).read_quiz_file() ]
+                self.load_quiz(chooser.get_filename())
             except (IOError, SaDrillError), e:
                 message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, 
                         buttons=gtk.BUTTONS_OK, message_format=e.str)
                 message.run()
                 message.destroy()
-            else:
-                self.switch_quiz(self.quiz_filer_list[0])
         chooser.destroy()
+
+    def load_quiz(self, quiz_path):
+        """
+        Load the given quiz. 
+        """
+        self.quiz_filer_list = [ Quiz_Loader(quiz_path).read_quiz_file() ]
+        self.switch_quiz(self.quiz_filer_list[0])
 
     def on_main_notebook_switch_page(self, widget, gpointer, new_tab):
         if new_tab == 2:  # "Simple Quiz"-tab
@@ -358,6 +338,111 @@ class Gui(object):
         self.quiz.next()
 
 
+class Gconf_Prefs(object):
+    """
+    Processes loading, saving and watching of gconf-keys. Gives nice default
+    values if gconf is not availible.
+    """
+    DIR_KEY = '/apps/quizdrill/timer'
+    USE_TIMER_KEY = DIR_KEY + '/use_timer'
+    EXAM_LENGTH_KEY = DIR_KEY + '/exam_length'
+    BREAK_LENGTH_KEY = DIR_KEY + '/break_length'
+    SNOOZE_LENGTH_KEY = DIR_KEY + '/snooze_length'
+    DEFAULT_QUIZ_KEY = DIR_KEY + '/default_quiz'
+    #
+    GCONF_KEYS = [ USE_TIMER_KEY, EXAM_LENGTH_KEY, BREAK_LENGTH_KEY, 
+            SNOOZE_LENGTH_KEY, DEFAULT_QUIZ_KEY ]
+    NOTIFIER_KEYS = [ 'use_timer', 'exam_length', 'break_length', 
+            'snooze_length', 'default_quiz' ]
+
+    def __init__(self):
+        # Notifier #
+        self.notifier = Notifier(self.NOTIFIER_KEYS)
+        self.notify = self.notifier.notify
+        self.connect = self.notifier.connect
+        self.disconnect = self.notifier.disconnect
+        #
+        if HAS_GCONF:
+            self.gconf_client = gconf.client_get_default()
+            self.quiz_file_path = \
+                    self.gconf_client.get_string(self.DEFAULT_QUIZ_KEY)
+            self.use_timer = self.gconf_client.get_bool(self.USE_TIMER_KEY)
+            self.exam_length = self.gconf_client.get_int(self.EXAM_LENGTH_KEY)
+            self.break_length = \
+                    self.gconf_client.get_int(self.BREAK_LENGTH_KEY)
+            self.snooze_length = \
+                    self.gconf_client.get_int(self.SNOOZE_LENGTH_KEY)
+            self.gconf_client.add_dir(self.DIR_KEY, gconf.CLIENT_PRELOAD_NONE)
+            for gconf_key, notifier_key in zip(self.GCONF_KEYS, 
+                    self.NOTIFIER_KEYS):
+                self._add_listener(gconf_key, 
+                        notifier_key, self.value_is_in_range)
+            for notifier_key in self.NOTIFIER_KEYS:
+                self.connect(notifier_key, self.on_key_changed)
+        else:
+            self.edit_menuitem.set_visibility(False)
+            # Default values #
+            self.use_timer = True
+            self.exam_length = 20
+            self.break_length = 15
+            self.snooze_length = 5
+            self.quiz_file_path = resource_filename(__name__, 
+                    '../quizzes/deu-fra.drill')
+        if not os.path.exists(self.quiz_file_path):
+            self.quiz_file_path = None
+
+    def save_quiz_path(self, path):
+        """
+        Saves the given path to gconf.
+        """
+        try:
+            self.gconf_client.set_string(self.DEFAULT_QUIZ_KEY, path)
+            return True
+        except:
+            return False
+
+    def _add_listener(self, gconf_key, notifier_key, eval_func=None):
+        """
+        Connects the gconf-notify with the notifier. For information about 
+        eval_func see _report_gconf_changed.
+        """
+        self.gconf_client.notify_add(gconf_key, self._report_gconf_changed, 
+                [gconf_key, notifier_key, eval_func])
+
+    def _report_gconf_changed(self, client, gconf_id, gconf_entry, 
+            keys, **kwargs):
+        """
+        Reports to the notifier, what a gconf-key changed to if it's new 
+        value is feasible. Keys should be a tuple of the gconf_key, 
+        notifier_key and a function which evaluates if the new value is 
+        feasible (returning True of False, given gconf_key and new_value).
+        """
+        gconf_key, notifier_key, eval_func = keys
+        new_value = client.get_value(gconf_key)
+        if eval_func == None or eval_func(gconf_key, new_value):
+            self.notify(notifier_key, [notifier_key, new_value])
+
+    def value_is_in_range(self, gconf_key, new_value):
+        range_dict = {
+                self.USE_TIMER_KEY: [ False, None ],
+                self.EXAM_LENGTH_KEY: [ 5, 100 ],
+                self.BREAK_LENGTH_KEY: [ 0, 600 ],
+                self.SNOOZE_LENGTH_KEY: [ 0, 300 ],
+                self.DEFAULT_QUIZ_KEY: [ '', None ] 
+                }
+        min_value, max_value = range_dict[gconf_key]
+        if type(min_value) == type(new_value) and (max_value == None or \
+                min_value <= new_value <= max_value):
+            return True
+        else:
+            return False
+
+    def on_key_changed(self, message):
+        """Update to the new value."""
+        notifier_key, new_value = message
+        self.__setattr__(notifier_key, new_value)
+
+
 class Gui_Statistics(object):
     """
     The statistics window.
@@ -379,6 +464,75 @@ class Gui_Statistics(object):
         for score, quiz in quiz_filer.quiz.get_worst_scores(5):
             treestore.append(None, quiz)
         treeview.set_model(treestore)
+
+class Gui_Preferences(object):
+    GLADE_FILE = resource_filename(__name__, "data/quizdrill.glade")
+    DIR_KEY = '/apps/quizdrill/timer'
+    USE_TIMER_KEY = DIR_KEY + '/use_timer'
+    EXAM_LENGTH_KEY = DIR_KEY + '/exam_length'
+    BREAK_LENGTH_KEY = DIR_KEY + '/break_length'
+    SNOOZE_LENGTH_KEY = DIR_KEY + '/snooze_length'
+    DEFAULT_QUIZ_KEY = DIR_KEY + '/default_quiz'
+
+    def __init__(self):
+        xml = gtk.glade.XML(self.GLADE_FILE, "pref_window", APP)
+        gw = xml.get_widget
+        self.window = gw("pref_window")
+        self.use_timer_checkbutton = gw("use_timer_checkbutton")
+        self.timer_subprefs_table = gw("timer_subprefs_table")
+        self.exam_length_spinbutton = gw("exam_length_spinbutton")
+        self.break_length_spinbutton = gw("break_length_spinbutton")
+        self.snooze_length_spinbutton = gw("snooze_length_spinbutton")
+        xml.signal_autoconnect(self)
+        # gconf #
+        self.gconf_client = gconf.client_get_default()
+        self.set_use_timer(self.gconf_client.get_bool(self.USE_TIMER_KEY))
+        for widget, key in [
+                [ self.exam_length_spinbutton, self.EXAM_LENGTH_KEY ], 
+                [ self.break_length_spinbutton, self.BREAK_LENGTH_KEY ],
+                [ self.snooze_length_spinbutton, self.SNOOZE_LENGTH_KEY ]]:
+            widget.set_value(self.gconf_client.get_int(key))
+        self.gconf_client.add_dir(self.DIR_KEY, gconf.CLIENT_PRELOAD_NONE)
+        self.gconf_client.notify_add(self.USE_TIMER_KEY, 
+                self.use_timer_listener)
+        for widget, key in [
+                [ self.exam_length_spinbutton, self.EXAM_LENGTH_KEY ],
+                [ self.break_length_spinbutton, self.BREAK_LENGTH_KEY ],
+                [ self.snooze_length_spinbutton, self.SNOOZE_LENGTH_KEY]]:
+            self.gconf_client.notify_add(key, self.timer_lengths_listener, 
+                    [ widget, key ])
+
+    def on_use_timer_checkbutton_toggled(self, widget):
+        is_active = widget.get_active()
+        self.timer_subprefs_table.set_sensitive(is_active)
+        self.gconf_client.set_bool(self.USE_TIMER_KEY, is_active)
+
+    def set_use_timer(self, value):
+        self.timer_subprefs_table.set_sensitive(value)
+        self.use_timer_checkbutton.set_active(value)
+
+    def use_timer_listener(self, client, *args, **kwargs):
+        self.set_use_timer(client.get_bool(self.USE_TIMER_KEY))
+
+    def timer_lengths_listener(self, client, gconf_id, gconf_entry, 
+            widget_key_pair, **kwargs):
+        widget, key = widget_key_pair
+        widget.set_value(client.get_int(key))
+
+    def on_exam_length_spinbutton_value_changed(self, widget):
+        self.gconf_client.set_int(self.EXAM_LENGTH_KEY, 
+                widget.get_value_as_int())
+
+    def on_break_length_spinbutton_value_changed(self, widget):
+        self.gconf_client.set_int(self.BREAK_LENGTH_KEY, 
+                widget.get_value_as_int())
+
+    def on_snooze_length_spinbutton_value_changed(self, widget):
+        self.gconf_client.set_int(self.SNOOZE_LENGTH_KEY, 
+                widget.get_value_as_int())
+
+    def on_close_preferences_button_clicked(self, widget):
+        self.window.destroy()
 
 
 def main():
