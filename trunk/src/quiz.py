@@ -48,13 +48,17 @@ class Notifier(object):
         if func in self.listoners[key]:
             self.listoners[key].remove(func)
 
-    def notify(self, key):
+    def notify(self, key, message=None):
         """ 
         Call the registered functions for a given key. See connect for
         more information.
         """
-        for func in self.listoners[key]:
-            func()
+        if message == None:
+            for func in self.listoners[key]:
+                func()
+        else:
+            for func in self.listoners[key]:
+                func(message)
 
 
 class Quiz(object):
