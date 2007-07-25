@@ -42,7 +42,7 @@
             <applyto>/apps/quizdrill/timer/break_length</applyto>
             <owner>quizdrill</owner>
             <type>int</type>
-            <default>10</default>
+            <default>15</default>
             <locale name="C">
                 <short>Break length in min</short>
                 <long>

@@ -801,7 +801,7 @@
                           <widget class="GtkSpinButton" id="snooze_length_spinbutton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="adjustment">5 0 120 1 10 10</property>
+                            <property name="adjustment">5 0 300 1 10 10</property>
                             <property name="climb_rate">1</property>
                             <accessibility>
                               <atkrelation target="label5" type="labelled-by"/>
