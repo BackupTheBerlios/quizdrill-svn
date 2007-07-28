@@ -1,4 +1,5 @@
-* moved saved scores from "~/.quizdrill/scores" to "~/.gnome2/quizdrill".
+* Moved saved scores from "~/.quizdrill/scores" to "~/.gnome2/quizdrill".
+* Added gconf configuration support.
 * New hint button.
 * Fixes bug which prevented quiz from loading if no score file existed.
 
