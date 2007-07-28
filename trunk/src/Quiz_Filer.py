@@ -190,7 +190,7 @@ class Score_Filer(object):
     """
     def __init__(self, quiz_file_path, score_type="", score_path=None):
         if score_path == None:
-            self.SCORE_PATH = os.path.expanduser("~/.quizdrill/scores/")
+            self.SCORE_PATH = os.path.expanduser("~/.gnome2/quizdrill/")
         else:
             self.SCORE_PATH = score_path
         self.score_type = score_type

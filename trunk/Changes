@@ -1,3 +1,4 @@
+* moved saved scores from "~/.quizdrill/scores" to "~/.gnome2/quizdrill".
 * New hint button.
 * Fixes bug which prevented quiz from loading if no score file existed.
 
