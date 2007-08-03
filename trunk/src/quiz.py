@@ -212,29 +212,31 @@ class Quiz(object):
         underscores and fill in two additional letters. Otherwise all letters
         will be replaces with underscores.
         """
-        def differ_only_in_underscores(first_text, second_text):
+        place_holder = '-'
+        def differ_only_in_place_holder(first_text, second_text):
             if len(first_text) != len(second_text):
                 return False
             else:
                 for first_char, second_char in zip(first_text, second_text):
-                    if first_char != second_char and first_char != '_':
+                    if first_char != second_char and \
+                            first_char != place_holder:
                         return False
                 return True
             
         self.tries += 1
         correct_answer = self.question[self.answer_to]
         if previous_hint == None or previous_hint == '':
-            return re.sub('\w', '_', correct_answer)
+            return re.sub('\w', place_holder, correct_answer)
         else:
-            if differ_only_in_underscores(previous_hint, correct_answer):
-                if previous_hint.count('_') <= 2:
+            if differ_only_in_place_holder(previous_hint, correct_answer):
+                if previous_hint.count(place_holder) <= 2:
                     return correct_answer
                 else:
-                    index_of_underscores = []
+                    index_of_place_holder = []
                     for i, char in enumerate(previous_hint):
-                        if char == '_':
-                            index_of_underscores.append(i)
-                    L = random.sample(index_of_underscores, 2)
+                        if char == place_holder:
+                            index_of_place_holder.append(i)
+                    L = random.sample(index_of_place_holder, 2)
                     L.sort()
                     i, j = L
                     return previous_hint[:i] + correct_answer[i] + \
@@ -245,7 +247,7 @@ class Quiz(object):
                 s = SequenceMatcher('', previous_hint, correct_answer)
                 for opcode in s.get_opcodes():
                     if opcode[0] == 'insert' or opcode[0] == 'replace':
-                        hint_string += re.sub('\w', '_', 
+                        hint_string += re.sub('\w', place_holder,
                                 correct_answer[opcode[3]:opcode[4]])
                     elif opcode[0] == 'equal':
                         hint_string += correct_answer[opcode[3]:opcode[4]]
