@@ -288,6 +288,7 @@ class Gui(object):
 
     def on_subquiz_combobox_changed(self, widget):
         new_status = widget.get_active()
+        self.main_window.set_title(_('Quiz') + ': ' + widget.get_active_text())
         self.quiz.set_question_direction(new_status)
         if len(self.quiz_filer.question_topic) > 1:
             for label in self.question_topic_labels:
