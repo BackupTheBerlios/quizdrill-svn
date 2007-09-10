@@ -79,9 +79,9 @@ class Gui(object):
                 gw("flash_question_topic_label") ]
         self.question_labels = [ gw("multi_question_label"), 
                 gw("simple_question_label"), gw("flash_question_label") ]
-        self.multi_question_buttons = [ gw("button11"), 
-                gw("button12"), gw("button13"), gw("button14"), 
-                gw("button15"), gw("button16"), gw("button17") ]
+        self.multi_question_buttons = [ gw("mq_button0"), 
+                gw("mq_button1"), gw("mq_button2"), gw("mq_button3"), 
+                gw("mq_button4"), gw("mq_button5"), gw("mq_button6") ]
         self.simple_question_button = gw("simple_question_button")
         self.flash_notebook = gw("flash_notebook")
         self.flash_answer_buttons = [ 
@@ -306,6 +306,7 @@ class Gui(object):
         if self.quiz.check(answer):
             self.redisplay_correctly_answered(self.quiz.question)
             self.quiz.next()
+            self.multi_question_buttons[0].grab_focus()
         else:
             widget.set_sensitive(False)
             # statusbar1: show question to selected answer #
@@ -315,6 +316,20 @@ class Gui(object):
                     }
             self.statusbar1.pop(self.statusbar_contextid["last_answer"])
             self.statusbar1.push(self.statusbar_contextid["last_answer"], text)
+
+    def on_multi_question_button_key_press_event(self, widget, event):
+        """
+        Use 'j' and 'k' to switch multi_choice_buttons focus in addition to 
+        the arrows.
+        """
+        if event.keyval == 106:   # 'j'
+            direction = 1
+        elif event.keyval == 107:   # 'k'
+            direction = -1
+        else:
+            return
+        self.multi_question_buttons[ 
+                (int(widget.get_name()[-1]) + direction) % 7 ].grab_focus()
 
     def on_simple_question_button_clicked(self, widget, data=None):
         if self.quiz.check(self.simple_answer_entry.get_text().strip()):
