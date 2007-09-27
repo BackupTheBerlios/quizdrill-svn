@@ -107,13 +107,15 @@ class Test_Quiz(unittest.TestCase):
 
     ## Single Method Tests ##
 
-    def test_first_hint_should_be_underscores(self):
+    hint_place_holder = '-'
+
+    def test_first_hint_should_be_blank(self):
         """
         Test that hint() starts with letters replaced by underscores.
         """
         solution = self.quiz.question[self.quiz.answer_to]
         first_hint = self.quiz.hint()
-        assert first_hint == re.sub('\w', '_', solution)
+        assert first_hint == re.sub('\w', self.hint_place_holder, solution)
 
     def test_hint_adds_two_lettres_each_time(self):
         """
@@ -123,12 +125,15 @@ class Test_Quiz(unittest.TestCase):
         solution = self.quiz.question[self.quiz.answer_to]
         first_hint = self.quiz.hint()
         next_hint = first_hint
-        for hint_num in range((first_hint.count('_') + 1) // 2):
-            assert next_hint.count('_') + hint_num * 2 == \
-                    first_hint.count('_'), "Hint no. %s gives %s letters, " \
-                    "but %s should have been given." % \
-                    (hint_num, first_hint.count('_') - next_hint.count('_'), \
-                    hint_num * 2)
+        for hint_num in \
+                range((first_hint.count(self.hint_place_holder) + 1) // 2):
+            assert next_hint.count(self.hint_place_holder) + hint_num * 2 == \
+                    first_hint.count(self.hint_place_holder), \
+                    ("Hint no. %s gives %s letters, but %s should have been " +
+                            "given." )% \
+                    (hint_num, first_hint.count(self.hint_place_holder) - 
+                            next_hint.count(self.hint_place_holder), \
+                            hint_num * 2)
             next_hint = self.quiz.hint(next_hint)
         assert next_hint == solution, \
                 'Final hint ("%s") is not the solution ("%s").' % \
@@ -149,7 +154,8 @@ class Test_Quiz(unittest.TestCase):
         solution = self.quiz.question[self.quiz.answer_to]
         first_hint = self.quiz.hint("spam")
         for hint_letter, solution_letter in zip(first_hint, solution):
-            assert hint_letter == '_' or hint_letter == solution_letter, \
+            assert hint_letter == self.hint_place_holder or \
+                    hint_letter == solution_letter, \
                     'Hint ("%s") does not match solution ("%s").' % \
                     (first_hint, solution)
 
