@@ -18,48 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+from notify import Notifier
+
 import random
 import re
 from difflib import SequenceMatcher
 import gettext
 _ = gettext.gettext
-
-class Notifier(object):
-    """
-    Small class to inform registered objects to different keys by calling the 
-    given method. Should be replaced by something more standard in the future.
-    """
-    def __init__(self, keys):
-        self.listoners = {}
-        for new_key in keys:
-            self.listoners[new_key] = []
-
-    def connect(self, key, func):
-        """ 
-        Register a method func to be called when an event (key) happens.
-        """
-        self.listoners[key].append(func)
-
-    def disconnect(self, key, func):
-        """
-        Unregister a method, previously registered with connect. See connect
-        for more information.
-        """
-        if func in self.listoners[key]:
-            self.listoners[key].remove(func)
-
-    def notify(self, key, message=None):
-        """ 
-        Call the registered functions for a given key. See connect for
-        more information.
-        """
-        if message == None:
-            for func in self.listoners[key]:
-                func()
-        else:
-            for func in self.listoners[key]:
-                func(message)
-
 
 class Quiz(object):
     """
@@ -75,6 +40,7 @@ class Quiz(object):
         self.connect = self.notifier.connect
         self.disconnect = self.notifier.disconnect
         #
+        self.previous_question = None
         self.quiz_pool = []
         self.answered = 0
         self.correct_answered = 0
@@ -118,7 +84,7 @@ class Quiz(object):
         else:
             return None
 
-    def new_question(self):
+    def new_question(self, previous_question=None):
         """
         Discard current question and ask a new one. 
         """
@@ -126,11 +92,13 @@ class Quiz(object):
         self._select_question()
         self.multi_choices = self._gen_multi_choices()
         self.notify('question_changed')
+        self.previous_question = previous_question
 
     def next(self):
         """ ask next question """
         # Generate new Test
-        self.new_question()
+        self.answered += 1
+        self.new_question(self.question)
         # Time for relaxing ?
         if self.answered == self.session_length:
             self.session_length += self.exam_length
@@ -162,7 +130,7 @@ class Quiz(object):
         if solution == self.question[self.answer_to]:
             if self.tries == 0:
                 self.correct_answered += 1
-            self.answered += 1
+            self.next()
             return True
         else:
             self.tries += 1
@@ -244,7 +212,7 @@ class Quiz(object):
                             previous_hint[j+1:]
             else:
                 hint_string = ''
-                s = SequenceMatcher('', previous_hint, correct_answer)
+                s = SequenceMatcher(None, previous_hint, correct_answer)
                 for opcode in s.get_opcodes():
                     if opcode[0] == 'insert' or opcode[0] == 'replace':
                         hint_string += re.sub('\w', place_holder,
@@ -291,14 +259,13 @@ class Weighted_Quiz(Quiz):
         """ 
         Check if a given answer is correct.
 
-        Note: This changes the score of a given question (on correct answers).
+        Note: This changes the score of a given question (on first try).
         """
-        if super(Weighted_Quiz, self).check(solution):
-            self._update_score(self.question[self.ask_from], 
-                    self.tries == 0)
-            return True
-        else:
-            return False
+        if self.tries == 0:
+            answer_score = SequenceMatcher(None, 
+                    self.question[self.answer_to], solution).ratio()
+            self._update_score(answer_score)
+        return super(Weighted_Quiz, self).check(solution)
 
     def set_answer_quality(self, quality):
         """
@@ -306,18 +273,22 @@ class Weighted_Quiz(Quiz):
         
         Future: Rating will be on a score from 0 (worst) to 5 (best) for the 
         SM-2 Algor.
+        Todo: Find a better name for this function.
         """
-        self._update_score(self.question[self.ask_from], quality == 1)
+        self._update_score(quality)
+        self.next()
 
-    def _update_score(self, word, correct_answered):
+    def _update_score(self, answer_score, question=None):
         """
-        Updates the score (and score_sum) of word, depending on whether
-        it was answered correctly.
+        Updates the score (and score_sum) of question, depending on how
+        well it was answered.
         """
-        self.score_sum -= self.question_score[word]
-        self.question_score[word] = (self.question_score[word] * 3
-                + correct_answered ) / 4
-        self.score_sum += self.question_score[word]
+        if question == None:
+            question = self.question[self.ask_from]
+        self.score_sum -= self.question_score[question]
+        self.question_score[question] = (self.question_score[question] * 3
+                + answer_score ** 3 ) / 4.
+        self.score_sum += self.question_score[question]
 
     def _gen_score_sum(self, quizzes=None, cleanup=False):
         """ 
@@ -347,6 +318,10 @@ class Weighted_Quiz(Quiz):
         self.score_sum = self._gen_score_sum()
 
     def add_quizzes(self, new_quizzes):
+        for new_quiz in new_quizzes:
+            new_question = new_quiz[self.ask_from]
+            if not new_question in self.question_score:
+                self.question_score[new_question] = 0.
         super(Weighted_Quiz, self).add_quizzes(new_quizzes)
         self.score_sum += self._gen_score_sum(new_quizzes)
 
@@ -376,6 +351,11 @@ class Weighted_Quiz(Quiz):
                         break
         return low_scored
 
+    def hint(self, previous_hint=None):
+        if self.tries == 0:
+            self._update_score(0)
+        return super(Weighted_Quiz, self).hint(previous_hint)
+
 
 class Queued_Quiz(Weighted_Quiz):
     """ 
@@ -395,14 +375,16 @@ class Queued_Quiz(Weighted_Quiz):
                 exam_length)
         self.add_quizzes(question_pool)
 
-    def _update_score(self, question, correct_answered):
+    def _update_score(self, correct_answered, question=None):
         """
         updates the score (and score_sum) of question, depending on whether
         it was answered correctly.
         """
+        if question == None:
+            question = self.question[self.ask_from]
         if self.question_score[question] < self.bad_score:
             self.num_bad_scores -= 1
-        super(Queued_Quiz, self)._update_score(question, correct_answered)
+        super(Queued_Quiz, self)._update_score(correct_answered, question)
         if self.question_score[question] < self.bad_score:
             self.num_bad_scores += 1
 
@@ -441,7 +423,7 @@ class Queued_Quiz(Weighted_Quiz):
         self._insure_min_quiz_num()
 
     def _insure_min_quiz_num(self):
-        """ Make sure not too few questions are in the quiz_pool """
+        """Make sure not too few questions are in the quiz_pool."""
         num_missing = min( len(self.new_quiz_pool),
                 self.min_question_num - len(self.quiz_pool) )
         if num_missing > 0:

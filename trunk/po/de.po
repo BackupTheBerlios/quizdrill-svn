@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-27 15:36+0200\n"
+"POT-Creation-Date: 2007-11-04 15:56+0100\n"
 "PO-Revision-Date: 2007-01-24 21:17+0100\n"
 "Last-Translator: Adam Schmalhofer <schmalhof@users.berlios.de>\n"
 "Language-Team: German <quizdrill-main@lists.berlios.de>\n"
@@ -20,25 +20,45 @@ msgstr ""
 #. TRANSLATORS: This is displayed on the statusbar so try to keep it
 #. short. The answer should be shown rather then the text or the
 #. question if the bar is too short.
-#: ../src/gtkui.py:166
+#: ../src/gtkui.py:147
 #, python-format
 msgid "'%(answer)s' to '%(question)s' was correct."
 msgstr "„%(answer)s“ zu „%(question)s“ war richtig."
 
-#: ../src/gtkui.py:188
+#: ../src/gtkui.py:157 ../src/gtkui.py:568
+msgid "Quiz"
+msgstr "Quiz"
+
+#: ../src/gtkui.py:177
 #, python-format
 msgid "Warning: unknown quiz type \"%s\"."
 msgstr "Warnung: Unbekannter Quiztyp \"%s\"."
 
-#: ../src/gtkui.py:224
+#: ../src/gtkui.py:214 ../src/gtkui.py:639
 msgid "test"
 msgstr "testen"
 
 #. statusbar1: show question to selected answer #
-#: ../src/gtkui.py:331
+#: ../src/gtkui.py:314
 #, python-format
 msgid "To '%(quest)s' '%(ans)s' would be the correct answer."
 msgstr "Zu „%(quest)s“ wäre „%(ans)s“ die richtige Antwort."
+
+#: ../src/Quiz_Filer.py:112 ../src/Quiz_Filer.py:289
+msgid "What is this?"
+msgstr "Was ist das?"
+
+#: ../src/Quiz_Filer.py:113
+msgid "Question"
+msgstr "Frage"
+
+#: ../src/Quiz_Filer.py:113
+msgid "Answer"
+msgstr "Antwort"
+
+#: ../src/Quiz_Filer.py:290
+msgid "Please translate:"
+msgstr "Übersetze:"
 
 #: ../src/SaDrill.py:32
 #, python-format
@@ -104,113 +124,186 @@ msgstr "Fehler: Unbekannter Quizbauer „%s“."
 msgid "Usage: %s [.drill.builder-file] [data_source-file]"
 msgstr "Aufruf: %s [.drill.builder-Datei] [daten-Datei]"
 
+#: ../src/wiki_builder.py:89
+#, python-format
+msgid "Found this infobox-type in %(num_boxes)s of %(num_articles)s articles."
+msgstr ""
+"Dieser Infoboxtyp wurde in %(num_boxes)s von %(num_articles)s Artikeln "
+"gefunden."
+
+#: ../src/wiki_builder.py:149
+msgid "Warning: Only one tag $wiki_cat_namespace allowed."
+msgstr "Warunung: Nur ein Tag $wiki_cat_namespace erlaubt."
+
+#: ../src/wiki_builder.py:204
+msgid "Warning: Only one tag $builder allowed."
+msgstr "Warunung: Nur ein Tag $builder erlaubt."
+
+#: ../src/wiki_builder.py:220
+#, python-format
+msgid "Warning: Skipping nested templates in \"%s\"."
+msgstr "Warnung: Überspringe verschachtelte Vorlagen in „%s“."
+
+#: ../src/wiki_builder.py:260
+#, python-format
+msgid ""
+"Warning: No parameter name in Infobox row \"%(para)s\" in article \"%"
+"(article)s\"."
+msgstr ""
+"Warnung: Kein Parametername in Infoboxzeile „%(para)s“ im Artikel „%(article)"
+"s“."
+
+#: ../src/wiki_builder.py:298
+#, python-format
+msgid ""
+"Warning: Parameter \"%(para)s\" missing in a template in article \"%(article)"
+"s\", using \"\" instead."
+msgstr ""
+"Warnung: Parameter „%(para)s“ fehlt in der Vorlage in Artikel „%(article)s“, "
+"verwende „“ stattdessen."
+
+#: ../src/wiki_builder.py:305 ../src/wiki_builder.py:313
+#, python-format
+msgid ""
+"Warning: Parameter \"%(para)s\" missing in a template in article \"%(article)"
+"s\", skipping."
+msgstr ""
+"Warnung: Parameter „%(para)s“ fehlt in der Vorlage in Artikel „%(article)s“, "
+"verwende „“ stattdessen."
+
 #: ../src/data/quizdrill.glade.h:1
+msgid "<b>File:</b>"
+msgstr "<b>Datei:</b>"
+
+#: ../src/data/quizdrill.glade.h:2
 msgid "<b>Solution:</b>"
 msgstr "<b>Lösung:</b>"
 
-#: ../src/data/quizdrill.glade.h:2
+#: ../src/data/quizdrill.glade.h:3
 msgid "<b>Subquiz:</b>"
 msgstr "<b>Teilquiz:</b>"
 
-#: ../src/data/quizdrill.glade.h:3
+#: ../src/data/quizdrill.glade.h:4
 msgid "<b>Timer:</b>"
 msgstr "<b>Stoppuhr:</b>"
 
-#: ../src/data/quizdrill.glade.h:4
+#: ../src/data/quizdrill.glade.h:5
+msgid "Answer:"
+msgstr "Antwort:"
+
+#: ../src/data/quizdrill.glade.h:6
 msgid "Break length in min:"
 msgstr "Pausenlänge in min:"
 
-#: ../src/data/quizdrill.glade.h:5
+#: ../src/data/quizdrill.glade.h:7
 msgid "Did you remember it correctly?"
 msgstr "Haben Sie dies richtig beantwortet?"
 
-#: ../src/data/quizdrill.glade.h:6
+#: ../src/data/quizdrill.glade.h:8
 msgid "Evaluate"
 msgstr "Bewerten"
 
-#: ../src/data/quizdrill.glade.h:7
+#: ../src/data/quizdrill.glade.h:9
 msgid "Exam length:"
 msgstr "Prüfungslänge:"
 
-#: ../src/data/quizdrill.glade.h:8
+#: ../src/data/quizdrill.glade.h:10
 msgid "Flashcard"
 msgstr "Karteikarten"
 
-#: ../src/data/quizdrill.glade.h:9
+#: ../src/data/quizdrill.glade.h:11
 msgid "Hint"
 msgstr "Tipp"
 
-#: ../src/data/quizdrill.glade.h:10
+#: ../src/data/quizdrill.glade.h:12
 msgid "Most difficult words"
 msgstr "Schwierigsten Wörter"
 
-#: ../src/data/quizdrill.glade.h:11
+#: ../src/data/quizdrill.glade.h:13
 msgid "Multiple Choice"
 msgstr "Mehrfachauswahl"
 
-#: ../src/data/quizdrill.glade.h:12
-msgid "Open _Recent"
-msgstr "_Zuletzt geöffnet"
+#: ../src/data/quizdrill.glade.h:14
+msgid "Priority:"
+msgstr "Priorität"
 
-#: ../src/data/quizdrill.glade.h:13
+#: ../src/data/quizdrill.glade.h:15
+msgid "Quiz Manager"
+msgstr "Quizverwalter"
+
+#: ../src/data/quizdrill.glade.h:16
 msgid "Quizdrill"
 msgstr "Quizdrill"
 
-#: ../src/data/quizdrill.glade.h:14
+#: ../src/data/quizdrill.glade.h:17
 msgid "Quizdrill Preferences"
 msgstr "Quizdill Einstellungen"
 
-#: ../src/data/quizdrill.glade.h:15
-msgid "Show solution"
-msgstr "Lösung zeigen"
-
-#: ../src/data/quizdrill.glade.h:16
-msgid "Simple Quiz"
-msgstr "Einfacher Quiz"
-
-#: ../src/data/quizdrill.glade.h:17
-msgid "Snooze length in min:"
-msgstr "Schlummerzeit in min:"
-
 #: ../src/data/quizdrill.glade.h:18
-msgid "Statistics of Quizdrill"
-msgstr "Statistiken von Quizdrill"
-
-#: ../src/data/quizdrill.glade.h:19
 msgid ""
-"This program is free software; you can redistribute it and/or modify it "
-"under the terms of the GNU General Public License as published by the Free "
+"Quizdrill is free software; you can redistribute it and/or modify it under "
+"the terms of the GNU General Public License as published by the Free "
 "Software Foundation; either version 2 of the License, or (at your option) "
 "any later version.\n"
 "\n"
-"This program is distributed in the hope that it will be useful, but WITHOUT "
-"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
-"FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for "
-"more details.\n"
+"Quizdrill is distributed in the hope that it will be useful, but WITHOUT ANY "
+"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE. See the GNU General Public License for more "
+"details.\n"
 "\n"
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 59 Temple "
 "Place - Suite 330, Boston, MA 02111-1307, USA."
 msgstr ""
-"Dieses Programm ist freie Software; Sie können es weitergeben und/oder "
+"Quizdrill ist freie Software; Sie können es weitergeben und/oder "
 "modifizieren im Sinne der GNU General Public License wie sie von der Free "
 "Software Foundation veröffentlicht wird; entweder Version 2, oder "
 "(wahlweise) jede neuere Version.\n"
 "\n"
-"Dieses Programm wird in der Hoffnung vertrieben, dass es nützlich ist, "
-"jedoch OHNE JEDE GARANTIE; selbst ohne die implizite Garantie der "
-"TAUGLICHKEIT oder der EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie die GNU "
-"General Public License für weitere Details.\n"
+"Quizdrill wird in der Hoffnung vertrieben, dass es nützlich ist, jedoch OHNE "
+"JEDE GARANTIE; selbst ohne die implizite Garantie der TAUGLICHKEIT oder der "
+"EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie die GNU General Public License "
+"für weitere Details.\n"
 "\n"
 "Sie sollten eine Kopie der GNU General Public License mit diesem Programm "
 "erhalten haben; wenn nicht, dann schreiben Sie an Free Software Foundation, "
 "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
+#: ../src/data/quizdrill.glade.h:23
+msgid "Show solution"
+msgstr "Lösung zeigen"
+
 #: ../src/data/quizdrill.glade.h:24
+msgid "Simple Quiz"
+msgstr "Einfacher Quiz"
+
+#: ../src/data/quizdrill.glade.h:25
+msgid "Snooze length in min:"
+msgstr "Schlummerzeit in min:"
+
+#: ../src/data/quizdrill.glade.h:26
+msgid "Statistics of Quizdrill"
+msgstr "Statistiken von Quizdrill"
+
+#: ../src/data/quizdrill.glade.h:27
 msgid "Use _timer"
 msgstr "Stopp_uhr benutzen"
 
-#: ../src/data/quizdrill.glade.h:25 ../src/data/quizdrill.schemas.in.h:9
+#: ../src/data/quizdrill.glade.h:28
+msgid ""
+"Very High\n"
+"High\n"
+"Medium\n"
+"Low\n"
+"Very Low"
+msgstr ""
+"Sehr Hoch\n"
+" Hoch\n"
+" Mittelmäßig\n"
+" Niedrig\n"
+" Sehr Niedrig"
+
+#: ../src/data/quizdrill.glade.h:33 ../src/data/quizdrill.schemas.in.h:9
 msgid ""
 "Whether or not the timer should be used. If it is used there will be a break "
 "after a given number of questions."
@@ -218,24 +311,36 @@ msgstr ""
 "Ob die Stoppuhr verwendet werden soll. Wenn ja wird nach einer angegebenen "
 "Anzahl an Fragen zur Pause auffordern."
 
-#: ../src/data/quizdrill.glade.h:26
+#: ../src/data/quizdrill.glade.h:34
 msgid "Words"
 msgstr "Wörter"
 
-#: ../src/data/quizdrill.glade.h:27
+#: ../src/data/quizdrill.glade.h:35
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: ../src/data/quizdrill.glade.h:28
+#: ../src/data/quizdrill.glade.h:36
 msgid "_File"
 msgstr "_Datei"
 
-#: ../src/data/quizdrill.glade.h:29
+#: ../src/data/quizdrill.glade.h:37
 msgid "_Help"
 msgstr "_Hilfe"
 
+#: ../src/data/quizdrill.glade.h:38
+msgid "_Manage"
+msgstr "_Verwalten"
+
+#: ../src/data/quizdrill.glade.h:39
+msgid ""
+"default\n"
+"mouse only"
+msgstr ""
+"Standard\n"
+" Nur die Maus benutzen"
+
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../src/data/quizdrill.glade.h:31
+#: ../src/data/quizdrill.glade.h:42
 msgid "translators-credits"
 msgstr "Deutsch (de): Adam Schmalhofer"
 
@@ -291,53 +396,8 @@ msgstr ""
 msgid "Learning-by-testing"
 msgstr "Durch Testen lernen"
 
-#~ msgid "Warning: Only one tag $filter allowed."
-#~ msgstr "Warunung: Nur ein Tag $filter erlaubt."
-
-#~ msgid "Warning: Only one tag $build_to allowed."
-#~ msgstr "Warunung: Nur ein Tag $build_to erlaubt."
-
-#~ msgid "What is this?"
-#~ msgstr "Was ist das?"
-
-#~ msgid "Question"
-#~ msgstr "Frage"
-
-#~ msgid "Answer"
-#~ msgstr "Antwort"
-
-#~ msgid "Please translate:"
-#~ msgstr "Übersetze:"
-
-#~ msgid ""
-#~ "Found this infobox-type in %(num_boxes)s of %(num_articles)s articles."
-#~ msgstr ""
-#~ "Dieser Infoboxtyp wurde in %(num_boxes)s von %(num_articles)s Artikeln "
-#~ "gefunden."
-
-#~ msgid "Warning: Skipping nested templates in \"%s\"."
-#~ msgstr "Warnung: Überspringe verschachtelte Vorlagen in „%s“."
-
-#~ msgid ""
-#~ "Warning: No parameter name in Infobox row \"%(para)s\" in article \"%"
-#~ "(article)s\"."
-#~ msgstr ""
-#~ "Warnung: Kein Parametername in Infoboxzeile „%(para)s“ im Artikel „%"
-#~ "(article)s“."
-
-#~ msgid ""
-#~ "Warning: Parameter \"%(para)s\" missing in a template in article \"%"
-#~ "(article)s\", using \"\" instead."
-#~ msgstr ""
-#~ "Warnung: Parameter „%(para)s“ fehlt in der Vorlage in Artikel „%(article)"
-#~ "s“, verwende „“ stattdessen."
-
-#~ msgid ""
-#~ "Warning: Parameter \"%(para)s\" missing in a template in article \"%"
-#~ "(article)s\", skipping."
-#~ msgstr ""
-#~ "Warnung: Parameter „%(para)s“ fehlt in der Vorlage in Artikel „%(article)"
-#~ "s“, verwende „“ stattdessen."
+#~ msgid "Open _Recent"
+#~ msgstr "_Zuletzt geöffnet"
 
 #~ msgid "Error: Tag $builder does not have exactly one \"=\"."
 #~ msgstr "Fehler: Bauanweisung $builder hat nicht genau ein „=“."

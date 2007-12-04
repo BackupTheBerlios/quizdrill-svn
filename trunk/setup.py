@@ -208,7 +208,8 @@ def make_setup():
                 'console_scripts': [ 'quiz_builder = quizdrill.builder:build'],
                 'gui_scripts': [ 'quizdrill = quizdrill.gtkui:main' ],
                 'quiz_builder_source_plugins': [ 'WikipediaArticle = '
-                    'quizdrill.wiki_builder:Wikipedia_Article_Handler' ]
+                    'quizdrill.wiki_builder:Wikipedia_Article_Handler' ],
+                'quiz_generator_plugins': [ ]
                 },
             test_suite = "src.testsuite",
             license='GNU General Public License',

@@ -61,6 +61,7 @@ class Test_Quiz(unittest.TestCase):
         # Removing all questions #
         self.mock_listener.expects(once()).question_changed()
         self.quiz.remove_quizzes(self.quiz.quiz_pool[:])
+        self.mock_listener.verify()
         assert self.quiz.quiz_pool == [ ], \
                 "quiz_pool still has %s after removing all quizzes" % \
                 self.quiz.quiz_pool
@@ -69,6 +70,7 @@ class Test_Quiz(unittest.TestCase):
         # Adding original quizzes back. #
         self.mock_listener.expects(once()).question_changed()
         self.quiz.add_quizzes(old_quiz_pool[:])
+        self.mock_listener.verify()
         assert self.quiz.quiz_pool == old_quiz_pool, \
                 "Adding %s to an empty quiz_pool leads to %s." % \
                 (old_quiz_pool, self.quiz.quiz_pool)
@@ -79,10 +81,13 @@ class Test_Quiz(unittest.TestCase):
         """
         self.mock_listener.expects(once()).question_changed()
         self.quiz.remove_quizzes([ self.quiz.multi_choices[0] ])
+        self.mock_listener.verify()
         self.mock_listener.expects(once()).question_changed()
         self.quiz.remove_quizzes([ self.quiz.multi_choices[-1] ])
+        self.mock_listener.verify()
         self.mock_listener.expects(once()).question_changed()
         self.quiz.remove_quizzes([ self.quiz.question ])
+        self.mock_listener.verify()
         assert self.quiz.question in self.quiz.quiz_pool, \
                 "Question not in quiz_pool."
 
@@ -104,6 +109,7 @@ class Test_Quiz(unittest.TestCase):
                     "Multiple choice options changed after removing other "\
                     "quizzes. " "New: %s; Old: %s; Removed: %s." % \
                     (self.quiz.multi_choices, old_multi_choices, quiz)
+        self.mock_listener.verify()
 
     ## Single Method Tests ##
 
@@ -111,7 +117,7 @@ class Test_Quiz(unittest.TestCase):
 
     def test_first_hint_should_be_blank(self):
         """
-        Test that hint() starts with letters replaced by underscores.
+        Test that hint() starts with letters replaced by the place_holder.
         """
         solution = self.quiz.question[self.quiz.answer_to]
         first_hint = self.quiz.hint()
@@ -144,7 +150,9 @@ class Test_Quiz(unittest.TestCase):
         Run previous test (test_hint_adds_two_lettres_each_time) with '0000'
         as double letters make comparison of solution and hint non-trivial.
         """
-        self.quiz.question = ['0000', '0000']
+        test_question = ['0000', '0000']
+        self.quiz.add_quizzes( [ test_question ] )
+        self.quiz.question = test_question
         self.test_hint_adds_two_lettres_each_time()
 
     def test_invalid_previous_hint(self):
@@ -152,12 +160,13 @@ class Test_Quiz(unittest.TestCase):
         Test that a string which wasn't a hint still gives a valid hint.
         """
         solution = self.quiz.question[self.quiz.answer_to]
-        first_hint = self.quiz.hint("spam")
-        for hint_letter, solution_letter in zip(first_hint, solution):
-            assert hint_letter == self.hint_place_holder or \
-                    hint_letter == solution_letter, \
-                    'Hint ("%s") does not match solution ("%s").' % \
-                    (first_hint, solution)
+        for first_hint in [ self.quiz.hint("a completely wrong answer"), 
+                self.quiz.hint('!' + solution[1:]) ]:
+            for hint_letter, solution_letter in zip(first_hint, solution):
+                assert hint_letter == self.hint_place_holder or \
+                        hint_letter == solution_letter, \
+                        'Hint ("%s") does not match solution ("%s").' % \
+                        (first_hint, solution)
 
     def test_hint_increments_tries(self):
         """
@@ -174,7 +183,13 @@ class Test_Quiz(unittest.TestCase):
                 self.quiz.question[self.quiz.answer_to]
 
     def test_check(self):
+        self.mock_listener.expects(once()).question_changed()
         assert self.quiz.check(self.quiz.question[self.quiz.answer_to])
+        self.mock_listener.verify()
+        self.mock_listener.expects(once()).question_changed()
+        assert not self.quiz.check('a wrong answer')
+        assert self.quiz.check(self.quiz.question[self.quiz.answer_to])
+        self.mock_listener.verify()
 
     def test__gen_multi_choices(self):
         multi_choices = self.quiz._gen_multi_choices()
@@ -210,6 +225,7 @@ class Test_Quiz(unittest.TestCase):
             len(self.quiz.multi_choices)
         self.quiz.remove_quizzes(self.quiz.quiz_pool[:3])
         assert len(self.quiz.multi_choices) == 1
+        self.mock_listener.verify()
 
     def test_get_answer_to_question(self):
         answer_to = self.quiz.answer_to
@@ -220,26 +236,35 @@ class Test_Quiz(unittest.TestCase):
                     self.quiz.get_answer_to_question(question_pair[ask_from]),\
                     "%s should be answer to question %s." % \
                     (question_pair[answer_to], question_pair[ask_from])
+        assert self.quiz.get_answer_to_question('asdfasdf') == None, \
+                "Non-existant question 'asdfasdf' should return 'None'."
 
     def test_get_question_to_answer_from_multichoices(self):
         answer_to = self.quiz.answer_to
         ask_from = self.quiz.ask_from
 
         for question_pair in self.quiz.multi_choices:
-            assert question_pair[answer_to] == \
-                    self.quiz.get_answer_to_question(question_pair[ask_from]),\
-                    "%s should be answer to question %s." % \
-                    (question_pair[answer_to], question_pair[ask_from])
+            assert question_pair[ask_from] == \
+                    self.quiz.get_question_to_answer_from_multichoices(
+                            question_pair[answer_to]),\
+                    "%s should be question to answer %s." % \
+                    (question_pair[ask_from], question_pair[answer_to])
+        assert self.quiz.get_question_to_answer_from_multichoices('asdfasdf') \
+                == None, \
+                "Non-existant answer 'asdfasdf' should return 'None'."
 
     def test_get_question_to_answer(self):
         answer_to = self.quiz.answer_to
         ask_from = self.quiz.ask_from
 
-        for question_pair in self.QUIZ_POOL:
+        for question_pair in self.quiz.multi_choices:
             assert question_pair[ask_from] == \
-                    self.quiz.get_question_to_answer(question_pair[answer_to]),\
+                    self.quiz.get_question_to_answer(
+                            question_pair[answer_to]),\
                     "%s should be question to answer %s." % \
                     (question_pair[ask_from], question_pair[answer_to])
+        assert self.quiz.get_question_to_answer('asdfasdf') == None, \
+                "Non-existant answer 'asdfasdf' should return 'None'."
 
     def test_notify(self):
         """
@@ -249,15 +274,24 @@ class Test_Quiz(unittest.TestCase):
         for i in range(self.quiz.session_length * 2):
             self.mock_listener.expects(once()).question_changed()
             self.quiz.new_question()
+            self.mock_listener.verify()
         # test_next #
         for i in range(self.quiz.session_length - 1):
             self.mock_listener.expects(once()).question_changed()
             self.quiz.next()
+            self.mock_listener.verify()
         self.mock_listener.expects(once()).question_changed()
         self.mock_listener.expects(once()).break_time()
         self.quiz.next()
+        self.mock_listener.verify()
 
-    #def test_set_question_direction(self):
+    def test_set_question_direction(self):
+        self.quiz.set_question_direction(0)
+        assert self.quiz.ask_from == 0 and self.quiz.answer_to == 1
+        self.quiz.set_question_direction(0)
+        assert self.quiz.ask_from == 0 and self.quiz.answer_to == 1
+        self.quiz.set_question_direction(1)
+        assert self.quiz.ask_from == 1 and self.quiz.answer_to == 0
 
 
 class Test_Weighted_Quiz(Test_Quiz):
@@ -301,12 +335,36 @@ class Test_Weighted_Quiz_with_scores(Test_Weighted_Quiz):
     def setUp(self):
         self.SCORE = {}
         for question in range(10, 30):
-            self.SCORE[question] = question / 10.
+            self.SCORE[str(question)] = question / 10.
         self.quiz = self.CLASS_TO_TEST(self.QUIZ_POOL[:], self.SCORE)
         self.mock_listener = Mock()
         self.quiz.connect('break_time', self.mock_listener.break_time)
         self.quiz.connect('question_changed', 
                 self.mock_listener.question_changed)
+
+    def test_score_on_correct_answer(self):
+        current_question = self.quiz.question[self.quiz.ask_from]
+        old_score = self.quiz.question_score[ current_question ]
+        self.mock_listener.expects(once()).question_changed()
+        self.quiz.check(self.quiz.question[self.quiz.answer_to])
+        new_score = self.quiz.question_score[ current_question ]
+        assert old_score < new_score or old_score == new_score == 1. , \
+                "Score of %s doesn't increase with correct answer: %s, %s" % \
+                (self.quiz.question[self.quiz.answer_to], old_score, new_score)
+        self.mock_listener.verify()
+
+
+    def test_score_on_wrong_answer(self):
+        current_question = self.quiz.question[self.quiz.ask_from]
+        old_score = self.quiz.question_score[ current_question ]
+        self.mock_listener.expects(once()).question_changed()
+        self.quiz.check('a wrong answer')
+        self.quiz.check(self.quiz.question[self.quiz.answer_to])
+        new_score = self.quiz.question_score[ current_question ]
+        assert old_score > new_score or old_score == new_score == 0. , \
+                "Score doesn't decrease with wrong answer: %s, %s" % \
+                (self.quiz.question[self.quiz.answer_to], old_score, new_score)
+        self.mock_listener.verify()
 
 
 class Test_Queued_Quiz(Test_Weighted_Quiz_with_scores):
@@ -314,6 +372,10 @@ class Test_Queued_Quiz(Test_Weighted_Quiz_with_scores):
     Unittest for the class Queued_Quiz.
     """
     CLASS_TO_TEST = Queued_Quiz
+
+    def test_hint_with_double_lettres(self):
+        self.quiz.question_score['0000'] = 0.
+        super(Test_Queued_Quiz, self).test_hint_with_double_lettres()
 
     #def add_quizzes(self):
     #def _increase_quiz_pool(self):

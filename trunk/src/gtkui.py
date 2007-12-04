@@ -18,9 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+"""A GTK user interface for quizdrill."""
+
+
 from SaDrill import SaDrillError
-from quiz import Weighted_Quiz, Notifier
-from Quiz_Filer import Quiz_Filer, Quiz_Loader
+from notify import Notifier
+from quiz import Weighted_Quiz
+from Quiz_Filer import Quiz_Filer, Quiz_Loader, Quiz_Trainer
 
 import pygtk
 pygtk.require('2.0')
@@ -56,7 +60,7 @@ class Gui(object):
 
     def __init__(self):
         self.timer_id = 0
-        self.quiz_filer_list = []
+        self.trainer = Quiz_Trainer()
         # gconf #
         self.gconf_watcher = Gconf_Prefs()
         quiz_file_path = self.gconf_watcher.gconf_client.get_string(
@@ -91,65 +95,87 @@ class Gui(object):
         sb = self.statusbar1 = gw("statusbar1")
         self.statusbar_contextid = { "last_answer" : 
                 sb.get_context_id( "The answer to the last asked question." ) }
+        #
+        self.trainer.load_quiz(quiz_file_path)
         # connect signals #
         xml.signal_autoconnect(self)
-        self.load_quiz(quiz_file_path)
+        self.trainer.connect('quiz_changed', self.on_quiz_switch)
+        self.trainer.connect('question_changed', self.update_gui)
+        self.trainer.connect('break_time', self.end_testing_interval)
+        self.trainer.connect('direction_changed', 
+                self.on_question_direction_changed)
+        #
+        self.on_quiz_switch()
 
     def update_gui(self):
         """
         (re-)set all the user-non-editable text (labels etc.).
-        Used when a new quiz is loaded, a new question is asked.
+        Used when a new question is asked.
         """
         for label in self.question_labels:
-            label.set_text(self.quiz.question[self.quiz.ask_from])
+            label.set_text(self.trainer.current_quiz.question[
+                self.trainer.current_quiz.ask_from])
         self.simple_answer_entry.set_text("")
         self.progressbar1.set_fraction(
-                float(self.quiz.answered) / self.quiz.session_length)
+                float(self.trainer.current_quiz.answered) / \
+                self.trainer.current_quiz.session_length)
         # set multiquiz answers #
         for button in self.multi_question_buttons:
             button.set_label('-')
             button.set_sensitive(False)
         for button, text in zip(self.multi_question_buttons, 
-                self.quiz.multi_choices):
-            button.set_label(text[self.quiz.answer_to])
+                self.trainer.current_quiz.multi_choices):
+            button.set_label(text[self.trainer.current_quiz.answer_to])
             button.set_sensitive(True)
         # set flash card to front side #
         self.flash_notebook.set_current_page(0)
 
-    def redisplay_correctly_answered(self, last_question):
+    def redisplay_correctly_answered(self):
         """
         Displays the last answer (currently on the StatusBar). This is so
         the user has the possibility to review again especially after many
         faulty answers (simple quiz) or surprised/unknows right answer (multi
         choice). No use on flashcard.
         """
-        # TRANSLATORS: This is displayed on the statusbar so try to keep it 
-        #    short. The answer should be shown rather then the text or the 
-        #    question if the bar is too short.
-        text = _("'%(answer)s' to '%(question)s' was correct.") % {
-                "answer" : last_question[self.quiz.answer_to],
-                "question" : last_question[self.quiz.ask_from] }
+        previous_question = self.trainer.current_quiz.previous_question
+        if previous_question == None:
+            text = ""
+        else:
+            # TRANSLATORS: This is displayed on the statusbar so try to keep it 
+            #    short. The answer should be shown rather then the text or the 
+            #    question if the bar is too short.
+            text = _("'%(answer)s' to '%(question)s' was correct.") % {
+                    "answer" : self.trainer.current_quiz.previous_question[
+                        self.trainer.current_quiz.answer_to],
+                    "question" : self.trainer.current_quiz.previous_question[
+                        self.trainer.current_quiz.ask_from] }
         self.statusbar1.pop(self.statusbar_contextid["last_answer"])
         self.statusbar1.push(self.statusbar_contextid["last_answer"], text)
 
-    def switch_quiz(self, quiz_filer=None):
+    def on_question_direction_changed(self):
+        new_status = self.trainer.current_quiz.ask_from
+        self.main_window.set_title(_('Quiz') + ': ' + 
+                self.trainer.current_filer.all_subquizzes[new_status])
+        if len(self.trainer.current_filer.question_topic) > 1:
+            for label in self.question_topic_labels:
+                label.set_text(
+                        self.trainer.current_filer.question_topic[new_status])
+        self.trainer.current_quiz.new_question()
+
+    def on_quiz_switch(self):
         """
-        Set the Userinterface to test a different Quiz (represented by a 
-        Quiz_Filer object or randomly selected).
+        Update the Userinterface when the quiz has been switched.
+
+        Note: This is obsolete. It will be replaced with 
+              Gui_Quiz_Manger.on_quiz_selected.
         """
-        # disconnect old listeners #
-        quiz_filer.quiz.disconnect('question_changed', self.update_gui)
-        quiz_filer.quiz.disconnect('break_time', self.start_relax_time)
-        # replace #
-        if quiz_filer == None:
-            quiz_filer = random.select(self.quiz_filer_list)
-        self.quiz_filer = quiz_filer
-        self.quiz = quiz_filer.quiz
+        self.on_question_direction_changed()
         # show and hide notebookpanels #
-        if quiz_filer.quiz_type in self.SHOW_TABS:
-            quiz_type = self.quiz_filer.quiz_type
+        if self.trainer.current_filer.quiz_type in self.SHOW_TABS:
+            quiz_type = self.trainer.current_filer.quiz_type
         else:
-            print _('Warning: unknown quiz type "%s".') % quiz_filer.quiz_type
+            print _('Warning: unknown quiz type "%s".') % \
+                    self.trainer.current_filer.quiz_type
             quiz_type = "all"
         for tab, visi in zip(self.main_notbook_tabs.itervalues(),
                 self.SHOW_TABS[quiz_type]):
@@ -159,24 +185,26 @@ class Gui(object):
                 else:
                     widget.hide()
         # show, hide and settext of combobox #
-        if quiz_filer.all_subquizzes == []:
+        if self.trainer.current_filer.all_subquizzes == []:
             self.subquiz_combobox.hide()
         else:
             for i in range(2):            # dirty clear combobox
                 self.subquiz_combobox.remove_text(0)
-            for subquiz in quiz_filer.all_subquizzes:
+            for subquiz in self.trainer.current_filer.all_subquizzes:
                 self.subquiz_combobox.append_text(subquiz)
-            self.subquiz_combobox.set_active(self.quiz.ask_from)
+            self.subquiz_combobox.set_active(
+                    self.trainer.current_quiz.ask_from)
             self.subquiz_combobox.show()
         #
         for label in self.question_topic_labels:
             label.set_markup("<b>%s</b>" % 
-                    quiz_filer.question_topic[self.quiz.ask_from])
+                    self.trainer.current_filer.question_topic[
+                        self.trainer.current_quiz.ask_from])
         # treeview #
         ## Question/Answer-Columns ##
         for column in self.word_treeview.get_columns():
             self.word_treeview.remove_column(column)
-        for i, title in enumerate(quiz_filer.data_name):
+        for i, title in enumerate(self.trainer.current_filer.data_name):
             tvcolumn = gtk.TreeViewColumn(title,
                     gtk.CellRendererText(), text=i)
             self.word_treeview.append_column(tvcolumn)
@@ -186,21 +214,24 @@ class Gui(object):
         tvcolumn = gtk.TreeViewColumn(_("test"), toggler)
         tvcolumn.add_attribute(toggler, "active", 2)
         self.word_treeview.append_column(tvcolumn)
-        self.word_treeview.set_model(quiz_filer.treestore)
+        self.word_treeview.set_model(self.trainer.current_filer.treestore)
         # clean statusbar #
         self.statusbar1.pop(self.statusbar_contextid["last_answer"])
-        # connect listeners #
-        quiz_filer.quiz.connect('question_changed', self.update_gui)
-        quiz_filer.quiz.connect('break_time', self.start_relax_time)
+        #
         self.update_gui()
 
     # Timer #
 
-    def start_relax_time(self, break_length=None, minimize=True):
+    def end_testing_interval(self):
         """
-        Iconify window as a break and deiconify it when it's over
+        start_relax_time and switch to next quiz.
+        """
+        self.trainer.switch_quiz()
+        self.start_relax_time(self.gconf_watcher.break_length)
 
-        Note: There is a race condition. However this should be harmless
+    def start_relax_time(self, break_length, minimize=True):
+        """
+        Iconify window as a break and deiconify it when it's over.
         """
         def ms2min(ms):
             """
@@ -210,8 +241,6 @@ class Gui(object):
 
         if not self.gconf_watcher.use_timer:
             return
-        if break_length == None:
-            break_length = self.gconf_watcher.break_length
         if self.timer_id:
             gobject.source_remove(self.timer_id)
         if minimize:
@@ -228,9 +257,9 @@ class Gui(object):
     ## all (or indebendant of) tabs ##
 
     def on_quit(self, widget):
-        for filer in self.quiz_filer_list:
+        for filer in self.trainer.quiz_filer_list:
             filer.write_score_file()
-        self.gconf_watcher.save_quiz_path(self.quiz_filer.file_path)
+        self.gconf_watcher.save_quiz_path(self.trainer.current_filer.file_path)
         gtk.main_quit()
 
     def on_main_window_window_state_event(self, widget, event):
@@ -244,41 +273,22 @@ class Gui(object):
             self.timer_id = 0
 
     def on_about_activate(self, widget):
-        gtk.glade.XML(self.GLADE_FILE, "aboutdialog1", APP)
+        "Open the about-dialog and close it when close button is pressed."
+        def on_dialog_close(widget): widget.window.destroy()
+        xml = gtk.glade.XML(self.GLADE_FILE, "aboutdialog1", APP)
+        close_button = xml.get_widget("aboutdialog1").get_children()[0]\
+                .get_children()[1].get_children()[2]       # XXX dirty
+        close_button.connect('clicked', on_dialog_close)
 
-    def on_preferences1_activate(self, widget):
+    def on_preferences_activate(self, widget):
         Gui_Preferences()
 
-    def on_open1_activate(self, widget):
-        "Creates an Open-File-Dialog, which selects a new Quiz"
-        chooser = gtk.FileChooserDialog("Open Quiz", None, 
-                gtk.FILE_CHOOSER_ACTION_OPEN, (gtk.STOCK_CANCEL, 
-                gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
-        try:
-            last_quiz_dir_path = os.path.abspath(os.path.dirname(
-                self.quiz_filer.file_path))
-        except AttributeError:
-            pass
-        else:
-            chooser.set_current_folder(last_quiz_dir_path)
-        response = chooser.run()
-        chooser.hide()
-        if response == gtk.RESPONSE_OK:
-            try:
-                self.load_quiz(chooser.get_filename())
-            except (IOError, SaDrillError), e:
-                message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, 
-                        buttons=gtk.BUTTONS_OK, message_format=e.str)
-                message.run()
-                message.destroy()
-        chooser.destroy()
+    def on_open_activate(self, widget):
+        create_open_dialog(self.trainer)
 
-    def load_quiz(self, quiz_path):
-        """
-        Load the given quiz. 
-        """
-        self.quiz_filer_list = [ Quiz_Loader(quiz_path).read_quiz_file() ]
-        self.switch_quiz(self.quiz_filer_list[0])
+    def on_manage_activate(self, widget):
+        "Creates the Gui_Quiz_Manger-Window."
+        Gui_Quiz_Manger(self.trainer)
 
     def on_main_notebook_switch_page(self, widget, gpointer, new_tab):
         if new_tab == 2:  # "Simple Quiz"-tab
@@ -288,32 +298,25 @@ class Gui(object):
 
     def on_subquiz_combobox_changed(self, widget):
         new_status = widget.get_active()
-        self.main_window.set_title(_('Quiz') + ': ' + widget.get_active_text())
-        self.quiz.set_question_direction(new_status)
-        if len(self.quiz_filer.question_topic) > 1:
-            for label in self.question_topic_labels:
-                label.set_text(self.quiz_filer.question_topic[new_status])
-        self.quiz.new_question()
+        self.trainer.current_quiz.set_question_direction(new_status)
 
     def on_treeview_toogled(self, cell, path ):
         """ toggle selected CellRendererToggle Row """
-        self.quiz_filer.toggle_questions(path)
+        self.trainer.current_filer.toggle_questions(path)
 
     ## questionaskting-tabs (simple/multi/flash) ##
 
     def on_multi_question_answer_button_clicked(self, widget, data=None):
         answer = widget.get_label()
-        if self.quiz.check(answer):
-            self.redisplay_correctly_answered(self.quiz.question)
-            self.quiz.next()
+        if self.trainer.current_quiz.check(answer):
+            self.redisplay_correctly_answered()
             self.multi_question_buttons[0].grab_focus()
         else:
             widget.set_sensitive(False)
             # statusbar1: show question to selected answer #
             text = _("To '%(quest)s' '%(ans)s' would be the correct answer.") \
-                    % { "ans" : answer, "quest" : \
-                    self.quiz.get_question_to_answer_from_multichoices(answer)
-                    }
+                    % { "ans" : answer, "quest" : self.trainer.current_quiz.\
+                    get_question_to_answer_from_multichoices(answer) }
             self.statusbar1.pop(self.statusbar_contextid["last_answer"])
             self.statusbar1.push(self.statusbar_contextid["last_answer"], text)
 
@@ -332,26 +335,25 @@ class Gui(object):
                 (int(widget.get_name()[-1]) + direction) % 7 ].grab_focus()
 
     def on_simple_question_button_clicked(self, widget, data=None):
-        if self.quiz.check(self.simple_answer_entry.get_text().strip()):
-            self.redisplay_correctly_answered(self.quiz.question)
-            self.quiz.next()
+        if self.trainer.current_quiz.check(
+                self.simple_answer_entry.get_text().strip()):
+            self.redisplay_correctly_answered()
         else:
             self.statusbar1.pop(self.statusbar_contextid["last_answer"])
     
     def on_simple_question_hint_button_clicked(self, widget, data=None):
-        self.simple_answer_entry.set_text(
-                self.quiz.hint(self.simple_answer_entry.get_text().strip()))
+        self.simple_answer_entry.set_text( self.trainer.current_quiz.hint(
+            self.simple_answer_entry.get_text().strip()))
 
     def on_flash_question_button_clicked(self, widget, date=None):
-        self.flash_answer_label.set_text(
-                self.quiz.question[self.quiz.answer_to])
+        self.flash_answer_label.set_text( self.trainer.current_quiz.question[
+            self.trainer.current_quiz.answer_to])
         self.flash_notebook.set_current_page(1)
 
     def on_flash_answer_button_clicked(self, widget, data=None):
-        if isinstance(self.quiz, Weighted_Quiz):
-            self.quiz.set_answer_quality(
+        if isinstance(self.trainer.current_quiz, Weighted_Quiz):
+            self.trainer.current_quiz.set_answer_quality(
                     self.flash_answer_buttons.index(widget))
-        self.quiz.next()
 
 
 class Gconf_Prefs(object):
@@ -481,6 +483,7 @@ class Gui_Statistics(object):
             treestore.append(None, quiz)
         treeview.set_model(treestore)
 
+
 class Gui_Preferences(object):
     GLADE_FILE = resource_filename(__name__, "data/quizdrill.glade")
     DIR_KEY = '/apps/quizdrill/timer'
@@ -549,6 +552,140 @@ class Gui_Preferences(object):
 
     def on_close_preferences_button_clicked(self, widget):
         self.window.destroy()
+
+
+class Gui_Quiz_Manger(object):
+    GLADE_FILE = resource_filename(__name__, "data/quizdrill.glade")
+
+    def __init__(self, trainer):
+        self.trainer = trainer
+        self.selected_filer = trainer.current_filer
+        xml = gtk.glade.XML(self.GLADE_FILE, "quiz_manager_window", APP)
+        gw = xml.get_widget
+        self.window = gw("quiz_manager_window")
+        self.quiz_file_label = gw("quiz_file_label")
+        self.word_treeview = gw("word_treeview2")
+        self.subquiz_combobox = gw("subquiz_combobox2")
+        # Setup quiz_list_treeview #
+        self.quiz_list_treeview = gw("quiz_list_treeview")
+        tvcolumn = gtk.TreeViewColumn(_('Quiz'), gtk.CellRendererText(), text=0)
+        self.quiz_list_treeview.append_column(tvcolumn)
+        self.quiz_list_treestore = gtk.TreeStore(str)
+        self.quiz_list_treeview.set_model(self.quiz_list_treestore)
+        self.update_question_directions()
+        trainer.connect('quiz_added', self.add_quiz_to_treeview)
+        trainer.connect('quiz_removed', self.remove_quiz_from_treeview)
+
+        xml.signal_autoconnect(self)
+        self.on_quiz_selected(self.selected_filer)
+
+    def update_question_directions(self):
+        for quiz_filer in self.trainer.quiz_filer_list:
+            quiz_filer.quiz.disconnect('direction_changed', 
+                    self.update_question_directions)
+        self.quiz_list_treestore.clear()
+        for quiz_filer in self.trainer.quiz_filer_list:
+            self.add_quiz_to_treeview(quiz_filer)
+
+    def add_quiz_to_treeview(self, quiz_filer):
+        self.quiz_list_treestore.append(None,
+                [ quiz_filer.all_subquizzes[quiz_filer.quiz.ask_from] ])
+        quiz_filer.quiz.connect('direction_changed', 
+                self.update_question_directions)
+
+    def remove_quiz_from_treeview(self, quiz_filer):
+        current_quiz_id = self.trainer.quiz_filer_list.index(quiz_filer)
+        self.quiz_list_treestore.remove( 
+                self.quiz_list_treestore.iter_nth_child(None, current_quiz_id))
+        quiz_filer.quiz.disconnect('direction_changed', 
+                self.update_question_directions)
+
+    def on_remove_quiz_button_clicked(self, widget):
+        self.trainer.remove_quiz(self.selected_filer)
+
+    def on_add_quiz_button_clicked(self, widget):
+        create_open_dialog(self.trainer)
+
+    def on_qm_close_button_clicked(self, widget):
+        self.window.destroy()
+
+    def update_selected_quiz_combobox(self):
+        self.subquiz_combobox.set_active(self.selected_filer.quiz.ask_from)
+
+    def on_quiz_list_treeview_cursor_changed(self, widget):
+        tree_row_id = widget.get_cursor()[0][0]
+        self.selected_filer = self.trainer.quiz_filer_list[tree_row_id]
+        self.on_quiz_selected(self.selected_filer)
+
+    def on_quiz_selected(self, quiz_filer):
+        """ 
+        Update the right-panel side. Called when quiz on the left is selected.
+
+        Note: Most of this has been copied/moved from Gui.on_quiz_switch().
+        """
+        self.quiz_file_label.set_text(quiz_filer.file_path)
+        # Show, hide and settext of the combobox #
+        if self.selected_filer.all_subquizzes == []:
+            self.subquiz_combobox.hide()
+        else:
+            for i in range(2):            # dirty clear combobox
+                self.subquiz_combobox.remove_text(0)
+            for subquiz in self.selected_filer.all_subquizzes:
+                self.subquiz_combobox.append_text(subquiz)
+            self.subquiz_combobox.set_active(
+                    self.selected_filer.quiz.ask_from)
+            self.subquiz_combobox.show()
+        self.trainer.connect('direction_changed',
+                self.update_selected_quiz_combobox)
+        # treeview #
+        ## Question/Answer-Columns ##
+        for column in self.word_treeview.get_columns():
+            self.word_treeview.remove_column(column)
+        for i, title in enumerate(quiz_filer.data_name):
+            tvcolumn = gtk.TreeViewColumn(title,
+                    gtk.CellRendererText(), text=i)
+            self.word_treeview.append_column(tvcolumn)
+        ## toggler ##
+        toggler = gtk.CellRendererToggle()
+        toggler.connect( 'toggled', self.on_treeview_toogled )
+        tvcolumn = gtk.TreeViewColumn(_("test"), toggler)
+        tvcolumn.add_attribute(toggler, "active", 2)
+        self.word_treeview.append_column(tvcolumn)
+        self.word_treeview.set_model(quiz_filer.treestore)
+
+    def on_treeview_toogled(self, cell, path ):
+        """ toggle selected CellRendererToggle Row """
+        self.selected_filer.toggle_questions(path)
+
+    def on_subquiz_combobox_changed(self, widget):
+        new_status = widget.get_active()
+        if new_status != -1:
+            self.selected_filer.set_question_direction(new_status)
+
+
+def create_open_dialog(trainer):
+    "Creates an Open-File-Dialog, which selects a new Quiz"
+    chooser = gtk.FileChooserDialog("Open Quiz", None, 
+            gtk.FILE_CHOOSER_ACTION_OPEN, (gtk.STOCK_CANCEL, 
+            gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
+    try:
+        last_quiz_dir_path = os.path.abspath(os.path.dirname(
+            trainer.current_filer.file_path))
+    except AttributeError:
+        pass
+    else:
+        chooser.set_current_folder(last_quiz_dir_path)
+    response = chooser.run()
+    chooser.hide()
+    if response == gtk.RESPONSE_OK:
+        try:
+            trainer.load_quiz(chooser.get_filename())
+        except (IOError, SaDrillError), e:
+            message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, 
+                    buttons=gtk.BUTTONS_OK, message_format=e.str)
+            message.run()
+            message.destroy()
+    chooser.destroy()
 
 
 def main():

@@ -21,9 +21,8 @@ Program
                 3: wrong in sq with more than 1 try (or more than two hints); 
                 4: wrong in sq with 1 try (or one hint)
                 5: right at first try (3-5 don't seem to be that good).
-              IDEA: Additionally use Levenshtein distance[2] or difflib to 
-                determine typo or completely wrong (and could even show the 
-                wrong letters in red).
+              IDEA: Additionally use difflib to determine typo or completely 
+                wrong (and could even show the wrong letters in red).
             * when user gets new words first show him the list of the new words
               then train her with multiple choice then switch to simple quiz 
               (or flashcard if the user can't type very well) (possibly with 

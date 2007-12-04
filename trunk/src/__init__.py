@@ -19,14 +19,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 import unittest
-import test_quiz
+import test_quiz, test_notify, test_SaDrill
 
 
 __all__=['gtk-ui', 'quiz', 'Quiz_Filer', 'SaDrill', 'builder', 'wiki_builder']
 
 def testsuite():
     suite = unittest.TestSuite()
-    for test_module in [ test_quiz ]:
+    for test_module in [ test_quiz, test_notify, test_SaDrill ]:
         suite.addTest(test_module.testsuite())
     return suite
 

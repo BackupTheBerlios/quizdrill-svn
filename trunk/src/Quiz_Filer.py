@@ -20,6 +20,8 @@
 
 from SaDrill import SaDrill, SaDrillError
 from quiz import Weighted_Quiz
+from notify import Notifier
+import random
 
 import pygtk
 pygtk.require('2.0')
@@ -29,6 +31,7 @@ from pkg_resources import resource_filename
 import cPickle as pickle
 import gettext
 _ = gettext.gettext
+
 
 class Quiz_Data_Builder(object):
     """
@@ -143,9 +146,8 @@ class Quiz_Filer(Quiz_Data, Quiz_Header):
             self.score_filer = score_filer
         self.quiz = Weighted_Quiz(self.quiz_list, 
                 self.score_filer.question_score)
-        self.quiz.next()
 
-    def set_question_direction(self, question, answer):
+    def set_question_direction(self, question, answer=None):
         """
         Sets which column of the quiz contains the questions and which the 
         answers.
@@ -153,6 +155,8 @@ class Quiz_Filer(Quiz_Data, Quiz_Header):
         Note: If either of the question or answer columns was not used before
           the .drill-file will be read again. (TODO)
         """
+        if answer == None:
+            answer = 1 - question
         if question == self.quiz.ask_from and answer == self.quiz.answer_to:
             return
         elif question == self.quiz.answer_to and answer == self.quiz.ask_from:
@@ -160,6 +164,8 @@ class Quiz_Filer(Quiz_Data, Quiz_Header):
         else:
             # TODO: Needed once quizzes can have more question/answer pairs
             print "Error: Not implemented yet!"
+            print self.quiz.ask_from, self.quiz.answer_to
+            print question, answer
 
     def write_score_file(self, score_file=None):
         """
@@ -303,3 +309,77 @@ class Quiz_Loader(SaDrill):
         # TODO
         pass
 
+
+class Quiz_Trainer(object):
+    """
+    Manages a list of quizzes with one being the current one.
+    """
+    def __init__(self):
+        self.quiz_filer_list = []
+        self.notifier = Notifier(["break_time", "question_changed", 
+            "direction_changed", "quiz_changed", "quiz_added", "quiz_removed",
+            "quiz_list_emtpied", "quiz_list_non_emtpy"])
+        self.notify = self.notifier.notify
+        self.connect = self.notifier.connect
+        self.disconnect = self.notifier.disconnect
+        self.current_quiz = None
+        self.current_filer = None
+
+    def _notify_break_time(self):
+        self.notify('break_time')
+
+    def _notify_question_changed(self):
+        self.notify('question_changed')
+
+    def _notify_direction_changed(self):
+        self.notify('direction_changed')
+
+    def switch_quiz(self, quiz_filer=None):
+        if self.current_quiz != None:
+            self.current_quiz.disconnect('break_time', self._notify_break_time)
+            self.current_quiz.disconnect('question_changed', 
+                    self._notify_question_changed)
+            self.current_quiz.disconnect('direction_changed', 
+                    self._notify_direction_changed)
+        if self.quiz_filer_list == []:
+            raise No_Quizzes_Availible_Exception()
+        if quiz_filer == None:
+            quiz_filer = random.choice(self.quiz_filer_list)
+        self.current_quiz = quiz_filer.quiz
+        self.current_filer = quiz_filer
+        self.notify('quiz_changed')
+        self.current_quiz.connect('break_time', self._notify_break_time)
+        self.current_quiz.connect('question_changed', 
+                self._notify_question_changed)
+        self.current_quiz.connect('direction_changed', 
+                self._notify_direction_changed)
+
+    def add_quiz(self, quiz_filer):
+        self.quiz_filer_list.append(quiz_filer)
+        if len(self.quiz_filer_list) == 1:
+            self.notify('quiz_list_non_emtpy')
+        self.notify('quiz_added', quiz_filer)
+
+    def load_quiz(self, quiz_path):
+        quiz_filer = Quiz_Loader(quiz_path).read_quiz_file()
+        self.add_quiz(quiz_filer)
+        self.switch_quiz(quiz_filer)
+
+    def add_quiz_from_file(self, file):
+        self.add_quiz(Quiz_Loader(quiz_path).read_quiz_file())
+
+    def remove_quiz(self, quiz_filer=None):
+        if quiz_filer == None:
+            quiz_filer = self.current_filer
+        self.notify('quiz_removed', quiz_filer)
+        self.quiz_filer_list.remove(quiz_filer)
+        if quiz_filer == self.current_filer:
+            try:
+                self.switch_quiz()
+            except No_Quizzes_Availible_Exception:
+                self.notify('quiz_list_emtpied')
+
+class No_Quizzes_Availible_Exception(Exception):
+    def __init__(self):
+        #super(No_Quizzes_Availible_Exception, self).__init__()
+        Exception.__init__(self)
