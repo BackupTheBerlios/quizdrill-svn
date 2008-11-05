@@ -96,7 +96,13 @@ class Gui(object):
         self.statusbar_contextid = { "last_answer" : 
                 sb.get_context_id( "The answer to the last asked question." ) }
         #
-        self.trainer.load_quiz(quiz_file_path)
+        try:
+            self.trainer.load_quiz(quiz_file_path)
+        except IOError:
+            quiz_file_path = resource_filename(__name__, 
+                    '../quizzes/deu-fra.drill')
+            self.trainer.load_quiz(quiz_file_path)
+
         # connect signals #
         xml.signal_autoconnect(self)
         self.trainer.connect('quiz_changed', self.on_quiz_switch)
